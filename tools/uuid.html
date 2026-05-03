@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>UUID Generator — RFC 4122 v4 Online Free | DevKit</title>
+<title>UUID Generator — RFC 4122 v4 Online Free | DevToolsHive</title>
 <meta name="description" content="Generate cryptographically random UUID v4 identifiers in bulk. Free online RFC 4122 UUID generator with copy and download. Works entirely in your browser." />
 <meta name="theme-color" content="#0b0d10" />
 <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
 <link rel="canonical" href="./uuid.html" />
-<meta property="og:title" content="UUID v4 Generator — DevKit" />
+<meta property="og:title" content="UUID v4 Generator — DevToolsHive" />
 <meta property="og:description" content="Generate cryptographically secure UUIDs in bulk." />
 <link rel="stylesheet" href="../assets/css/styles.css" />
-<script>(function(){try{var t=localStorage.getItem('devkit-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+<script>(function(){try{var t=localStorage.getItem('dth-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
 </head>
 <body>
 <div id="site-header"></div>
@@ -34,10 +34,12 @@
       <span id="status" class="status muted">Ready</span>
     </div>
 
-    <div class="toolbar">
+    <div class="sticky-actions">
       <button class="btn btn-primary" onclick="generate()">Generate <span class="kbd">⌘↵</span></button>
       <button class="btn" onclick="copyAll()">Copy all</button>
       <button class="btn" onclick="downloadAll()">Download .txt</button>
+      <div class="toolbar-spacer"></div>
+      <span class="hint">⌘⇧C copy · ⌘L clear</span>
       <button class="btn btn-ghost" onclick="document.getElementById('list').innerHTML=''">Clear</button>
     </div>
 
@@ -69,6 +71,14 @@
       <p>The standard string form is <code>xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx</code> (lowercase hex with dashes). Toggle the options above for uppercase, no dashes (32-character hex), or curly braces (<code>{…}</code>) — common in Microsoft and SQL Server contexts.</p>
 
       <p>Need a hash or signed token instead? See the <a href="base64.html">Base64 encoder</a> for JWT-style payloads.</p>
+
+      <h2>Frequently asked questions</h2>
+      <div class="faq">
+        <details open><summary>Are these UUIDs cryptographically random?</summary><p>Yes. They use the browser's CSPRNG via <code>crypto.randomUUID()</code> or <code>crypto.getRandomValues()</code> — never <code>Math.random()</code>.</p></details>
+        <details><summary>Can I use UUID v4 as a primary key?</summary><p>Yes, but expect index fragmentation in B-tree databases. For high-write tables, consider ULID or UUID v7 (time-ordered) variants.</p></details>
+        <details><summary>What does the "4" in v4 mean?</summary><p>It's the version digit. UUID v4 means "fully random". Other versions encode time, namespace, or MAC addresses.</p></details>
+        <details><summary>How many UUIDs can I generate at once?</summary><p>Up to 1000 per click. Use Download .txt to save them as a file for seeding databases or test data.</p></details>
+      </div>
     </section>
   </div>
 </main>
@@ -126,7 +136,7 @@ function downloadAll() { const t = getAllText(); if (!t) { showToast('Nothing to
 
 [$upper, $nodash, $braces].forEach(el => el.addEventListener('change', generate));
 $count.addEventListener('change', generate);
-onShortcut('ctrl+enter', generate);
+window.toolShortcuts = { process: generate, copyOutput: copyAll, clearInput: () => { document.getElementById('list').innerHTML=''; } };
 generate();
 </script>
 </body>

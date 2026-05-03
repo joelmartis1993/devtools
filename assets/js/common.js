@@ -1,9 +1,9 @@
-/* DevKit common utilities — theme, clipboard, toast, shortcuts */
+/* DevToolsHive common utilities — theme, clipboard, toast, shortcuts */
 (function () {
   'use strict';
 
-  // ===== Theme =====
-  const THEME_KEY = 'devkit-theme';
+  // ===== Theme (dark by default; persist user preference) =====
+  const THEME_KEY = 'dth-theme';
   const root = document.documentElement;
   const stored = localStorage.getItem(THEME_KEY);
   if (stored === 'light') root.setAttribute('data-theme', 'light');
@@ -37,12 +37,12 @@
 
   // ===== Clipboard =====
   window.copyText = async function (text, label) {
-    if (!text) { showToast('Nothing to copy'); return; }
+    if (text == null) return;
+    text = String(text);
     try {
       await navigator.clipboard.writeText(text);
       showToast(label || 'Copied to clipboard');
     } catch {
-      // fallback
       const ta = document.createElement('textarea');
       ta.value = text;
       ta.style.position = 'fixed';
@@ -83,13 +83,44 @@
     };
   };
 
-  // ===== Shortcut helpers =====
+  // ===== Global keyboard shortcuts =====
+  // Tools register handlers via window.toolShortcuts = { process, copyOutput, clearInput }
+  window.toolShortcuts = window.toolShortcuts || {};
+  document.addEventListener('keydown', (e) => {
+    const ctrl = e.ctrlKey || e.metaKey;
+    if (!ctrl) return;
+    const tag = (e.target && e.target.tagName) || '';
+    const isInput = tag === 'INPUT' || tag === 'TEXTAREA';
+    // Ctrl+Enter -> process
+    if (e.key === 'Enter' && window.toolShortcuts.process) {
+      e.preventDefault(); window.toolShortcuts.process();
+    }
+    // Ctrl+Shift+C -> copy output
+    else if (e.shiftKey && (e.key === 'C' || e.key === 'c') && window.toolShortcuts.copyOutput) {
+      e.preventDefault(); window.toolShortcuts.copyOutput();
+    }
+    // Ctrl+L -> clear input (only when in a tool input or page focused)
+    else if (!e.shiftKey && (e.key === 'l' || e.key === 'L') && window.toolShortcuts.clearInput) {
+      e.preventDefault(); window.toolShortcuts.clearInput();
+    }
+  });
+
+  // Legacy helper (kept for older pages)
   window.onShortcut = function (combo, handler) {
     document.addEventListener('keydown', (e) => {
       const ctrl = e.ctrlKey || e.metaKey;
       if (combo === 'ctrl+enter' && ctrl && e.key === 'Enter') { e.preventDefault(); handler(e); }
       if (combo === 'ctrl+shift+c' && ctrl && e.shiftKey && (e.key === 'C' || e.key === 'c')) { e.preventDefault(); handler(e); }
-      if (combo === 'ctrl+k' && ctrl && (e.key === 'k' || e.key === 'K')) { e.preventDefault(); handler(e); }
+      if (combo === 'ctrl+l' && ctrl && (e.key === 'l' || e.key === 'L')) { e.preventDefault(); handler(e); }
     });
   };
+
+  // Auto-focus first tool input on load (skip if user already focused something)
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      if (document.activeElement && document.activeElement !== document.body) return;
+      const first = document.querySelector('[data-autofocus], textarea#input, input#input, input#pattern, input#tsInput');
+      if (first) try { first.focus(); } catch {}
+    }, 50);
+  });
 })();

@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Text Case Converter — camelCase, snake_case, PascalCase | DevKit</title>
+<title>Text Case Converter — camelCase, snake_case, PascalCase | DevToolsHive</title>
 <meta name="description" content="Convert text between camelCase, snake_case, PascalCase, kebab-case, CONSTANT_CASE, Title Case, and more. Free online case converter with instant results and copy buttons." />
 <meta name="theme-color" content="#0b0d10" />
 <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
 <link rel="canonical" href="./case-converter.html" />
-<meta property="og:title" content="Text Case Converter — DevKit" />
+<meta property="og:title" content="Text Case Converter — DevToolsHive" />
 <meta property="og:description" content="Convert between camelCase, snake_case, PascalCase, kebab-case and more." />
 <link rel="stylesheet" href="../assets/css/styles.css" />
-<script>(function(){try{var t=localStorage.getItem('devkit-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+<script>(function(){try{var t=localStorage.getItem('dth-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
 </head>
 <body>
 <div id="site-header"></div>
@@ -57,6 +57,13 @@
 
       <h3>Practical examples</h3>
       <p>Pasting <code>userProfileSettings</code> gives you <code>user_profile_settings</code> for your Python backend, <code>user-profile-settings</code> for the matching CSS class, and <code>USER_PROFILE_SETTINGS</code> for the environment variable that controls the feature flag — all without typing any of them by hand.</p>
+
+      <h2>Frequently asked questions</h2>
+      <div class="faq">
+        <details open><summary>How does the splitter detect words?</summary><p>It looks for transitions between lower- and upper-case letters, plus dashes, underscores, dots, slashes, and whitespace. So <code>helloWorld</code>, <code>hello_world</code>, and <code>hello-world</code> all become the same two-word phrase.</p></details>
+        <details><summary>Which case should I use for JavaScript variables?</summary><p>camelCase for variables and functions; PascalCase for classes and React components; CONSTANT_CASE for true constants.</p></details>
+        <details><summary>Are acronyms handled correctly?</summary><p>Acronyms in input like <code>parseHTML</code> split as <code>parse + html</code>. The output is then re-cased per convention.</p></details>
+      </div>
     </section>
   </div>
 </main>
@@ -115,6 +122,7 @@ $in.addEventListener('input', debounce(run, 100));
 $in.value = 'user profile settings';
 run();
 $in.focus();
+window.toolShortcuts = { process: run, copyOutput: () => copyText($in.value, 'Input copied'), clearInput: () => { $in.value=''; run(); $in.focus(); } };
 </script>
 </body>
 </html>

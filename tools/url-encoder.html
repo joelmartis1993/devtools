@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>URL Encoder & Decoder — Percent Encode Online Free | DevKit</title>
+<title>URL Encoder & Decoder — Percent Encode Online Free | DevToolsHive</title>
 <meta name="description" content="Free online URL encoder and decoder. Percent-encode query strings, path segments, and form values. Switch between component-level and full-URI encoding instantly." />
 <meta name="theme-color" content="#0b0d10" />
 <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
 <link rel="canonical" href="./url-encoder.html" />
-<meta property="og:title" content="URL Encoder & Decoder — DevKit" />
+<meta property="og:title" content="URL Encoder & Decoder — DevToolsHive" />
 <meta property="og:description" content="Percent-encode/decode URL components in your browser." />
 <link rel="stylesheet" href="../assets/css/styles.css" />
-<script>(function(){try{var t=localStorage.getItem('devkit-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+<script>(function(){try{var t=localStorage.getItem('dth-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
 </head>
 <body>
 <div id="site-header"></div>
@@ -39,9 +39,12 @@
       <span id="status" class="status muted">Awaiting input</span>
     </div>
 
-    <div class="toolbar">
+    <div class="sticky-actions">
       <button class="btn btn-primary" onclick="run()">Convert <span class="kbd">⌘↵</span></button>
       <button class="btn" onclick="swap()">Swap ⇄</button>
+      <div class="toolbar-spacer"></div>
+      <span class="hint">⌘⇧C copy · ⌘L clear</span>
+      <button class="btn" onclick="copyOut()">Copy output</button>
       <button class="btn btn-ghost" onclick="clearAll()">Clear</button>
     </div>
 
@@ -80,6 +83,14 @@
       <p>Encoding the value <code>name=Ada Lovelace&amp;role=admin</code> in component mode produces <code>name%3DAda%20Lovelace%26role%3Dadmin</code>, which can be safely used as a single query parameter without breaking the URL structure.</p>
 
       <p>For binary or token data, see the <a href="base64.html">Base64 encoder</a>.</p>
+
+      <h2>Frequently asked questions</h2>
+      <div class="faq">
+        <details open><summary>When should I use encodeURIComponent vs encodeURI?</summary><p>Use <code>encodeURIComponent</code> for individual values inside a URL (query params, path segments). Use <code>encodeURI</code> when encoding a complete URL that already contains structural characters like <code>:</code>, <code>/</code>, and <code>?</code>.</p></details>
+        <details><summary>Why are spaces sometimes encoded as + and sometimes as %20?</summary><p><code>+</code> is a legacy convention from <code>application/x-www-form-urlencoded</code> form bodies. Modern URL encoding uses <code>%20</code>. Both decode to a space.</p></details>
+        <details><summary>Is URL encoding the same as Base64?</summary><p>No. URL encoding escapes individual unsafe characters; Base64 re-encodes arbitrary bytes into a 64-character ASCII alphabet. Use Base64 for binary data, URL encoding for text in URLs.</p></details>
+        <details><summary>Can I decode a URL safely?</summary><p>Yes — decoding never executes anything. The tool runs entirely in your browser; nothing is sent over the network.</p></details>
+      </div>
     </section>
   </div>
 </main>
@@ -120,7 +131,7 @@ async function pasteIn(){try{$in.value=await navigator.clipboard.readText();run(
 $in.addEventListener('input', debounce(run, 150));
 $mode.addEventListener('change', run);
 $scope.addEventListener('change', run);
-onShortcut('ctrl+enter', run);
+window.toolShortcuts = { process: run, copyOutput: copyOut, clearInput: clearAll };
 $in.focus();
 </script>
 </body>

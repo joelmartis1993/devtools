@@ -1,5 +1,5 @@
 /* ============================
-   DevKit — Developer Tools
+   DevToolsHive — Developer Tools
    Modern, minimal, dark-first
    ============================ */
 
@@ -610,3 +610,136 @@ button:focus-visible, a:focus-visible { outline-offset: 2px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; border: 2px solid var(--bg); }
 ::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+
+/* ===== v2 upgrades ===== */
+.sticky-actions {
+  position: sticky; top: 64px; z-index: 20;
+  display: flex; gap: 8px; flex-wrap: wrap;
+  padding: 10px 14px;
+  background: color-mix(in srgb, var(--bg-elev) 85%, transparent);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  align-items: center;
+}
+.sticky-actions .toolbar-spacer { flex: 1; }
+.sticky-actions .hint { font-size: 12px; color: var(--text-dim); }
+@media (max-width: 640px) { .sticky-actions { top: 56px; padding: 8px 10px; } .sticky-actions .hint { display: none; } }
+
+/* ===== JSON tree view ===== */
+.json-tree {
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.6;
+  padding: 14px;
+  overflow: auto;
+  max-height: 600px;
+}
+.json-tree ul { list-style: none; padding-left: 18px; margin: 0; border-left: 1px dashed var(--border); }
+.json-tree .node { display: flex; align-items: flex-start; gap: 4px; padding: 1px 4px; border-radius: 4px; }
+.json-tree .node:hover { background: var(--bg-elev-2); }
+.json-tree .toggle {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 14px; height: 14px; cursor: pointer; user-select: none;
+  color: var(--text-muted); font-size: 10px;
+}
+.json-tree .toggle.empty { visibility: hidden; }
+.json-tree .key { color: var(--info); }
+.json-tree .str { color: #a5d6a7; }
+[data-theme="light"] .json-tree .str { color: #0a7d3b; }
+.json-tree .num { color: #ffb86c; }
+.json-tree .bool { color: var(--accent); }
+.json-tree .null { color: var(--text-dim); font-style: italic; }
+.json-tree .colon { color: var(--text-muted); margin: 0 4px 0 2px; }
+.json-tree .meta { color: var(--text-dim); margin-left: 6px; font-size: 11px; }
+.json-tree .copy-node {
+  margin-left: 6px; opacity: 0; cursor: pointer;
+  background: none; border: none; color: var(--text-muted); font-size: 11px;
+  padding: 0 4px; border-radius: 3px;
+}
+.json-tree .node:hover .copy-node { opacity: 1; }
+.json-tree .copy-node:hover { background: var(--bg-elev-2); color: var(--accent); }
+.json-tree .collapsed > ul { display: none; }
+.json-tree .collapsed > .node .toggle::before { content: "▶"; }
+.json-tree .toggle::before { content: "▼"; }
+
+/* JSON line-error gutter */
+.json-error-line {
+  background: rgba(248, 81, 73, 0.12) !important;
+}
+.error-banner {
+  background: rgba(248, 81, 73, 0.08);
+  border: 1px solid rgba(248, 81, 73, 0.4);
+  color: var(--danger);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  margin: 12px 0;
+}
+.error-banner .err-snippet { color: var(--text); margin-top: 6px; white-space: pre; overflow-x: auto; }
+.error-banner .err-caret { color: var(--danger); }
+
+/* ===== View tabs ===== */
+.tab-row { display: inline-flex; gap: 2px; background: var(--bg-elev-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 2px; }
+.tab-row button {
+  background: transparent; border: none; color: var(--text-muted);
+  padding: 5px 12px; font-size: 12px; font-weight: 500; cursor: pointer;
+  border-radius: 4px; transition: all var(--transition); font-family: inherit;
+}
+.tab-row button.active { background: var(--bg); color: var(--text); }
+
+/* ===== Regex enhancements ===== */
+.regex-output mark.g0 { background: rgba(124, 92, 255, 0.2); color: var(--accent); }
+.regex-output mark.g1 { background: rgba(63, 185, 80, 0.22); color: #6fce7a; }
+.regex-output mark.g2 { background: rgba(255, 184, 108, 0.22); color: #ffb86c; }
+.regex-output mark.g3 { background: rgba(78, 201, 255, 0.22); color: #4ec9ff; }
+.regex-output mark.g4 { background: rgba(255, 121, 198, 0.22); color: #ff79c6; }
+.preset-row { display: flex; gap: 6px; flex-wrap: wrap; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+.preset-row button {
+  background: var(--bg-elev-2); border: 1px solid var(--border); color: var(--text-muted);
+  font-size: 12px; padding: 4px 10px; border-radius: 999px; cursor: pointer;
+  font-family: inherit; transition: all var(--transition);
+}
+.preset-row button:hover { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+.regex-explain {
+  padding: 10px 14px; border-top: 1px solid var(--border);
+  font-size: 12.5px; color: var(--text-muted); font-family: var(--font-mono);
+}
+.regex-explain b { color: var(--text); font-weight: 600; }
+
+/* ===== FAQ ===== */
+.faq { margin-top: 16px; }
+.faq details {
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  margin-bottom: 8px; background: var(--bg-elev); overflow: hidden;
+}
+.faq summary {
+  cursor: pointer; padding: 12px 14px; font-weight: 600; color: var(--text);
+  font-size: 14px; list-style: none; display: flex; justify-content: space-between; align-items: center;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; color: var(--text-muted); font-size: 18px; transition: transform var(--transition); }
+.faq details[open] summary::after { content: "−"; }
+.faq details[open] summary { border-bottom: 1px solid var(--border); }
+.faq details > p, .faq details > ul { padding: 12px 14px; color: var(--text-muted); margin: 0; font-size: 14.5px; }
+.faq details > ul { padding-left: 32px; }
+
+/* Mobile: bigger tap targets */
+@media (max-width: 640px) {
+  .btn { padding: 9px 14px; font-size: 14px; }
+  .icon-btn { width: 34px; height: 34px; }
+  .icon-btn svg { width: 16px; height: 16px; }
+  .preset-row button { padding: 7px 12px; font-size: 13px; }
+}
+
+/* Smooth fade for state changes */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(2px); } to { opacity: 1; transform: none; } }
+.json-tree, .ts-grid, #results, #matches { animation: fadeIn 180ms ease; }
+
+/* Per-format copyable timestamp item */
+.ts-item { position: relative; cursor: pointer; transition: border-color var(--transition); }
+.ts-item:hover { border-color: var(--accent); }
+.ts-item .ts-copy-hint { position: absolute; top: 8px; right: 10px; font-size: 10px; color: var(--text-dim); opacity: 0; transition: opacity var(--transition); }
+.ts-item:hover .ts-copy-hint { opacity: 1; }

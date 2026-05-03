@@ -3,15 +3,22 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Unix Timestamp Converter — Epoch to Date Online | DevKit</title>
-<meta name="description" content="Convert Unix timestamps to human-readable dates and back. Supports seconds, milliseconds, ISO 8601, RFC 2822, and any timezone. Live updating clock and copy-to-clipboard." />
+<title>Convert Unix Timestamp to Readable Date — DevToolsHive</title>
+<meta name="description" content="Convert Unix timestamp to readable date in JavaScript-friendly formats: local, UTC, ISO 8601, RFC 2822, and relative time. Auto-detects seconds vs milliseconds. One-click copy for every format." />
 <meta name="theme-color" content="#0b0d10" />
 <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
 <link rel="canonical" href="./timestamp.html" />
-<meta property="og:title" content="Unix Timestamp Converter — DevKit" />
-<meta property="og:description" content="Convert epoch ⇄ human-readable dates instantly." />
+<meta property="og:title" content="Unix Timestamp Converter — DevToolsHive" />
+<meta property="og:description" content="Convert epoch ⇄ human-readable dates instantly. Local, UTC, ISO, relative." />
 <link rel="stylesheet" href="../assets/css/styles.css" />
-<script>(function(){try{var t=localStorage.getItem('devkit-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+<script>(function(){try{var t=localStorage.getItem('dth-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How to convert Unix timestamp to readable date in JavaScript?","acceptedAnswer":{"@type":"Answer","text":"Multiply seconds by 1000 and pass the result to new Date(). Example: new Date(1700000000 * 1000).toISOString() returns 2023-11-14T22:13:20.000Z. This tool does that conversion automatically and shows local, UTC, ISO, RFC 2822, and relative time side by side."}},
+{"@type":"Question","name":"What's the difference between Unix seconds and milliseconds?","acceptedAnswer":{"@type":"Answer","text":"POSIX and most backend languages use seconds (10 digits today). JavaScript's Date.now() and most modern web APIs use milliseconds (13 digits). The converter auto-detects which you've pasted but you can override the unit."}},
+{"@type":"Question","name":"How do I get the current Unix timestamp?","acceptedAnswer":{"@type":"Answer","text":"Click 'Use current time'. The page also shows a live ticking timestamp at the top so you can copy the current epoch value at any second."}}
+]}
+</script>
 </head>
 <body>
 <div id="site-header"></div>
@@ -20,21 +27,26 @@
   <div class="container">
     <div class="tool-header">
       <div class="breadcrumb"><a href="../index.html">Tools</a> / Timestamp Converter</div>
-      <h1>Timestamp Converter</h1>
-      <p>Convert between Unix epoch values and human-readable dates in any timezone.</p>
+      <h1>Unix Timestamp Converter</h1>
+      <p>Convert epoch values to human-readable dates and back. Local, UTC, ISO 8601, RFC 2822, and relative time — all at once.</p>
     </div>
 
     <div class="input-row">
       <label>Now:</label>
-      <span id="now" class="status muted" style="font-family:var(--font-mono);"></span>
+      <span id="now" class="status muted" style="font-family:var(--font-mono);cursor:pointer;" title="Click to copy" onclick="copyText(document.getElementById('now').dataset.ts, 'Current timestamp copied')"></span>
       <button class="btn" style="margin-left:auto;" onclick="useNow()">Use current time</button>
+    </div>
+
+    <div class="sticky-actions">
+      <button class="btn btn-primary" onclick="useNow()">Now</button>
+      <div class="toolbar-spacer"></div>
+      <span class="hint">Click any result to copy · ⌘L clear</span>
+      <button class="btn btn-ghost" onclick="clearAll()">Clear</button>
     </div>
 
     <div class="io-grid">
       <div class="io-panel">
-        <div class="io-head"><span>Unix timestamp</span>
-          <div class="io-actions"><button class="icon-btn" onclick="copyTs()" title="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div>
-        </div>
+        <div class="io-head"><span>Unix timestamp → date</span></div>
         <div style="padding:14px;">
           <input type="text" id="tsInput" placeholder="e.g. 1700000000 or 1700000000000" style="background:var(--bg-elev-2);border:1px solid var(--border);border-radius:6px;padding:10px;font-family:var(--font-mono);" />
           <div class="input-row" style="margin-top:10px;">
@@ -44,45 +56,69 @@
               <option value="s">Seconds</option>
               <option value="ms">Milliseconds</option>
             </select>
+            <label>Timezone:</label>
+            <select id="tz" style="flex:1;"></select>
           </div>
         </div>
         <div class="ts-grid" id="tsResults" style="border-top:1px solid var(--border);"></div>
       </div>
 
       <div class="io-panel">
-        <div class="io-head"><span>Human date</span>
-          <div class="io-actions"><button class="icon-btn" onclick="copyDate()" title="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div>
-        </div>
+        <div class="io-head"><span>Date → Unix timestamp</span></div>
         <div style="padding:14px;">
           <input type="text" id="dateInput" placeholder="2024-01-15T10:30:00Z or any parseable date" style="background:var(--bg-elev-2);border:1px solid var(--border);border-radius:6px;padding:10px;font-family:var(--font-mono);" />
-          <div class="input-row" style="margin-top:10px;">
-            <label>Timezone:</label>
-            <select id="tz" style="flex:1;"></select>
-          </div>
         </div>
         <div class="ts-grid" id="dateResults" style="border-top:1px solid var(--border);"></div>
       </div>
     </div>
 
     <section class="content">
-      <h2>About Unix timestamps</h2>
-      <p>A Unix timestamp (also called <strong>epoch time</strong>) is the number of seconds that have elapsed since 00:00:00 UTC on 1 January 1970, ignoring leap seconds. It's the canonical way computers store and exchange points in time — used in databases, log files, JWTs, HTTP cookies, and virtually every API.</p>
+      <h2>What is a Unix timestamp?</h2>
+      <p>A <strong>Unix timestamp</strong> (also called <em>epoch time</em>) is the number of seconds elapsed since 00:00:00 UTC on 1 January 1970, ignoring leap seconds. It's the canonical way computers store and exchange points in time — you'll find it in databases, server logs, JWT <code>iat</code>/<code>exp</code> claims, HTTP cookies, and almost every API. Knowing how to <strong>convert Unix timestamp to readable date in JavaScript</strong>, Python, or any other language is a daily task for backend developers.</p>
 
-      <h3>Seconds vs milliseconds</h3>
-      <p>POSIX, most Unix tools, and many backend languages use <strong>seconds</strong>. JavaScript's <code>Date.now()</code>, Java's <code>System.currentTimeMillis()</code>, and most modern web APIs use <strong>milliseconds</strong>. This converter auto-detects which you've pasted (numbers around 10 digits = seconds, around 13 digits = ms) but you can override the unit if needed.</p>
+      <h2>How to use this converter</h2>
+      <ol>
+        <li>Paste a Unix timestamp on the left — the tool auto-detects seconds vs milliseconds.</li>
+        <li>Or paste any human date on the right (ISO 8601, RFC 2822, "Jan 15 2024", etc.).</li>
+        <li>All formats appear side by side: local, UTC, ISO, RFC, and relative time.</li>
+        <li>Click any result card to copy that single format to your clipboard.</li>
+      </ol>
 
-      <h3>How developers use this tool</h3>
+      <h2>Real-world examples</h2>
+      <h3>Reading a JWT expiry</h3>
+      <p>A JWT contains <code>"exp": 1735689600</code>. Paste that number to learn it's <code>2025-01-01T00:00:00Z</code> — and the relative time tells you immediately whether the token is still valid.</p>
+
+      <h3>Debugging a log entry</h3>
+      <p>A server log shows <code>[1714560000123]</code>. Paste it; the tool detects milliseconds and shows the local time when the event happened — saving you a mental subtraction.</p>
+
+      <h3>Building a cron schedule</h3>
+      <p>Type <code>2026-05-03T03:00:00</code> to see the corresponding epoch values you can hard-code in a one-off scheduled job.</p>
+
+      <h2>Common use cases</h2>
       <ul>
-        <li>Reading <code>iat</code> and <code>exp</code> claims from a JWT to check expiry</li>
-        <li>Debugging server logs that record events with epoch timestamps</li>
-        <li>Verifying that a scheduled cron entry will fire when expected</li>
-        <li>Translating between user-facing dates and database timestamps</li>
+        <li>Inspecting JWT <code>iat</code>, <code>exp</code>, and <code>nbf</code> claims</li>
+        <li>Converting database timestamp columns for human review</li>
+        <li>Coordinating release windows across timezones</li>
+        <li>Translating between Unix seconds and JavaScript's millisecond convention</li>
+        <li>Generating fixed timestamps for tests and migrations</li>
       </ul>
 
-      <h3>Supported formats</h3>
-      <p>The date input accepts ISO 8601 (<code>2024-01-15T10:30:00Z</code>), RFC 2822 (<code>Mon, 15 Jan 2024 10:30:00 GMT</code>), and most other formats the browser's <code>Date</code> constructor understands. The output is shown simultaneously as a Unix timestamp (seconds and milliseconds), an ISO string, a localized human-readable form, and a relative time like "3 hours ago".</p>
+      <h2>Tips & best practices</h2>
+      <ul>
+        <li>If your number has 10 digits it's almost certainly <strong>seconds</strong>; 13 digits is <strong>milliseconds</strong>. The auto-detect threshold here is <code>≥ 1e12</code>.</li>
+        <li>Always serialize timestamps in <strong>UTC</strong> (ISO 8601 with a trailing <code>Z</code>) for storage and transport — convert to local time only at the UI layer.</li>
+        <li>Beware the <strong>year 2038 problem</strong>: 32-bit signed seconds overflow on 19 January 2038. Use 64-bit integers for any new system.</li>
+      </ul>
 
-      <p>Need to generate identifiers stamped with the current time? Try the <a href="uuid.html">UUID generator</a>.</p>
+      <h2>Frequently asked questions</h2>
+      <div class="faq">
+        <details open><summary>How to convert Unix timestamp to readable date in JavaScript?</summary><p>Use <code>new Date(timestamp * 1000).toISOString()</code> if your value is in seconds, or <code>new Date(timestamp).toISOString()</code> if it's already in milliseconds. This tool does both automatically.</p></details>
+        <details><summary>Why does the timestamp look different in my database?</summary><p>Most SQL databases store timestamps as ISO date strings or in milliseconds. PostgreSQL's <code>extract(epoch from now())</code> returns seconds with a fractional part; truncate or round depending on what your app expects.</p></details>
+        <details><summary>What is a relative timestamp?</summary><p>A human-friendly description like "2 hours ago" or "in 3 days". This page derives it from the parsed timestamp and the current clock.</p></details>
+        <details><summary>Does this support timezones?</summary><p>Yes. Pick any IANA timezone in the dropdown to see how the same instant looks in that location. Storage is always UTC; the timezone only affects display.</p></details>
+      </div>
+
+      <p style="margin-top:24px;">Related: <a href="uuid.html">UUID generator</a> · <a href="json-formatter.html">JSON formatter</a>.</p>
     </section>
   </div>
 </main>
@@ -99,7 +135,6 @@ const $now = document.getElementById('now');
 const $tsResults = document.getElementById('tsResults');
 const $dateResults = document.getElementById('dateResults');
 
-// Populate timezones
 const localTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
 const zones = ['UTC', localTz, 'America/New_York','America/Los_Angeles','America/Chicago','Europe/London','Europe/Paris','Europe/Berlin','Asia/Tokyo','Asia/Shanghai','Asia/Kolkata','Australia/Sydney'];
 const seen = new Set();
@@ -108,14 +143,18 @@ $tz.value = localTz;
 
 function tick() {
   const d = new Date();
-  $now.textContent = Math.floor(d.getTime()/1000) + ' · ' + d.toISOString();
+  const s = Math.floor(d.getTime()/1000);
+  $now.textContent = s + '  ·  ' + d.toISOString();
+  $now.dataset.ts = s;
+  // Refresh relative-time row only
+  const rel = document.getElementById('relCell');
+  if (rel) rel.textContent = relative(new Date(parseInt(rel.dataset.ms,10)));
 }
 tick(); setInterval(tick, 1000);
 
 function fmtIn(d, tz) {
-  try {
-    return new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'long', timeZone: tz }).format(d);
-  } catch { return d.toString(); }
+  try { return new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'long', timeZone: tz }).format(d); }
+  catch { return d.toString(); }
 }
 function relative(d) {
   const diff = (d.getTime() - Date.now()) / 1000;
@@ -128,8 +167,17 @@ function relative(d) {
   if (abs < 86400*365) return rtf.format(Math.round(diff/(86400*30)), 'month');
   return rtf.format(Math.round(diff/(86400*365)), 'year');
 }
-function row(label, val) {
-  return '<div class="ts-item"><div class="ts-label">'+label+'</div><div class="ts-value">'+val+'</div></div>';
+function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function row(label, val, opts) {
+  opts = opts || {};
+  const v = String(val);
+  const extra = opts.id ? ' id="'+opts.id+'" data-ms="'+opts.ms+'"' : '';
+  return '<div class="ts-item" onclick="copyText(this.querySelector(\'.ts-value\').textContent, \''+label.replace(/'/g,'')+' copied\')">' +
+    '<div class="ts-label">'+label+'</div>' +
+    '<div class="ts-value"'+extra+'>'+escapeHtml(v)+'</div>' +
+    '<span class="ts-copy-hint">click to copy</span>' +
+    '</div>';
 }
 
 function fromTs() {
@@ -140,25 +188,33 @@ function fromTs() {
   if (unit === 'auto') unit = (Math.abs(n) >= 1e12) ? 'ms' : 's';
   const ms = unit === 's' ? n * 1000 : n;
   const d = new Date(ms);
-  if (isNaN(d.getTime())) { $tsResults.innerHTML = row('Error','Invalid timestamp'); return; }
+  if (isNaN(d.getTime())) { $tsResults.innerHTML = '<div class="error-banner">Invalid timestamp</div>'; return; }
   $tsResults.innerHTML =
     row('ISO 8601 (UTC)', d.toISOString()) +
     row('Local ('+localTz+')', fmtIn(d, localTz)) +
     row('Selected ('+$tz.value+')', fmtIn(d, $tz.value)) +
-    row('Relative', relative(d));
+    row('RFC 2822', d.toUTCString()) +
+    row('Unix (seconds)', Math.floor(ms/1000)) +
+    row('Unix (ms)', ms) +
+    '<div class="ts-item" onclick="copyText(document.getElementById(\'relCell\').textContent, \'Relative copied\')">' +
+      '<div class="ts-label">Relative</div>' +
+      '<div class="ts-value" id="relCell" data-ms="'+ms+'">'+relative(d)+'</div>' +
+      '<span class="ts-copy-hint">click to copy</span></div>';
 }
 
 function fromDate() {
   const raw = $dateInput.value.trim();
   if (!raw) { $dateResults.innerHTML = ''; return; }
   const d = new Date(raw);
-  if (isNaN(d.getTime())) { $dateResults.innerHTML = row('Error','Could not parse date'); return; }
+  if (isNaN(d.getTime())) { $dateResults.innerHTML = '<div class="error-banner">Could not parse date</div>'; return; }
   const ms = d.getTime();
   $dateResults.innerHTML =
     row('Unix (seconds)', Math.floor(ms/1000)) +
     row('Unix (ms)', ms) +
     row('ISO 8601', d.toISOString()) +
-    row('RFC 2822', d.toUTCString());
+    row('RFC 2822', d.toUTCString()) +
+    row('Local ('+localTz+')', fmtIn(d, localTz)) +
+    row('Relative', relative(d));
 }
 
 function useNow() {
@@ -170,19 +226,14 @@ function useNow() {
   fromDate();
 }
 
-function copyTs() {
-  const t = $tsResults.innerText.trim();
-  if (t) copyText(t, 'Copied');
-}
-function copyDate() {
-  const t = $dateResults.innerText.trim();
-  if (t) copyText(t, 'Copied');
-}
+function clearAll() { $tsInput.value = ''; $dateInput.value = ''; $tsResults.innerHTML=''; $dateResults.innerHTML=''; $tsInput.focus(); }
 
-$tsInput.addEventListener('input', debounce(fromTs, 150));
+$tsInput.addEventListener('input', debounce(fromTs, 120));
 $unit.addEventListener('change', fromTs);
 $tz.addEventListener('change', fromTs);
-$dateInput.addEventListener('input', debounce(fromDate, 150));
+$dateInput.addEventListener('input', debounce(fromDate, 120));
+
+window.toolShortcuts = { process: useNow, copyOutput: () => copyText($tsResults.innerText, 'All copied'), clearInput: clearAll };
 
 useNow();
 </script>
