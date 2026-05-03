@@ -1,4 +1,4 @@
-# DevKit — Free Developer Tools
+# DevToolsHive — Free Developer Tools
 
 A fast, minimal, fully static collection of developer utilities. No backend, no build step, no tracking.
 

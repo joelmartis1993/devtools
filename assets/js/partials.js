@@ -15,7 +15,7 @@
       <div class="header-inner">
         <a href="${b}index.html" class="logo">
           <span class="logo-mark">D</span>
-          <span>DevKit</span>
+          <span>DevToolsHive</span>
         </a>
         <nav class="nav" aria-label="Primary">
           <a href="${b}index.html">Tools</a>
@@ -35,7 +35,7 @@
     return `
     <footer class="footer">
       <div class="footer-inner">
-        <div>© ${year} DevKit · Free developer tools, in your browser.</div>
+        <div>© ${year} DevToolsHive · Free developer tools, in your browser.</div>
         <div class="footer-links">
           <a href="${b}index.html">Home</a>
           <a href="${b}tools/json-formatter.html">JSON</a>
@@ -45,7 +45,6 @@
           <a href="${b}tools/uuid.html">UUID</a>
           <a href="${b}tools/regex.html">Regex</a>
           <a href="${b}tools/case-converter.html">Case</a>
-          <a href="${b}tools/user-agent.html">User Agent</a>
         </div>
       </div>
     </footer>`;

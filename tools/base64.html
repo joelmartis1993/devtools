@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Base64 Encoder & Decoder — Free Online Tool | DevKit</title>
+<title>Base64 Encoder & Decoder — Free Online Tool | DevToolsHive</title>
 <meta name="description" content="Encode and decode Base64 strings instantly online. Supports UTF-8, URL-safe Base64, and large payloads. Free, private, and works without uploading data." />
 <meta name="theme-color" content="#0b0d10" />
 <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
 <link rel="canonical" href="./base64.html" />
-<meta property="og:title" content="Base64 Encoder & Decoder — DevKit" />
+<meta property="og:title" content="Base64 Encoder & Decoder — DevToolsHive" />
 <meta property="og:description" content="Encode/decode Base64 in your browser. UTF-8 and URL-safe support." />
 <link rel="stylesheet" href="../assets/css/styles.css" />
-<script>(function(){try{var t=localStorage.getItem('devkit-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+<script>(function(){try{var t=localStorage.getItem('dth-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
 </head>
 <body>
 <div id="site-header"></div>
@@ -35,9 +35,12 @@
       <span id="status" class="status muted">Awaiting input</span>
     </div>
 
-    <div class="toolbar">
+    <div class="sticky-actions">
       <button class="btn btn-primary" onclick="run()">Convert <span class="kbd">⌘↵</span></button>
       <button class="btn" onclick="swap()">Swap ⇄</button>
+      <div class="toolbar-spacer"></div>
+      <span class="hint">⌘⇧C copy · ⌘L clear</span>
+      <button class="btn" onclick="copyOut()">Copy output</button>
       <button class="btn btn-ghost" onclick="clearAll()">Clear</button>
     </div>
 
@@ -77,6 +80,15 @@
       <p>Unlike many naive Base64 tools, this encoder correctly handles multi-byte UTF-8 characters — emoji, accented Latin, Cyrillic, CJK, and so on — by encoding the byte representation rather than the code points. Decoding will round-trip these characters losslessly.</p>
 
       <p>Need to encode for a query string instead? Use the <a href="url-encoder.html">URL encoder</a>.</p>
+
+      <h2>Frequently asked questions</h2>
+      <div class="faq">
+        <details open><summary>What is Base64 encoding used for?</summary><p>Base64 makes binary data safe to transport through text-only channels: HTTP headers, URLs, JSON payloads, JWTs, email attachments, and inline images in CSS or HTML.</p></details>
+        <details><summary>Why do I get "InvalidCharacterError" when decoding?</summary><p>The input contains characters outside the Base64 alphabet, or has the wrong padding. If your token uses <code>-</code> and <code>_</code>, enable URL-safe mode.</p></details>
+        <details><summary>Does Base64 encrypt my data?</summary><p>No. Base64 is encoding, not encryption. Anyone can decode it. Use it for transport safety only — never as a security measure.</p></details>
+        <details><summary>How do I decode a JWT with Base64?</summary><p>A JWT has three dot-separated parts. Copy the middle (payload) segment and decode it with URL-safe mode on. The result is JSON you can pretty-print in the <a href="json-formatter.html">JSON formatter</a>.</p></details>
+        <details><summary>Does this support UTF-8 characters like emoji?</summary><p>Yes. The encoder converts strings to UTF-8 bytes first, so emoji and CJK characters round-trip losslessly.</p></details>
+      </div>
     </section>
   </div>
 </main>
@@ -149,7 +161,7 @@ const live = debounce(run, 200);
 $in.addEventListener('input', live);
 $mode.addEventListener('change', () => { updateLabels(); run(); });
 $url.addEventListener('change', run);
-onShortcut('ctrl+enter', run);
+window.toolShortcuts = { process: run, copyOutput: copyOut, clearInput: clearAll };
 updateLabels();
 $in.focus();
 </script>
