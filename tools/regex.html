@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Regex Tester — Live Regular Expression Tester Online | DevKit</title>
+<meta name="description" content="Test regular expressions live with match highlighting, capture groups, and all flag combinations. Free online regex tester with instant feedback. Works in your browser." />
+<meta name="theme-color" content="#0b0d10" />
+<link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+<link rel="canonical" href="./regex.html" />
+<meta property="og:title" content="Regex Tester — DevKit" />
+<meta property="og:description" content="Test regular expressions live with match highlighting." />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+<script>(function(){try{var t=localStorage.getItem('devkit-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+</head>
+<body>
+<div id="site-header"></div>
+
+<main>
+  <div class="container">
+    <div class="tool-header">
+      <div class="breadcrumb"><a href="../index.html">Tools</a> / Regex Tester</div>
+      <h1>Regex Tester</h1>
+      <p>Build and test JavaScript regular expressions with live match highlighting and capture groups.</p>
+    </div>
+
+    <div class="input-row">
+      <label>/</label>
+      <input type="text" id="pattern" placeholder="pattern" style="font-size:14px;" />
+      <label>/</label>
+      <input type="text" id="flags" value="g" placeholder="gimsuy" style="flex:0 0 90px;" />
+      <div class="toolbar-spacer"></div>
+      <span id="status" class="status muted">Awaiting pattern</span>
+    </div>
+
+    <div class="toolbar" style="font-size:12px;color:var(--text-muted);">
+      <span>Flags:</span>
+      <label><input type="checkbox" data-flag="g" checked /> g (global)</label>
+      <label><input type="checkbox" data-flag="i" /> i (ignore case)</label>
+      <label><input type="checkbox" data-flag="m" /> m (multiline)</label>
+      <label><input type="checkbox" data-flag="s" /> s (dotall)</label>
+      <label><input type="checkbox" data-flag="u" /> u (unicode)</label>
+    </div>
+
+    <div class="io-grid">
+      <div class="io-panel">
+        <div class="io-head"><span>Test string</span></div>
+        <textarea id="input" spellcheck="false" placeholder="Paste text to test against the pattern…"></textarea>
+      </div>
+      <div class="io-panel">
+        <div class="io-head"><span id="matchCount">Matches</span>
+          <div class="io-actions"><button class="icon-btn" onclick="copyMatches()" title="Copy matches"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div>
+        </div>
+        <div id="highlighted" class="regex-output"></div>
+        <div id="matches" class="match-list" style="border-top:1px solid var(--border);max-height:240px;overflow:auto;"></div>
+      </div>
+    </div>
+
+    <section class="content">
+      <h2>About the regex tester</h2>
+      <p>Regular expressions are one of the most powerful — and least readable — tools in a developer's belt. A live <strong>regex tester</strong> shortens the feedback loop dramatically: you type a pattern and immediately see what it matches, what it captures, and where it fails. This tool uses the JavaScript regex engine, the same one your application code uses in browsers and Node.js.</p>
+
+      <h3>Flags at a glance</h3>
+      <ul>
+        <li><code>g</code> — find all matches (without it, only the first)</li>
+        <li><code>i</code> — case-insensitive matching</li>
+        <li><code>m</code> — <code>^</code> and <code>$</code> match line starts/ends instead of the whole string</li>
+        <li><code>s</code> — <code>.</code> matches newline characters too</li>
+        <li><code>u</code> — full Unicode mode (required for <code>\p{…}</code> properties)</li>
+      </ul>
+
+      <h3>Practical examples</h3>
+      <p>Extracting all email addresses from a text dump: <code>[\w.+-]+@[\w-]+\.[\w.-]+</code> with the <code>g</code> flag. Validating a hex color: <code>^#(?:[0-9a-fA-F]{3}){1,2}$</code>. Splitting CSV rows that may contain quoted commas: <code>"([^"]*)"|([^,]+)</code>.</p>
+
+      <h3>How matches are displayed</h3>
+      <p>The right-hand panel highlights every match in your test string and lists each match below with its index in the input. Capture groups are not highlighted separately, but they appear in the match list so you can verify your groupings. If your pattern is malformed, you'll see the exact error from the JavaScript engine — including the position of the offending character.</p>
+
+      <h3>Privacy</h3>
+      <p>All evaluation happens locally in your browser. Patterns and test strings are never transmitted, which makes this tool safe for testing against real production logs or user data.</p>
+    </section>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+<script src="../assets/js/common.js"></script>
+<script src="../assets/js/partials.js"></script>
+<script>
+const $pattern = document.getElementById('pattern');
+const $flags = document.getElementById('flags');
+const $input = document.getElementById('input');
+const $hl = document.getElementById('highlighted');
+const $matches = document.getElementById('matches');
+const $status = document.getElementById('status');
+const $matchCount = document.getElementById('matchCount');
+const $flagBoxes = document.querySelectorAll('[data-flag]');
+
+function escapeHtml(s) { return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function syncFlagsToText() {
+  let f = '';
+  $flagBoxes.forEach(b => { if (b.checked) f += b.dataset.flag; });
+  $flags.value = f;
+}
+function syncTextToFlags() {
+  const f = $flags.value;
+  $flagBoxes.forEach(b => { b.checked = f.includes(b.dataset.flag); });
+}
+
+function run() {
+  const pat = $pattern.value;
+  const flg = $flags.value;
+  const text = $input.value;
+  if (!pat) { $hl.innerHTML = escapeHtml(text); $matches.innerHTML=''; $matchCount.textContent='Matches'; $status.className='status muted'; $status.textContent='Awaiting pattern'; return; }
+  let re;
+  try { re = new RegExp(pat, flg.includes('g') ? flg : flg + 'g'); }
+  catch (e) { $hl.innerHTML = escapeHtml(text); $matches.innerHTML=''; $status.className='status err'; $status.textContent='Error: '+e.message; return; }
+
+  let html = '';
+  let last = 0;
+  const all = [];
+  let m;
+  let safety = 0;
+  while ((m = re.exec(text)) !== null) {
+    if (m.index === re.lastIndex) re.lastIndex++; // avoid infinite loop on zero-width
+    html += escapeHtml(text.slice(last, m.index)) + '<mark>' + escapeHtml(m[0]) + '</mark>';
+    last = m.index + m[0].length;
+    all.push({ index: m.index, value: m[0], groups: m.slice(1) });
+    if (++safety > 10000) break;
+  }
+  html += escapeHtml(text.slice(last));
+  $hl.innerHTML = html || '<span style="color:var(--text-dim);">No input</span>';
+
+  $matchCount.textContent = all.length + ' match' + (all.length === 1 ? '' : 'es');
+  if (all.length === 0) { $matches.innerHTML = '<span style="color:var(--text-dim);">No matches</span>'; }
+  else {
+    $matches.innerHTML = all.slice(0, 200).map((m,i) =>
+      '<div class="match-item"><span class="match-num">#'+i+'</span><span style="color:var(--text);">'+escapeHtml(m.value)+'</span>'+
+      (m.groups.length ? '<div style="margin-top:4px;color:var(--text-dim);font-size:12px;">groups: ['+m.groups.map(g=>g===undefined?'undefined':JSON.stringify(g)).join(', ')+']</div>' : '') +
+      '</div>'
+    ).join('') + (all.length > 200 ? '<div style="padding:6px 0;color:var(--text-dim);">…and '+(all.length-200)+' more</div>' : '');
+  }
+  $status.className = 'status ' + (all.length ? 'ok' : 'muted');
+  $status.textContent = all.length ? 'Valid · '+all.length+' match'+(all.length===1?'':'es') : 'Valid · no matches';
+}
+
+function copyMatches() {
+  const t = [...document.querySelectorAll('.match-item')].map(el => el.querySelector('span:nth-child(2)').textContent).join('\n');
+  if (t) copyText(t, 'Matches copied'); else showToast('No matches');
+}
+
+const live = debounce(run, 100);
+$pattern.addEventListener('input', live);
+$flags.addEventListener('input', () => { syncTextToFlags(); run(); });
+$input.addEventListener('input', live);
+$flagBoxes.forEach(b => b.addEventListener('change', () => { syncFlagsToText(); run(); }));
+
+// Sample
+$pattern.value = '\\b\\w+@\\w+\\.\\w+\\b';
+$input.value = 'Contact us at hello@devkit.io or support@example.com — we reply fast.';
+syncTextToFlags(); run();
+$pattern.focus();
+</script>
+</body>
+</html>

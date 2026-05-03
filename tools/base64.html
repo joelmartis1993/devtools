@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Base64 Encoder & Decoder — Free Online Tool | DevKit</title>
+<meta name="description" content="Encode and decode Base64 strings instantly online. Supports UTF-8, URL-safe Base64, and large payloads. Free, private, and works without uploading data." />
+<meta name="theme-color" content="#0b0d10" />
+<link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+<link rel="canonical" href="./base64.html" />
+<meta property="og:title" content="Base64 Encoder & Decoder — DevKit" />
+<meta property="og:description" content="Encode/decode Base64 in your browser. UTF-8 and URL-safe support." />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+<script>(function(){try{var t=localStorage.getItem('devkit-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+</head>
+<body>
+<div id="site-header"></div>
+
+<main>
+  <div class="container">
+    <div class="tool-header">
+      <div class="breadcrumb"><a href="../index.html">Tools</a> / Base64</div>
+      <h1>Base64 Encoder / Decoder</h1>
+      <p>Convert text to and from Base64. Supports UTF-8 characters and URL-safe variants.</p>
+    </div>
+
+    <div class="input-row">
+      <label for="mode">Mode:</label>
+      <select id="mode" style="flex:0 0 auto;min-width:130px;">
+        <option value="encode">Encode → Base64</option>
+        <option value="decode">Decode ← Base64</option>
+      </select>
+      <label style="margin-left:8px;"><input type="checkbox" id="urlsafe" /> URL-safe</label>
+      <div class="toolbar-spacer"></div>
+      <span id="status" class="status muted">Awaiting input</span>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn btn-primary" onclick="run()">Convert <span class="kbd">⌘↵</span></button>
+      <button class="btn" onclick="swap()">Swap ⇄</button>
+      <button class="btn btn-ghost" onclick="clearAll()">Clear</button>
+    </div>
+
+    <div class="io-grid">
+      <div class="io-panel">
+        <div class="io-head"><span id="inLabel">Plain text</span>
+          <div class="io-actions"><button class="icon-btn" onclick="pasteIn()" title="Paste"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M5 6h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/></svg></button></div>
+        </div>
+        <textarea id="input" spellcheck="false" placeholder="Type or paste text…"></textarea>
+      </div>
+      <div class="io-panel">
+        <div class="io-head"><span id="outLabel">Base64</span>
+          <div class="io-actions">
+            <button class="icon-btn" onclick="copyOut()" title="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+          </div>
+        </div>
+        <textarea id="output" spellcheck="false" readonly placeholder="Result appears here"></textarea>
+      </div>
+    </div>
+
+    <section class="content">
+      <h2>About Base64 encoding</h2>
+      <p>Base64 is a binary-to-text encoding that represents arbitrary bytes using 64 printable ASCII characters. It's used everywhere in modern web development: embedding small images in CSS as <code>data:</code> URIs, storing binary fields in JSON, signing JWT tokens, and transmitting credentials in HTTP <code>Authorization</code> headers.</p>
+
+      <h3>Encode vs decode</h3>
+      <p>Use <strong>encode</strong> to turn human-readable text or binary data into a transport-safe ASCII string. Use <strong>decode</strong> to reverse the operation. The optional <strong>URL-safe</strong> mode replaces the characters <code>+</code> and <code>/</code> with <code>-</code> and <code>_</code> and removes padding — the variant required by JWT, OAuth, and most URL-embedded tokens.</p>
+
+      <h3>Practical examples</h3>
+      <ul>
+        <li>Decoding a JWT payload to inspect its claims (paste the middle segment).</li>
+        <li>Building a Basic Auth header: encode <code>username:password</code> and prefix with <code>Basic&nbsp;</code>.</li>
+        <li>Inspecting <code>data:image/png;base64,…</code> blobs from CSS or HTML.</li>
+        <li>Sending UTF-8 strings through systems that mangle non-ASCII bytes.</li>
+      </ul>
+
+      <h3>UTF-8 handling</h3>
+      <p>Unlike many naive Base64 tools, this encoder correctly handles multi-byte UTF-8 characters — emoji, accented Latin, Cyrillic, CJK, and so on — by encoding the byte representation rather than the code points. Decoding will round-trip these characters losslessly.</p>
+
+      <p>Need to encode for a query string instead? Use the <a href="url-encoder.html">URL encoder</a>.</p>
+    </section>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+<script src="../assets/js/common.js"></script>
+<script src="../assets/js/partials.js"></script>
+<script>
+const $in = document.getElementById('input');
+const $out = document.getElementById('output');
+const $mode = document.getElementById('mode');
+const $url = document.getElementById('urlsafe');
+const $status = document.getElementById('status');
+const $inLabel = document.getElementById('inLabel');
+const $outLabel = document.getElementById('outLabel');
+
+function setStatus(m, t) { $status.className = 'status ' + (t || 'muted'); $status.textContent = m; }
+
+function utf8ToB64(str) {
+  const bytes = new TextEncoder().encode(str);
+  let bin = '';
+  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin);
+}
+function b64ToUtf8(str) {
+  const bin = atob(str);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+}
+function toUrlSafe(b) { return b.replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+function fromUrlSafe(b) {
+  let s = b.replace(/-/g,'+').replace(/_/g,'/');
+  while (s.length % 4) s += '=';
+  return s;
+}
+
+function updateLabels() {
+  if ($mode.value === 'encode') { $inLabel.textContent = 'Plain text'; $outLabel.textContent = 'Base64'; }
+  else { $inLabel.textContent = 'Base64'; $outLabel.textContent = 'Plain text'; }
+}
+
+function run() {
+  const v = $in.value;
+  if (!v) { $out.value = ''; setStatus('Awaiting input', 'muted'); return; }
+  try {
+    if ($mode.value === 'encode') {
+      let r = utf8ToB64(v);
+      if ($url.checked) r = toUrlSafe(r);
+      $out.value = r;
+      setStatus('Encoded · ' + r.length + ' chars', 'ok');
+    } else {
+      let s = v.trim();
+      if ($url.checked || /[-_]/.test(s)) s = fromUrlSafe(s);
+      $out.value = b64ToUtf8(s);
+      setStatus('Decoded · ' + $out.value.length + ' chars', 'ok');
+    }
+  } catch (e) {
+    $out.value = '';
+    setStatus('Invalid Base64: ' + e.message, 'err');
+  }
+}
+
+function clearAll() { $in.value = $out.value = ''; setStatus('Awaiting input', 'muted'); $in.focus(); }
+function copyOut() { copyText($out.value, 'Copied'); }
+function swap() { const a = $in.value, b = $out.value; $in.value = b; $mode.value = $mode.value === 'encode' ? 'decode' : 'encode'; updateLabels(); run(); }
+async function pasteIn() { try { $in.value = await navigator.clipboard.readText(); run(); } catch { showToast('Clipboard blocked'); } }
+
+const live = debounce(run, 200);
+$in.addEventListener('input', live);
+$mode.addEventListener('change', () => { updateLabels(); run(); });
+$url.addEventListener('change', run);
+onShortcut('ctrl+enter', run);
+updateLabels();
+$in.focus();
+</script>
+</body>
+</html>

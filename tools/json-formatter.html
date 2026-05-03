@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>JSON Formatter & Validator — Format JSON Online Free | DevKit</title>
+<meta name="description" content="Free online JSON formatter, beautifier, validator, and minifier. Pretty-print JSON with custom indentation, validate syntax instantly, and copy or download the result. Works entirely in your browser." />
+<meta name="theme-color" content="#0b0d10" />
+<link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+<link rel="canonical" href="./json-formatter.html" />
+<meta property="og:title" content="JSON Formatter & Validator — DevKit" />
+<meta property="og:description" content="Format, validate, and minify JSON online. Free and private." />
+<meta property="og:type" content="website" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+<script>(function(){try{var t=localStorage.getItem('devkit-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"JSON Formatter","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0"}}
+</script>
+</head>
+<body>
+<div id="site-header"></div>
+
+<main>
+  <div class="container">
+    <div class="tool-header">
+      <div class="breadcrumb"><a href="../index.html">Tools</a> / JSON Formatter</div>
+      <h1>JSON Formatter & Validator</h1>
+      <p>Pretty-print, minify, and validate JSON instantly. Errors are pinpointed with line and column.</p>
+    </div>
+
+    <div class="input-row">
+      <label for="indent">Indent:</label>
+      <select id="indent" style="flex:0 0 auto;min-width:90px;">
+        <option value="2">2 spaces</option>
+        <option value="4">4 spaces</option>
+        <option value="\t">Tab</option>
+      </select>
+      <div class="toolbar-spacer"></div>
+      <span id="status" class="status muted">Awaiting input</span>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn btn-primary" onclick="doFormat()">Format <span class="kbd">⌘↵</span></button>
+      <button class="btn" onclick="doMinify()">Minify</button>
+      <button class="btn" onclick="loadSample()">Sample</button>
+      <button class="btn btn-ghost" onclick="clearAll()">Clear</button>
+    </div>
+
+    <div class="io-grid">
+      <div class="io-panel">
+        <div class="io-head">
+          <span>Input</span>
+          <div class="io-actions">
+            <button class="icon-btn" onclick="pasteIn()" title="Paste"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M5 6h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/></svg></button>
+          </div>
+        </div>
+        <textarea id="input" spellcheck="false" placeholder='Paste JSON here, e.g. {"name":"DevKit","tools":7}'></textarea>
+      </div>
+      <div class="io-panel">
+        <div class="io-head">
+          <span>Output</span>
+          <div class="io-actions">
+            <button class="icon-btn" onclick="copyOut()" title="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+            <button class="icon-btn" onclick="downloadOut()" title="Download"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button>
+          </div>
+        </div>
+        <textarea id="output" spellcheck="false" readonly placeholder="Formatted JSON appears here"></textarea>
+      </div>
+    </div>
+
+    <section class="content">
+      <h2>About the JSON Formatter</h2>
+      <p>JSON (JavaScript Object Notation) is the lingua franca of modern web APIs, configuration files, and structured logs. A good <strong>online JSON formatter</strong> is something every developer reaches for daily — to inspect an unreadable single-line response, to validate a hand-written config before deploying, or to spot the trailing comma that broke a build.</p>
+
+      <h3>What this tool does</h3>
+      <ul>
+        <li><strong>Beautifies</strong> minified JSON with configurable indentation (2 spaces, 4 spaces, or tabs).</li>
+        <li><strong>Minifies</strong> formatted JSON down to a single line for transport or storage.</li>
+        <li><strong>Validates</strong> structure and reports the exact position of syntax errors.</li>
+        <li>Runs entirely in your browser — sensitive payloads never leave your machine.</li>
+      </ul>
+
+      <h3>How developers use it</h3>
+      <p>Common workflows include pretty-printing a response from <code>curl</code>, debugging a webhook payload, cleaning up <code>package.json</code>, or stripping whitespace from a JSON Web Token claim before encoding. Because the tool is fully client-side, it's safe for inspecting tokens, secrets, or production data.</p>
+
+      <h3>Practical example</h3>
+      <p>Paste <code>{"user":{"id":42,"name":"Ada","tags":["admin","beta"]}}</code> and click <strong>Format</strong> to get a clean, indented tree. If you accidentally include <code>{"a": 1,}</code> with a trailing comma, the validator will tell you exactly where the parser failed so you can fix it in seconds.</p>
+
+      <h3>Keyboard shortcuts</h3>
+      <ul>
+        <li><span class="kbd">Ctrl</span> / <span class="kbd">⌘</span> + <span class="kbd">Enter</span> — format the input</li>
+        <li>Type to <strong>auto-format</strong> after a brief pause</li>
+      </ul>
+      <p>Looking for related utilities? Try the <a href="base64.html">Base64 encoder</a>, <a href="url-encoder.html">URL encoder</a>, or <a href="regex.html">regex tester</a>.</p>
+    </section>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+<script src="../assets/js/common.js"></script>
+<script src="../assets/js/partials.js"></script>
+<script>
+const $in = document.getElementById('input');
+const $out = document.getElementById('output');
+const $status = document.getElementById('status');
+const $indent = document.getElementById('indent');
+
+function setStatus(msg, type) {
+  $status.className = 'status ' + (type || 'muted');
+  $status.textContent = msg;
+}
+
+function getIndent() {
+  const v = $indent.value;
+  return v === '\\t' ? '\t' : parseInt(v, 10);
+}
+
+function format(minify) {
+  const txt = $in.value.trim();
+  if (!txt) { $out.value = ''; setStatus('Awaiting input', 'muted'); return; }
+  try {
+    const parsed = JSON.parse(txt);
+    $out.value = minify ? JSON.stringify(parsed) : JSON.stringify(parsed, null, getIndent());
+    const size = new Blob([$out.value]).size;
+    setStatus('Valid JSON · ' + size + ' B', 'ok');
+  } catch (e) {
+    $out.value = '';
+    // Extract position from error
+    const m = /position (\d+)/i.exec(e.message);
+    let pos = m ? parseInt(m[1], 10) : -1;
+    let where = '';
+    if (pos >= 0) {
+      const before = txt.slice(0, pos);
+      const line = before.split('\n').length;
+      const col = pos - before.lastIndexOf('\n');
+      where = ' (line ' + line + ', col ' + col + ')';
+    }
+    setStatus('Error: ' + e.message.replace(/^JSON\.parse:\s*/, '') + where, 'err');
+  }
+}
+
+function doFormat() { format(false); }
+function doMinify() { format(true); }
+function clearAll() { $in.value = ''; $out.value = ''; setStatus('Awaiting input', 'muted'); $in.focus(); }
+function copyOut() { copyText($out.value, 'JSON copied'); }
+function downloadOut() {
+  if (!$out.value) { showToast('Nothing to download'); return; }
+  downloadText($out.value, 'formatted.json', 'application/json');
+}
+async function pasteIn() {
+  try { $in.value = await navigator.clipboard.readText(); format(false); } catch { showToast('Clipboard blocked'); }
+}
+function loadSample() {
+  $in.value = '{"app":"DevKit","version":"1.0.0","tools":[{"name":"JSON","slug":"json-formatter"},{"name":"Base64","slug":"base64"}],"meta":{"private":false,"tags":["dev","free"]}}';
+  format(false);
+}
+
+const live = debounce(() => format(false), 250);
+$in.addEventListener('input', live);
+$indent.addEventListener('change', () => format(false));
+onShortcut('ctrl+enter', doFormat);
+$in.focus();
+</script>
+</body>
+</html>
