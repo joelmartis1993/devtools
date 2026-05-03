@@ -1,128 +1,269 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Text Case Converter — camelCase, snake_case, PascalCase | DevToolsHive</title>
-<meta name="description" content="Convert text between camelCase, snake_case, PascalCase, kebab-case, CONSTANT_CASE, Title Case, and more. Free online case converter with instant results and copy buttons." />
-<meta name="theme-color" content="#0b0d10" />
-<link rel="icon" href="../favicon.svg" type="image/svg+xml" />
-<link rel="canonical" href="./case-converter.html" />
-<meta property="og:title" content="Text Case Converter — DevToolsHive" />
-<meta property="og:description" content="Convert between camelCase, snake_case, PascalCase, kebab-case and more." />
-<link rel="stylesheet" href="../assets/css/styles.css" />
-<script>(function(){try{var t=localStorage.getItem('dth-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
-</head>
-<body>
-<div id="site-header"></div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>
+      Text Case Converter — camelCase, snake_case, PascalCase | DevToolsHive
+    </title>
+    <meta
+      name="description"
+      content="Convert text between camelCase, snake_case, PascalCase, kebab-case, CONSTANT_CASE, Title Case, and more. Free online case converter with instant results and copy buttons."
+    />
+    <meta name="theme-color" content="#0b0d10" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href="./case-converter.html" />
+    <meta property="og:title" content="Text Case Converter — DevToolsHive" />
+    <meta
+      property="og:description"
+      content="Convert between camelCase, snake_case, PascalCase, kebab-case and more."
+    />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("dth-theme");
+          if (t === "light")
+            document.documentElement.setAttribute("data-theme", "light");
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="site-header"></div>
 
-<main>
-  <div class="container">
-    <div class="tool-header">
-      <div class="breadcrumb"><a href="../index.html">Tools</a> / Case Converter</div>
-      <h1>Text Case Converter</h1>
-      <p>Convert identifiers and sentences between every common naming convention at once.</p>
-    </div>
+    <main>
+      <div class="container">
+        <div class="tool-header">
+          <div class="breadcrumb">
+            <a href="../index.html">Tools</a> / Case Converter
+          </div>
+          <h1>Text Case Converter</h1>
+          <p>
+            Convert identifiers and sentences between every common naming
+            convention at once.
+          </p>
+        </div>
 
-    <div class="io-panel" style="margin-bottom:14px;">
-      <div class="io-head"><span>Input</span>
-        <div class="io-actions"><button class="icon-btn" onclick="pasteIn()" title="Paste"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M5 6h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/></svg></button></div>
+        <div class="io-panel" style="margin-bottom: 14px">
+          <div class="io-head">
+            <span>Input</span>
+            <div class="io-actions">
+              <button class="icon-btn" onclick="pasteIn()" title="Paste">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="9" y="2" width="6" height="4" rx="1" />
+                  <path
+                    d="M5 6h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <textarea
+            id="input"
+            spellcheck="false"
+            style="min-height: 120px"
+            placeholder='Type any text — e.g. "user profile settings" or "getUserById"'
+          ></textarea>
+        </div>
+
+        <div class="io-panel">
+          <div class="io-head"><span>All conversions</span></div>
+          <div id="results" class="case-results"></div>
+        </div>
+
+        <section class="content">
+          <h2>About text case conversion</h2>
+          <p>
+            Programming languages and ecosystems each have their own preferred
+            naming convention, and converting between them is a tedious daily
+            chore. JavaScript favors <strong>camelCase</strong>, Python uses
+            <strong>snake_case</strong>, CSS classes are typically
+            <strong>kebab-case</strong>, environment variables are
+            <strong>CONSTANT_CASE</strong>, and React components are
+            <strong>PascalCase</strong>. This tool converts your input into all
+            of them simultaneously so you can copy the one you need.
+          </p>
+
+          <h3>Supported conventions</h3>
+          <ul>
+            <li>
+              <strong>camelCase</strong> — JavaScript variables, JSON keys, Java
+              methods
+            </li>
+            <li>
+              <strong>PascalCase</strong> — class names, React components, type
+              names
+            </li>
+            <li><strong>snake_case</strong> — Python, Ruby, SQL columns</li>
+            <li>
+              <strong>kebab-case</strong> — CSS classes, URL slugs, CLI flags
+            </li>
+            <li>
+              <strong>CONSTANT_CASE</strong> — environment variables, constants
+            </li>
+            <li>
+              <strong>Title Case</strong> — headings and user-visible labels
+            </li>
+            <li><strong>Sentence case</strong> — natural prose</li>
+            <li>
+              <strong>UPPER</strong> / <strong>lower</strong> — when you just
+              need to flatten
+            </li>
+          </ul>
+
+          <h3>How the splitter works</h3>
+          <p>
+            The converter splits your input into words by detecting boundaries:
+            existing dashes, underscores, spaces, and the transition between a
+            lowercase letter and an uppercase letter. That means it understands
+            all of <code>"hello world"</code>, <code>"helloWorld"</code>,
+            <code>"hello-world"</code>, and <code>"hello_world"</code> as the
+            same two-word phrase, and converts them consistently.
+          </p>
+
+          <h3>Practical examples</h3>
+          <p>
+            Pasting <code>userProfileSettings</code> gives you
+            <code>user_profile_settings</code> for your Python backend,
+            <code>user-profile-settings</code> for the matching CSS class, and
+            <code>USER_PROFILE_SETTINGS</code> for the environment variable that
+            controls the feature flag — all without typing any of them by hand.
+          </p>
+
+          <h2>Frequently asked questions</h2>
+          <div class="faq">
+            <details open>
+              <summary>How does the splitter detect words?</summary>
+              <p>
+                It looks for transitions between lower- and upper-case letters,
+                plus dashes, underscores, dots, slashes, and whitespace. So
+                <code>helloWorld</code>, <code>hello_world</code>, and
+                <code>hello-world</code> all become the same two-word phrase.
+              </p>
+            </details>
+            <details>
+              <summary>
+                Which case should I use for JavaScript variables?
+              </summary>
+              <p>
+                camelCase for variables and functions; PascalCase for classes
+                and React components; CONSTANT_CASE for true constants.
+              </p>
+            </details>
+            <details>
+              <summary>Are acronyms handled correctly?</summary>
+              <p>
+                Acronyms in input like <code>parseHTML</code> split as
+                <code>parse + html</code>. The output is then re-cased per
+                convention.
+              </p>
+            </details>
+          </div>
+        </section>
       </div>
-      <textarea id="input" spellcheck="false" style="min-height:120px;" placeholder='Type any text — e.g. "user profile settings" or "getUserById"'></textarea>
-    </div>
+    </main>
 
-    <div class="io-panel">
-      <div class="io-head"><span>All conversions</span></div>
-      <div id="results" class="case-results"></div>
-    </div>
+    <div id="site-footer"></div>
+    <script src="../assets/js/common.js"></script>
+    <script src="../assets/js/partials.js"></script>
+    <script>
+      const $in = document.getElementById("input");
+      const $res = document.getElementById("results");
 
-    <section class="content">
-      <h2>About text case conversion</h2>
-      <p>Programming languages and ecosystems each have their own preferred naming convention, and converting between them is a tedious daily chore. JavaScript favors <strong>camelCase</strong>, Python uses <strong>snake_case</strong>, CSS classes are typically <strong>kebab-case</strong>, environment variables are <strong>CONSTANT_CASE</strong>, and React components are <strong>PascalCase</strong>. This tool converts your input into all of them simultaneously so you can copy the one you need.</p>
+      function splitWords(s) {
+        if (!s) return [];
+        return s
+          .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+          .replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2")
+          .split(/[\s_\-./]+/)
+          .filter(Boolean)
+          .map((w) => w.toLowerCase());
+      }
 
-      <h3>Supported conventions</h3>
-      <ul>
-        <li><strong>camelCase</strong> — JavaScript variables, JSON keys, Java methods</li>
-        <li><strong>PascalCase</strong> — class names, React components, type names</li>
-        <li><strong>snake_case</strong> — Python, Ruby, SQL columns</li>
-        <li><strong>kebab-case</strong> — CSS classes, URL slugs, CLI flags</li>
-        <li><strong>CONSTANT_CASE</strong> — environment variables, constants</li>
-        <li><strong>Title Case</strong> — headings and user-visible labels</li>
-        <li><strong>Sentence case</strong> — natural prose</li>
-        <li><strong>UPPER</strong> / <strong>lower</strong> — when you just need to flatten</li>
-      </ul>
+      const conversions = {
+        camelCase: (w) => (w.length ? w[0] + w.slice(1).map(cap).join("") : ""),
+        PascalCase: (w) => w.map(cap).join(""),
+        snake_case: (w) => w.join("_"),
+        CONSTANT_CASE: (w) => w.join("_").toUpperCase(),
+        "kebab-case": (w) => w.join("-"),
+        "Train-Case": (w) => w.map(cap).join("-"),
+        "dot.case": (w) => w.join("."),
+        "path/case": (w) => w.join("/"),
+        "Title Case": (w) => w.map(cap).join(" "),
+        "Sentence case": (w) =>
+          w.length
+            ? cap(w[0]) + (w.length > 1 ? " " + w.slice(1).join(" ") : "")
+            : "",
+        "lower case": (w) => w.join(" "),
+        "UPPER CASE": (w) => w.join(" ").toUpperCase(),
+      };
 
-      <h3>How the splitter works</h3>
-      <p>The converter splits your input into words by detecting boundaries: existing dashes, underscores, spaces, and the transition between a lowercase letter and an uppercase letter. That means it understands all of <code>"hello world"</code>, <code>"helloWorld"</code>, <code>"hello-world"</code>, and <code>"hello_world"</code> as the same two-word phrase, and converts them consistently.</p>
+      function cap(s) {
+        return s ? s[0].toUpperCase() + s.slice(1) : s;
+      }
 
-      <h3>Practical examples</h3>
-      <p>Pasting <code>userProfileSettings</code> gives you <code>user_profile_settings</code> for your Python backend, <code>user-profile-settings</code> for the matching CSS class, and <code>USER_PROFILE_SETTINGS</code> for the environment variable that controls the feature flag — all without typing any of them by hand.</p>
+      function escapeHtml(s) {
+        return s.replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
 
-      <h2>Frequently asked questions</h2>
-      <div class="faq">
-        <details open><summary>How does the splitter detect words?</summary><p>It looks for transitions between lower- and upper-case letters, plus dashes, underscores, dots, slashes, and whitespace. So <code>helloWorld</code>, <code>hello_world</code>, and <code>hello-world</code> all become the same two-word phrase.</p></details>
-        <details><summary>Which case should I use for JavaScript variables?</summary><p>camelCase for variables and functions; PascalCase for classes and React components; CONSTANT_CASE for true constants.</p></details>
-        <details><summary>Are acronyms handled correctly?</summary><p>Acronyms in input like <code>parseHTML</code> split as <code>parse + html</code>. The output is then re-cased per convention.</p></details>
-      </div>
-    </section>
-  </div>
-</main>
+      function run() {
+        const words = splitWords($in.value);
+        let html = "";
+        for (const [name, fn] of Object.entries(conversions)) {
+          const out = words.length ? fn(words) : "";
+          html +=
+            '<div class="case-item"><div class="case-label">' +
+            name +
+            '<button class="icon-btn" onclick="copyText(this.parentElement.nextElementSibling.textContent,\'Copied\')" title="Copy"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"9\" y=\"9\" width=\"13\" height=\"13\" rx=\"2\"/><path d=\"M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1\"/></svg></button>' +
+            '</div><div class="case-value">' +
+            (out
+              ? escapeHtml(out)
+              : '<span style="color:var(--text-dim);">—</span>') +
+            "</div></div>";
+        }
+        $res.innerHTML = html;
+      }
 
-<div id="site-footer"></div>
-<script src="../assets/js/common.js"></script>
-<script src="../assets/js/partials.js"></script>
-<script>
-const $in = document.getElementById('input');
-const $res = document.getElementById('results');
+      async function pasteIn() {
+        try {
+          $in.value = await navigator.clipboard.readText();
+          run();
+        } catch {
+          showToast("Clipboard blocked");
+        }
+      }
 
-function splitWords(s) {
-  if (!s) return [];
-  return s
-    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
-    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
-    .split(/[\s_\-./]+/)
-    .filter(Boolean)
-    .map(w => w.toLowerCase());
-}
-
-const conversions = {
-  'camelCase':       w => w.length ? w[0] + w.slice(1).map(cap).join('') : '',
-  'PascalCase':      w => w.map(cap).join(''),
-  'snake_case':      w => w.join('_'),
-  'CONSTANT_CASE':   w => w.join('_').toUpperCase(),
-  'kebab-case':      w => w.join('-'),
-  'Train-Case':      w => w.map(cap).join('-'),
-  'dot.case':        w => w.join('.'),
-  'path/case':       w => w.join('/'),
-  'Title Case':      w => w.map(cap).join(' '),
-  'Sentence case':   w => w.length ? cap(w[0]) + (w.length>1 ? ' ' + w.slice(1).join(' ') : '') : '',
-  'lower case':      w => w.join(' '),
-  'UPPER CASE':      w => w.join(' ').toUpperCase()
-};
-
-function cap(s) { return s ? s[0].toUpperCase() + s.slice(1) : s; }
-
-function escapeHtml(s) { return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-function run() {
-  const words = splitWords($in.value);
-  let html = '';
-  for (const [name, fn] of Object.entries(conversions)) {
-    const out = words.length ? fn(words) : '';
-    html += '<div class="case-item"><div class="case-label">'+name+
-      '<button class="icon-btn" onclick="copyText(this.parentElement.nextElementSibling.textContent,\'Copied\')" title="Copy"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"9\" y=\"9\" width=\"13\" height=\"13\" rx=\"2\"/><path d=\"M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1\"/></svg></button>'+
-      '</div><div class="case-value">'+(out ? escapeHtml(out) : '<span style="color:var(--text-dim);">—</span>')+'</div></div>';
-  }
-  $res.innerHTML = html;
-}
-
-async function pasteIn() { try { $in.value = await navigator.clipboard.readText(); run(); } catch { showToast('Clipboard blocked'); } }
-
-$in.addEventListener('input', debounce(run, 100));
-$in.value = 'user profile settings';
-run();
-$in.focus();
-window.toolShortcuts = { process: run, copyOutput: () => copyText($in.value, 'Input copied'), clearInput: () => { $in.value=''; run(); $in.focus(); } };
-</script>
-</body>
+      $in.addEventListener("input", debounce(run, 100));
+      $in.value = "user profile settings";
+      run();
+      $in.focus();
+      window.toolShortcuts = {
+        process: run,
+        copyOutput: () => copyText($in.value, "Input copied"),
+        clearInput: () => {
+          $in.value = "";
+          run();
+          $in.focus();
+        },
+      };
+    </script>
+  </body>
 </html>

@@ -1,138 +1,302 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>URL Encoder & Decoder — Percent Encode Online Free | DevToolsHive</title>
-<meta name="description" content="Free online URL encoder and decoder. Percent-encode query strings, path segments, and form values. Switch between component-level and full-URI encoding instantly." />
-<meta name="theme-color" content="#0b0d10" />
-<link rel="icon" href="../favicon.svg" type="image/svg+xml" />
-<link rel="canonical" href="./url-encoder.html" />
-<meta property="og:title" content="URL Encoder & Decoder — DevToolsHive" />
-<meta property="og:description" content="Percent-encode/decode URL components in your browser." />
-<link rel="stylesheet" href="../assets/css/styles.css" />
-<script>(function(){try{var t=localStorage.getItem('dth-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
-</head>
-<body>
-<div id="site-header"></div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>
+      URL Encoder & Decoder — Percent Encode Online Free | DevToolsHive
+    </title>
+    <meta
+      name="description"
+      content="Free online URL encoder and decoder. Percent-encode query strings, path segments, and form values. Switch between component-level and full-URI encoding instantly."
+    />
+    <meta name="theme-color" content="#0b0d10" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href="./url-encoder.html" />
+    <meta property="og:title" content="URL Encoder & Decoder — DevToolsHive" />
+    <meta
+      property="og:description"
+      content="Percent-encode/decode URL components in your browser."
+    />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("dth-theme");
+          if (t === "light")
+            document.documentElement.setAttribute("data-theme", "light");
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="site-header"></div>
 
-<main>
-  <div class="container">
-    <div class="tool-header">
-      <div class="breadcrumb"><a href="../index.html">Tools</a> / URL Encoder</div>
-      <h1>URL Encode / Decode</h1>
-      <p>Percent-encode strings for safe use in URLs, query parameters, and form bodies.</p>
-    </div>
-
-    <div class="input-row">
-      <label for="mode">Mode:</label>
-      <select id="mode" style="flex:0 0 auto;min-width:130px;">
-        <option value="encode">Encode</option>
-        <option value="decode">Decode</option>
-      </select>
-      <label for="scope">Scope:</label>
-      <select id="scope" style="flex:0 0 auto;min-width:160px;">
-        <option value="component">Component (encodeURIComponent)</option>
-        <option value="uri">Full URI (encodeURI)</option>
-      </select>
-      <div class="toolbar-spacer"></div>
-      <span id="status" class="status muted">Awaiting input</span>
-    </div>
-
-    <div class="sticky-actions">
-      <button class="btn btn-primary" onclick="run()">Convert <span class="kbd">⌘↵</span></button>
-      <button class="btn" onclick="swap()">Swap ⇄</button>
-      <div class="toolbar-spacer"></div>
-      <span class="hint">⌘⇧C copy · ⌘L clear</span>
-      <button class="btn" onclick="copyOut()">Copy output</button>
-      <button class="btn btn-ghost" onclick="clearAll()">Clear</button>
-    </div>
-
-    <div class="io-grid">
-      <div class="io-panel">
-        <div class="io-head"><span>Input</span>
-          <div class="io-actions"><button class="icon-btn" onclick="pasteIn()" title="Paste"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M5 6h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/></svg></button></div>
+    <main>
+      <div class="container">
+        <div class="tool-header">
+          <div class="breadcrumb">
+            <a href="../index.html">Tools</a> / URL Encoder
+          </div>
+          <h1>URL Encode / Decode</h1>
+          <p>
+            Percent-encode strings for safe use in URLs, query parameters, and
+            form bodies.
+          </p>
         </div>
-        <textarea id="input" spellcheck="false" placeholder="https://example.com/search?q=hello world"></textarea>
-      </div>
-      <div class="io-panel">
-        <div class="io-head"><span>Output</span>
-          <div class="io-actions"><button class="icon-btn" onclick="copyOut()" title="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div>
+
+        <div class="input-row">
+          <label for="mode">Mode:</label>
+          <select id="mode" style="flex: 0 0 auto; min-width: 130px">
+            <option value="encode">Encode</option>
+            <option value="decode">Decode</option>
+          </select>
+          <label for="scope">Scope:</label>
+          <select id="scope" style="flex: 0 0 auto; min-width: 160px">
+            <option value="component">Component (encodeURIComponent)</option>
+            <option value="uri">Full URI (encodeURI)</option>
+          </select>
+          <div class="toolbar-spacer"></div>
+          <span id="status" class="status muted">Awaiting input</span>
         </div>
-        <textarea id="output" spellcheck="false" readonly placeholder="Result appears here"></textarea>
+
+        <div class="sticky-actions">
+          <button class="btn btn-primary" onclick="run()">
+            Convert <span class="kbd">⌘↵</span>
+          </button>
+          <button class="btn" onclick="swap()">Swap ⇄</button>
+          <div class="toolbar-spacer"></div>
+          <span class="hint">⌘⇧C copy · ⌘L clear</span>
+          <button class="btn" onclick="copyOut()">Copy output</button>
+          <button class="btn btn-ghost" onclick="clearAll()">Clear</button>
+        </div>
+
+        <div class="io-grid">
+          <div class="io-panel">
+            <div class="io-head">
+              <span>Input</span>
+              <div class="io-actions">
+                <button class="icon-btn" onclick="pasteIn()" title="Paste">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect x="9" y="2" width="6" height="4" rx="1" />
+                    <path
+                      d="M5 6h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <textarea
+              id="input"
+              spellcheck="false"
+              placeholder="https://example.com/search?q=hello world"
+            ></textarea>
+          </div>
+          <div class="io-panel">
+            <div class="io-head">
+              <span>Output</span>
+              <div class="io-actions">
+                <button class="icon-btn" onclick="copyOut()" title="Copy">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect x="9" y="9" width="13" height="13" rx="2" />
+                    <path
+                      d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <textarea
+              id="output"
+              spellcheck="false"
+              readonly
+              placeholder="Result appears here"
+            ></textarea>
+          </div>
+        </div>
+
+        <section class="content">
+          <h2>About URL encoding</h2>
+          <p>
+            URL encoding (also called <strong>percent-encoding</strong>) is how
+            the web safely represents characters in a URL that would otherwise
+            have a special meaning — like <code>?</code>, <code>&amp;</code>,
+            <code>#</code>, spaces, or non-ASCII characters. Each problematic
+            byte is replaced by a <code>%</code> followed by its two-digit hex
+            value.
+          </p>
+
+          <h3>Component vs full URI</h3>
+          <p>
+            The <strong>Component</strong> mode (equivalent to JavaScript's
+            <code>encodeURIComponent</code>) encodes <em>everything</em> that
+            isn't a safe character — including <code>/</code>, <code>?</code>,
+            and <code>&amp;</code>. Use it for individual query values, path
+            segments, or form field values.
+          </p>
+          <p>
+            The <strong>Full URI</strong> mode (<code>encodeURI</code>)
+            preserves the structural characters of a URL, encoding only spaces
+            and other unsafe bytes. Use it when you have a complete URL and just
+            want to clean it up.
+          </p>
+
+          <h3>When developers reach for it</h3>
+          <ul>
+            <li>Building share links: <code>?text=Check%20this%20out</code></li>
+            <li>Constructing OAuth redirect URIs and signed callback URLs</li>
+            <li>Embedding user-supplied search queries into API requests</li>
+            <li>
+              Decoding access logs to read what visitors actually requested
+            </li>
+          </ul>
+
+          <h3>Practical example</h3>
+          <p>
+            Encoding the value <code>name=Ada Lovelace&amp;role=admin</code> in
+            component mode produces
+            <code>name%3DAda%20Lovelace%26role%3Dadmin</code>, which can be
+            safely used as a single query parameter without breaking the URL
+            structure.
+          </p>
+
+          <p>
+            For binary or token data, see the
+            <a href="base64.html">Base64 encoder</a>.
+          </p>
+
+          <h2>Frequently asked questions</h2>
+          <div class="faq">
+            <details open>
+              <summary>
+                When should I use encodeURIComponent vs encodeURI?
+              </summary>
+              <p>
+                Use <code>encodeURIComponent</code> for individual values inside
+                a URL (query params, path segments). Use
+                <code>encodeURI</code> when encoding a complete URL that already
+                contains structural characters like <code>:</code>,
+                <code>/</code>, and <code>?</code>.
+              </p>
+            </details>
+            <details>
+              <summary>
+                Why are spaces sometimes encoded as + and sometimes as %20?
+              </summary>
+              <p>
+                <code>+</code> is a legacy convention from
+                <code>application/x-www-form-urlencoded</code> form bodies.
+                Modern URL encoding uses <code>%20</code>. Both decode to a
+                space.
+              </p>
+            </details>
+            <details>
+              <summary>Is URL encoding the same as Base64?</summary>
+              <p>
+                No. URL encoding escapes individual unsafe characters; Base64
+                re-encodes arbitrary bytes into a 64-character ASCII alphabet.
+                Use Base64 for binary data, URL encoding for text in URLs.
+              </p>
+            </details>
+            <details>
+              <summary>Can I decode a URL safely?</summary>
+              <p>
+                Yes — decoding never executes anything. The tool runs entirely
+                in your browser; nothing is sent over the network.
+              </p>
+            </details>
+          </div>
+        </section>
       </div>
-    </div>
+    </main>
 
-    <section class="content">
-      <h2>About URL encoding</h2>
-      <p>URL encoding (also called <strong>percent-encoding</strong>) is how the web safely represents characters in a URL that would otherwise have a special meaning — like <code>?</code>, <code>&amp;</code>, <code>#</code>, spaces, or non-ASCII characters. Each problematic byte is replaced by a <code>%</code> followed by its two-digit hex value.</p>
+    <div id="site-footer"></div>
+    <script src="../assets/js/common.js"></script>
+    <script src="../assets/js/partials.js"></script>
+    <script>
+      const $in = document.getElementById("input");
+      const $out = document.getElementById("output");
+      const $mode = document.getElementById("mode");
+      const $scope = document.getElementById("scope");
+      const $status = document.getElementById("status");
 
-      <h3>Component vs full URI</h3>
-      <p>The <strong>Component</strong> mode (equivalent to JavaScript's <code>encodeURIComponent</code>) encodes <em>everything</em> that isn't a safe character — including <code>/</code>, <code>?</code>, and <code>&amp;</code>. Use it for individual query values, path segments, or form field values.</p>
-      <p>The <strong>Full URI</strong> mode (<code>encodeURI</code>) preserves the structural characters of a URL, encoding only spaces and other unsafe bytes. Use it when you have a complete URL and just want to clean it up.</p>
+      function setStatus(m, t) {
+        $status.className = "status " + (t || "muted");
+        $status.textContent = m;
+      }
 
-      <h3>When developers reach for it</h3>
-      <ul>
-        <li>Building share links: <code>?text=Check%20this%20out</code></li>
-        <li>Constructing OAuth redirect URIs and signed callback URLs</li>
-        <li>Embedding user-supplied search queries into API requests</li>
-        <li>Decoding access logs to read what visitors actually requested</li>
-      </ul>
+      function run() {
+        const v = $in.value;
+        if (!v) {
+          $out.value = "";
+          setStatus("Awaiting input", "muted");
+          return;
+        }
+        try {
+          if ($mode.value === "encode") {
+            $out.value =
+              $scope.value === "component"
+                ? encodeURIComponent(v)
+                : encodeURI(v);
+          } else {
+            $out.value =
+              $scope.value === "component"
+                ? decodeURIComponent(v)
+                : decodeURI(v);
+          }
+          setStatus("Done · " + $out.value.length + " chars", "ok");
+        } catch (e) {
+          $out.value = "";
+          setStatus("Error: " + e.message, "err");
+        }
+      }
 
-      <h3>Practical example</h3>
-      <p>Encoding the value <code>name=Ada Lovelace&amp;role=admin</code> in component mode produces <code>name%3DAda%20Lovelace%26role%3Dadmin</code>, which can be safely used as a single query parameter without breaking the URL structure.</p>
+      function clearAll() {
+        $in.value = $out.value = "";
+        setStatus("Awaiting input", "muted");
+        $in.focus();
+      }
+      function copyOut() {
+        copyText($out.value, "Copied");
+      }
+      function swap() {
+        const b = $out.value;
+        $in.value = b;
+        $mode.value = $mode.value === "encode" ? "decode" : "encode";
+        run();
+      }
+      async function pasteIn() {
+        try {
+          $in.value = await navigator.clipboard.readText();
+          run();
+        } catch {
+          showToast("Clipboard blocked");
+        }
+      }
 
-      <p>For binary or token data, see the <a href="base64.html">Base64 encoder</a>.</p>
-
-      <h2>Frequently asked questions</h2>
-      <div class="faq">
-        <details open><summary>When should I use encodeURIComponent vs encodeURI?</summary><p>Use <code>encodeURIComponent</code> for individual values inside a URL (query params, path segments). Use <code>encodeURI</code> when encoding a complete URL that already contains structural characters like <code>:</code>, <code>/</code>, and <code>?</code>.</p></details>
-        <details><summary>Why are spaces sometimes encoded as + and sometimes as %20?</summary><p><code>+</code> is a legacy convention from <code>application/x-www-form-urlencoded</code> form bodies. Modern URL encoding uses <code>%20</code>. Both decode to a space.</p></details>
-        <details><summary>Is URL encoding the same as Base64?</summary><p>No. URL encoding escapes individual unsafe characters; Base64 re-encodes arbitrary bytes into a 64-character ASCII alphabet. Use Base64 for binary data, URL encoding for text in URLs.</p></details>
-        <details><summary>Can I decode a URL safely?</summary><p>Yes — decoding never executes anything. The tool runs entirely in your browser; nothing is sent over the network.</p></details>
-      </div>
-    </section>
-  </div>
-</main>
-
-<div id="site-footer"></div>
-<script src="../assets/js/common.js"></script>
-<script src="../assets/js/partials.js"></script>
-<script>
-const $in = document.getElementById('input');
-const $out = document.getElementById('output');
-const $mode = document.getElementById('mode');
-const $scope = document.getElementById('scope');
-const $status = document.getElementById('status');
-
-function setStatus(m,t){$status.className='status '+(t||'muted');$status.textContent=m;}
-
-function run() {
-  const v = $in.value;
-  if (!v) { $out.value=''; setStatus('Awaiting input','muted'); return; }
-  try {
-    if ($mode.value === 'encode') {
-      $out.value = $scope.value === 'component' ? encodeURIComponent(v) : encodeURI(v);
-    } else {
-      $out.value = $scope.value === 'component' ? decodeURIComponent(v) : decodeURI(v);
-    }
-    setStatus('Done · ' + $out.value.length + ' chars', 'ok');
-  } catch (e) {
-    $out.value = '';
-    setStatus('Error: ' + e.message, 'err');
-  }
-}
-
-function clearAll(){$in.value=$out.value='';setStatus('Awaiting input','muted');$in.focus();}
-function copyOut(){copyText($out.value,'Copied');}
-function swap(){const b=$out.value;$in.value=b;$mode.value=$mode.value==='encode'?'decode':'encode';run();}
-async function pasteIn(){try{$in.value=await navigator.clipboard.readText();run();}catch{showToast('Clipboard blocked');}}
-
-$in.addEventListener('input', debounce(run, 150));
-$mode.addEventListener('change', run);
-$scope.addEventListener('change', run);
-window.toolShortcuts = { process: run, copyOutput: copyOut, clearInput: clearAll };
-$in.focus();
-</script>
-</body>
+      $in.addEventListener("input", debounce(run, 150));
+      $mode.addEventListener("change", run);
+      $scope.addEventListener("change", run);
+      window.toolShortcuts = {
+        process: run,
+        copyOutput: copyOut,
+        clearInput: clearAll,
+      };
+      $in.focus();
+    </script>
+  </body>
 </html>
