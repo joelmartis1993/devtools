@@ -1,102 +1,428 @@
 <!doctype html>
 <html lang="en" data-theme="dark">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>User Agent Parser Online — Decode Browser, OS &amp; Device | DevToolsHive</title>
-<meta name="description" content="Parse any User-Agent string into browser, engine, OS, device and bot info. Auto-detect your own. 100% client-side.">
-<link rel="canonical" href="https://devtoolshive.com/tools/user-agent.html">
-<link rel="alternate" hreflang="en" href="https://devtoolshive.com/tools/user-agent.html?lang=en" />
-    <link rel="alternate" hreflang="es" href="https://devtoolshive.com/tools/user-agent.html?lang=es" />
-    <link rel="alternate" hreflang="de" href="https://devtoolshive.com/tools/user-agent.html?lang=de" />
-    <link rel="alternate" hreflang="fr" href="https://devtoolshive.com/tools/user-agent.html?lang=fr" />
-    <link rel="alternate" hreflang="ja" href="https://devtoolshive.com/tools/user-agent.html?lang=ja" />
-    <link rel="alternate" hreflang="x-default" href="https://devtoolshive.com/tools/user-agent.html" />
-<meta property="og:type" content="website">
-<meta property="og:title" content="User Agent Parser Online — Decode Browser, OS &amp; Device | DevToolsHive">
-<meta property="og:description" content="Parse any User-Agent string into browser, engine, OS, device and bot info. Auto-detect your own. 100% client-side.">
-<meta property="og:url" content="https://devtoolshive.com/tools/user-agent.html">
-<meta property="og:image" content="https://devtoolshive.com/assets/img/favicon.svg">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="User Agent Parser Online — Decode Browser, OS &amp; Device | DevToolsHive">
-<meta name="twitter:description" content="Parse any User-Agent string into browser, engine, OS, device and bot info. Auto-detect your own. 100% client-side.">
-<meta name="twitter:image" content="https://devtoolshive.com/assets/img/favicon.svg">
-<meta name="robots" content="index,follow">
-<meta name="theme-color" content="#0b0d12">
-<link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
-<link rel="stylesheet" href="/assets/css/styles.css">
-<script src="/assets/js/theme.js"></script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "User Agent Parser Online", "applicationCategory": "DeveloperApplication", "operatingSystem": "Any (web)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "url": "https://devtoolshive.com/tools/user-agent.html"}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why do all browsers say 'Mozilla/5.0' at the start?", "acceptedAnswer": {"@type": "Answer", "text": "Historical compatibility \u2014 websites in the 1990s gated content on 'Mozilla', so every browser since pretends to be it."}}, {"@type": "Question", "name": "Can I trust the User-Agent for analytics?", "acceptedAnswer": {"@type": "Answer", "text": "Roughly, but it's user-controllable and increasingly frozen for privacy. For accurate device targeting, use Client Hints."}}, {"@type": "Question", "name": "How accurate is bot detection?", "acceptedAnswer": {"@type": "Answer", "text": "Common crawlers self-identify and are caught. Sophisticated scrapers spoof real browsers \u2014 UA alone is not a security signal."}}]}</script>
-</head>
-<body>
-<a class="skip-link" href="#main">Skip to content</a>
-<div id="site-header"></div>
-<main id="main" class="container tool-page">
-<div class="crumbs"><a href="/">Home</a> · <span data-i18n="nav.tools">Tools</span> · <span>User Agent Parser</span></div>
-<header class="tool-head"><h1 data-i18n="tool.user-agent.title">User Agent Parser</h1><p data-i18n="tool.user-agent.desc">Parse User-Agent strings into structured browser, OS and device information.</p></header>
-<div class="toolbar">
-<button class="btn" id="mine" data-i18n="ui.useMine">Use my User-Agent</button>
-<button class="btn" id="paste" data-i18n="ui.paste">Paste</button>
-<span class="spacer"></span>
-<button class="btn" id="copy" data-shortcut="copy">Copy as JSON</button>
-<button class="btn ghost danger" id="clear" data-shortcut="clear" data-i18n="ui.clear">Clear</button></div>
-<div class="pane"><div class="pane-head">User-Agent string</div>
-<textarea id="ua" autofocus spellcheck="false" rows="3" style="min-height:80px" placeholder="Mozilla/5.0 ..."></textarea></div>
-<div id="out" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin-top:14px"></div>
-<section class="content narrow"><h2>Parse User-Agent strings into browser, OS, device and bot info</h2>
-<p>The User-Agent string is a free-text header that browsers send with every HTTP request. It encodes the browser, rendering engine, operating system, device, and CPU architecture — but in a famously messy format that has accumulated decades of compatibility cruft. This parser extracts the structured fields and shows you what each piece means.</p>
-<h3>What it detects</h3>
-<ul><li><strong>Browser</strong> — Chrome, Firefox, Safari, Edge, Opera, plus version.</li>
-<li><strong>Engine</strong> — Blink, WebKit, Gecko, with version.</li>
-<li><strong>OS</strong> — Windows (with NT version mapped to 10/11/8.1/7), macOS, iOS, Android, Linux.</li>
-<li><strong>Device</strong> — mobile / tablet / desktop, vendor and model when available.</li>
-<li><strong>Bots</strong> — Googlebot, Bingbot, DuckDuckBot, Yandex, Baidu, Twitterbot, Facebookexternalhit and others.</li></ul>
-<h3>Privacy</h3><p>Parsing happens with regex in your browser — no UA strings are uploaded.</p><h2 data-i18n="ui.related">Related tools</h2><div class="related"><a href="/tools/regex.html" data-i18n="tool.regex.title">Regex Tester</a><a href="/tools/json-formatter.html" data-i18n="tool.json-formatter.title">JSON Formatter</a><a href="/tools/jwt-decoder.html" data-i18n="tool.jwt.title">JWT Decoder</a></div><h2 data-i18n=ui.faq>FAQ</h2><div class=faq><details class="faq-item"><summary>Why do all browsers say &#x27;Mozilla/5.0&#x27; at the start?</summary><div class="a">Historical compatibility — websites in the 1990s gated content on 'Mozilla', so every browser since pretends to be it.</div></details><details class="faq-item"><summary>Can I trust the User-Agent for analytics?</summary><div class="a">Roughly, but it's user-controllable and increasingly frozen for privacy. For accurate device targeting, use Client Hints.</div></details><details class="faq-item"><summary>How accurate is bot detection?</summary><div class="a">Common crawlers self-identify and are caught. Sophisticated scrapers spoof real browsers — UA alone is not a security signal.</div></details></div></section>
-</main>
-<div id="site-footer"></div>
-<script src="/assets/js/common.js"></script>
-<script src="/assets/js/i18n/translations.js"></script>
-<script src="/assets/js/i18n.js"></script>
-<script src="/assets/js/partials.js"></script>
-<script>const D=window.DTH,$=D.$;const UA=$('#ua'),OUT=$('#out');
-function parse(s){
-  const r={browser:{},engine:{},os:{},device:{},bot:false};
-  const bots=[/Googlebot/i,/Bingbot/i,/DuckDuckBot/i,/Baiduspider/i,/YandexBot/i,/Slurp/i,/facebookexternalhit/i,/Twitterbot/i];
-  for(const b of bots){const m=b.exec(s);if(m){r.bot=true;r.browser.name=m[0];return r;}}
-  const browsers=[['Edg','Edge'],['OPR','Opera'],['Opera','Opera'],['Chrome','Chrome'],['Firefox','Firefox'],['Safari','Safari']];
-  for(const [pat,name] of browsers){const m=new RegExp(pat+'\\/([\\d.]+)').exec(s);if(m){r.browser.name=name;r.browser.version=m[1];break;}}
-  if(/AppleWebKit\/[\d.]+/.test(s)){const m=/AppleWebKit\/([\d.]+)/.exec(s);r.engine.name=/Chrome|Edg|OPR/.test(s)?'Blink':'WebKit';r.engine.version=m[1];}
-  else if(/Gecko\//.test(s)){r.engine.name='Gecko';const m=/rv:([\d.]+)/.exec(s);if(m)r.engine.version=m[1];}
-  if(/Windows NT 10/.test(s)){r.os.name='Windows';r.os.version='10/11';}
-  else if(/Windows NT 6\.3/.test(s)){r.os.name='Windows';r.os.version='8.1';}
-  else if(/Windows NT 6\.1/.test(s)){r.os.name='Windows';r.os.version='7';}
-  else if(/Mac OS X ([\d_]+)/.test(s)){r.os.name='macOS';r.os.version=/Mac OS X ([\d_]+)/.exec(s)[1].replace(/_/g,'.');}
-  else if(/Android ([\d.]+)/.test(s)){r.os.name='Android';r.os.version=/Android ([\d.]+)/.exec(s)[1];}
-  else if(/iPhone OS ([\d_]+)/.test(s)){r.os.name='iOS';r.os.version=/iPhone OS ([\d_]+)/.exec(s)[1].replace(/_/g,'.');}
-  else if(/Linux/.test(s)){r.os.name='Linux';}
-  if(/iPhone/.test(s))r.device={type:'mobile',vendor:'Apple',model:'iPhone'};
-  else if(/iPad/.test(s))r.device={type:'tablet',vendor:'Apple',model:'iPad'};
-  else if(/Android/.test(s)){const m=/;\s*([^;)]+?)\s+Build/.exec(s);r.device={type:/Mobile/.test(s)?'mobile':'tablet',vendor:'',model:m?m[1]:''};}
-  else r.device={type:'desktop'};
-  if(/x86_64|x64|Win64/.test(s))r.cpu='x64';else if(/arm64|aarch64/.test(s))r.cpu='arm64';else if(/i\d86/.test(s))r.cpu='x86';
-  return r;
-}
-function card(title,kv){const c=document.createElement('div');c.className='pane';c.style.minHeight='auto';
-  c.innerHTML=`<div class="pane-head">${title}</div><dl class="kv" style="padding:12px">${Object.entries(kv).map(([k,v])=>`<dt>${k}</dt><dd>${v||'<span class=muted>—</span>'}</dd>`).join('')}</dl>`;return c;}
-function go(){
-  OUT.innerHTML='';if(!UA.value.trim())return;
-  const r=parse(UA.value.trim());
-  OUT.appendChild(card('Browser',{Name:r.browser.name||'Unknown',Version:r.browser.version||'',Bot:r.bot?'Yes':'No'}));
-  OUT.appendChild(card('Engine',{Name:r.engine.name||'',Version:r.engine.version||''}));
-  OUT.appendChild(card('OS',{Name:r.os.name||'',Version:r.os.version||''}));
-  OUT.appendChild(card('Device',{Type:r.device.type||'',Vendor:r.device.vendor||'',Model:r.device.model||'',CPU:r.cpu||''}));
-}
-UA.addEventListener('input',D.debounce(go,200));
-$('#mine').onclick=()=>{UA.value=navigator.userAgent;go();};
-$('#paste').onclick=async()=>{try{UA.value=await navigator.clipboard.readText();go();}catch(e){D.toast('Clipboard blocked','err');}};
-$('#copy').onclick=()=>{const r=parse(UA.value.trim()||navigator.userAgent);D.copyText(JSON.stringify(r,null,2));};
-$('#clear').onclick=()=>{UA.value='';OUT.innerHTML='';UA.focus();};
-UA.value=navigator.userAgent;go();</script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>
+      User Agent Parser Online — Decode Browser, OS &amp; Device | DevToolsHive
+    </title>
+    <meta
+      name="description"
+      content="Parse any User-Agent string into browser, engine, OS, device and bot info. Auto-detect your own. 100% client-side."
+    />
+    <link
+      rel="canonical"
+      href="https://devtoolshive.com/tools/user-agent.html"
+    />
+    <link
+      rel="alternate"
+      hreflang="en"
+      href="https://devtoolshive.com/tools/user-agent.html?lang=en"
+    />
+    <link
+      rel="alternate"
+      hreflang="es"
+      href="https://devtoolshive.com/tools/user-agent.html?lang=es"
+    />
+    <link
+      rel="alternate"
+      hreflang="de"
+      href="https://devtoolshive.com/tools/user-agent.html?lang=de"
+    />
+    <link
+      rel="alternate"
+      hreflang="fr"
+      href="https://devtoolshive.com/tools/user-agent.html?lang=fr"
+    />
+    <link
+      rel="alternate"
+      hreflang="ja"
+      href="https://devtoolshive.com/tools/user-agent.html?lang=ja"
+    />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href="https://devtoolshive.com/tools/user-agent.html"
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="User Agent Parser Online — Decode Browser, OS &amp; Device | DevToolsHive"
+    />
+    <meta
+      property="og:description"
+      content="Parse any User-Agent string into browser, engine, OS, device and bot info. Auto-detect your own. 100% client-side."
+    />
+    <meta
+      property="og:url"
+      content="https://devtoolshive.com/tools/user-agent.html"
+    />
+    <meta
+      property="og:image"
+      content="https://devtoolshive.com/assets/img/favicon.svg"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="User Agent Parser Online — Decode Browser, OS &amp; Device | DevToolsHive"
+    />
+    <meta
+      name="twitter:description"
+      content="Parse any User-Agent string into browser, engine, OS, device and bot info. Auto-detect your own. 100% client-side."
+    />
+    <meta
+      name="twitter:image"
+      content="https://devtoolshive.com/assets/img/favicon.svg"
+    />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0b0d12" />
+    <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg" />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <script src="/assets/js/theme.js"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "User Agent Parser Online",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any (web)",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "url": "https://devtoolshive.com/tools/user-agent.html"
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Why do all browsers say 'Mozilla/5.0' at the start?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Historical compatibility \u2014 websites in the 1990s gated content on 'Mozilla', so every browser since pretends to be it."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I trust the User-Agent for analytics?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Roughly, but it's user-controllable and increasingly frozen for privacy. For accurate device targeting, use Client Hints."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How accurate is bot detection?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Common crawlers self-identify and are caught. Sophisticated scrapers spoof real browsers \u2014 UA alone is not a security signal."
+            }
+          }
+        ]
+      }
+    </script>
+  </head>
+  <!-- Google tag (gtag.js) -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-82130N1ETD"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-82130N1ETD");
+  </script>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="site-header"></div>
+    <main id="main" class="container tool-page">
+      <div class="crumbs">
+        <a href="/">Home</a> · <span data-i18n="nav.tools">Tools</span> ·
+        <span>User Agent Parser</span>
+      </div>
+      <header class="tool-head">
+        <h1 data-i18n="tool.user-agent.title">User Agent Parser</h1>
+        <p data-i18n="tool.user-agent.desc">
+          Parse User-Agent strings into structured browser, OS and device
+          information.
+        </p>
+      </header>
+      <div class="toolbar">
+        <button class="btn" id="mine" data-i18n="ui.useMine">
+          Use my User-Agent
+        </button>
+        <button class="btn" id="paste" data-i18n="ui.paste">Paste</button>
+        <span class="spacer"></span>
+        <button class="btn" id="copy" data-shortcut="copy">Copy as JSON</button>
+        <button
+          class="btn ghost danger"
+          id="clear"
+          data-shortcut="clear"
+          data-i18n="ui.clear"
+        >
+          Clear
+        </button>
+      </div>
+      <div class="pane">
+        <div class="pane-head">User-Agent string</div>
+        <textarea
+          id="ua"
+          autofocus
+          spellcheck="false"
+          rows="3"
+          style="min-height: 80px"
+          placeholder="Mozilla/5.0 ..."
+        ></textarea>
+      </div>
+      <div
+        id="out"
+        style="
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 10px;
+          margin-top: 14px;
+        "
+      ></div>
+      <section class="content narrow">
+        <h2>Parse User-Agent strings into browser, OS, device and bot info</h2>
+        <p>
+          The User-Agent string is a free-text header that browsers send with
+          every HTTP request. It encodes the browser, rendering engine,
+          operating system, device, and CPU architecture — but in a famously
+          messy format that has accumulated decades of compatibility cruft. This
+          parser extracts the structured fields and shows you what each piece
+          means.
+        </p>
+        <h3>What it detects</h3>
+        <ul>
+          <li>
+            <strong>Browser</strong> — Chrome, Firefox, Safari, Edge, Opera,
+            plus version.
+          </li>
+          <li><strong>Engine</strong> — Blink, WebKit, Gecko, with version.</li>
+          <li>
+            <strong>OS</strong> — Windows (with NT version mapped to
+            10/11/8.1/7), macOS, iOS, Android, Linux.
+          </li>
+          <li>
+            <strong>Device</strong> — mobile / tablet / desktop, vendor and
+            model when available.
+          </li>
+          <li>
+            <strong>Bots</strong> — Googlebot, Bingbot, DuckDuckBot, Yandex,
+            Baidu, Twitterbot, Facebookexternalhit and others.
+          </li>
+        </ul>
+        <h3>Privacy</h3>
+        <p>
+          Parsing happens with regex in your browser — no UA strings are
+          uploaded.
+        </p>
+        <h2 data-i18n="ui.related">Related tools</h2>
+        <div class="related">
+          <a href="/tools/regex.html" data-i18n="tool.regex.title"
+            >Regex Tester</a
+          ><a
+            href="/tools/json-formatter.html"
+            data-i18n="tool.json-formatter.title"
+            >JSON Formatter</a
+          ><a href="/tools/jwt-decoder.html" data-i18n="tool.jwt.title"
+            >JWT Decoder</a
+          >
+        </div>
+        <h2 data-i18n="ui.faq">FAQ</h2>
+        <div class="faq">
+          <details class="faq-item">
+            <summary>
+              Why do all browsers say &#x27;Mozilla/5.0&#x27; at the start?
+            </summary>
+            <div class="a">
+              Historical compatibility — websites in the 1990s gated content on
+              'Mozilla', so every browser since pretends to be it.
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>Can I trust the User-Agent for analytics?</summary>
+            <div class="a">
+              Roughly, but it's user-controllable and increasingly frozen for
+              privacy. For accurate device targeting, use Client Hints.
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>How accurate is bot detection?</summary>
+            <div class="a">
+              Common crawlers self-identify and are caught. Sophisticated
+              scrapers spoof real browsers — UA alone is not a security signal.
+            </div>
+          </details>
+        </div>
+      </section>
+    </main>
+    <div id="site-footer"></div>
+    <script src="/assets/js/common.js"></script>
+    <script src="/assets/js/i18n/translations.js"></script>
+    <script src="/assets/js/i18n.js"></script>
+    <script src="/assets/js/partials.js"></script>
+    <script>
+      const D = window.DTH,
+        $ = D.$;
+      const UA = $("#ua"),
+        OUT = $("#out");
+      function parse(s) {
+        const r = { browser: {}, engine: {}, os: {}, device: {}, bot: false };
+        const bots = [
+          /Googlebot/i,
+          /Bingbot/i,
+          /DuckDuckBot/i,
+          /Baiduspider/i,
+          /YandexBot/i,
+          /Slurp/i,
+          /facebookexternalhit/i,
+          /Twitterbot/i,
+        ];
+        for (const b of bots) {
+          const m = b.exec(s);
+          if (m) {
+            r.bot = true;
+            r.browser.name = m[0];
+            return r;
+          }
+        }
+        const browsers = [
+          ["Edg", "Edge"],
+          ["OPR", "Opera"],
+          ["Opera", "Opera"],
+          ["Chrome", "Chrome"],
+          ["Firefox", "Firefox"],
+          ["Safari", "Safari"],
+        ];
+        for (const [pat, name] of browsers) {
+          const m = new RegExp(pat + "\\/([\\d.]+)").exec(s);
+          if (m) {
+            r.browser.name = name;
+            r.browser.version = m[1];
+            break;
+          }
+        }
+        if (/AppleWebKit\/[\d.]+/.test(s)) {
+          const m = /AppleWebKit\/([\d.]+)/.exec(s);
+          r.engine.name = /Chrome|Edg|OPR/.test(s) ? "Blink" : "WebKit";
+          r.engine.version = m[1];
+        } else if (/Gecko\//.test(s)) {
+          r.engine.name = "Gecko";
+          const m = /rv:([\d.]+)/.exec(s);
+          if (m) r.engine.version = m[1];
+        }
+        if (/Windows NT 10/.test(s)) {
+          r.os.name = "Windows";
+          r.os.version = "10/11";
+        } else if (/Windows NT 6\.3/.test(s)) {
+          r.os.name = "Windows";
+          r.os.version = "8.1";
+        } else if (/Windows NT 6\.1/.test(s)) {
+          r.os.name = "Windows";
+          r.os.version = "7";
+        } else if (/Mac OS X ([\d_]+)/.test(s)) {
+          r.os.name = "macOS";
+          r.os.version = /Mac OS X ([\d_]+)/.exec(s)[1].replace(/_/g, ".");
+        } else if (/Android ([\d.]+)/.test(s)) {
+          r.os.name = "Android";
+          r.os.version = /Android ([\d.]+)/.exec(s)[1];
+        } else if (/iPhone OS ([\d_]+)/.test(s)) {
+          r.os.name = "iOS";
+          r.os.version = /iPhone OS ([\d_]+)/.exec(s)[1].replace(/_/g, ".");
+        } else if (/Linux/.test(s)) {
+          r.os.name = "Linux";
+        }
+        if (/iPhone/.test(s))
+          r.device = { type: "mobile", vendor: "Apple", model: "iPhone" };
+        else if (/iPad/.test(s))
+          r.device = { type: "tablet", vendor: "Apple", model: "iPad" };
+        else if (/Android/.test(s)) {
+          const m = /;\s*([^;)]+?)\s+Build/.exec(s);
+          r.device = {
+            type: /Mobile/.test(s) ? "mobile" : "tablet",
+            vendor: "",
+            model: m ? m[1] : "",
+          };
+        } else r.device = { type: "desktop" };
+        if (/x86_64|x64|Win64/.test(s)) r.cpu = "x64";
+        else if (/arm64|aarch64/.test(s)) r.cpu = "arm64";
+        else if (/i\d86/.test(s)) r.cpu = "x86";
+        return r;
+      }
+      function card(title, kv) {
+        const c = document.createElement("div");
+        c.className = "pane";
+        c.style.minHeight = "auto";
+        c.innerHTML = `<div class="pane-head">${title}</div><dl class="kv" style="padding:12px">${Object.entries(
+          kv,
+        )
+          .map(
+            ([k, v]) =>
+              `<dt>${k}</dt><dd>${v || "<span class=muted>—</span>"}</dd>`,
+          )
+          .join("")}</dl>`;
+        return c;
+      }
+      function go() {
+        OUT.innerHTML = "";
+        if (!UA.value.trim()) return;
+        const r = parse(UA.value.trim());
+        OUT.appendChild(
+          card("Browser", {
+            Name: r.browser.name || "Unknown",
+            Version: r.browser.version || "",
+            Bot: r.bot ? "Yes" : "No",
+          }),
+        );
+        OUT.appendChild(
+          card("Engine", {
+            Name: r.engine.name || "",
+            Version: r.engine.version || "",
+          }),
+        );
+        OUT.appendChild(
+          card("OS", { Name: r.os.name || "", Version: r.os.version || "" }),
+        );
+        OUT.appendChild(
+          card("Device", {
+            Type: r.device.type || "",
+            Vendor: r.device.vendor || "",
+            Model: r.device.model || "",
+            CPU: r.cpu || "",
+          }),
+        );
+      }
+      UA.addEventListener("input", D.debounce(go, 200));
+      $("#mine").onclick = () => {
+        UA.value = navigator.userAgent;
+        go();
+      };
+      $("#paste").onclick = async () => {
+        try {
+          UA.value = await navigator.clipboard.readText();
+          go();
+        } catch (e) {
+          D.toast("Clipboard blocked", "err");
+        }
+      };
+      $("#copy").onclick = () => {
+        const r = parse(UA.value.trim() || navigator.userAgent);
+        D.copyText(JSON.stringify(r, null, 2));
+      };
+      $("#clear").onclick = () => {
+        UA.value = "";
+        OUT.innerHTML = "";
+        UA.focus();
+      };
+      UA.value = navigator.userAgent;
+      go();
+    </script>
+  </body>
 </html>

@@ -1,83 +1,347 @@
 <!doctype html>
 <html lang="en" data-theme="dark">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Unix Timestamp Converter — Epoch to Date in JavaScript | DevToolsHive</title>
-<meta name="description" content="Convert Unix timestamps to readable dates in 8 formats: local, UTC, ISO 8601, relative time. Auto-detects seconds vs milliseconds.">
-<link rel="canonical" href="https://devtoolshive.com/tools/timestamp.html">
-<link rel="alternate" hreflang="en" href="https://devtoolshive.com/tools/timestamp.html?lang=en" />
-    <link rel="alternate" hreflang="es" href="https://devtoolshive.com/tools/timestamp.html?lang=es" />
-    <link rel="alternate" hreflang="de" href="https://devtoolshive.com/tools/timestamp.html?lang=de" />
-    <link rel="alternate" hreflang="fr" href="https://devtoolshive.com/tools/timestamp.html?lang=fr" />
-    <link rel="alternate" hreflang="ja" href="https://devtoolshive.com/tools/timestamp.html?lang=ja" />
-    <link rel="alternate" hreflang="x-default" href="https://devtoolshive.com/tools/timestamp.html" />
-<meta property="og:type" content="website">
-<meta property="og:title" content="Unix Timestamp Converter — Epoch to Date in JavaScript | DevToolsHive">
-<meta property="og:description" content="Convert Unix timestamps to readable dates in 8 formats: local, UTC, ISO 8601, relative time. Auto-detects seconds vs milliseconds.">
-<meta property="og:url" content="https://devtoolshive.com/tools/timestamp.html">
-<meta property="og:image" content="https://devtoolshive.com/assets/img/favicon.svg">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Unix Timestamp Converter — Epoch to Date in JavaScript | DevToolsHive">
-<meta name="twitter:description" content="Convert Unix timestamps to readable dates in 8 formats: local, UTC, ISO 8601, relative time. Auto-detects seconds vs milliseconds.">
-<meta name="twitter:image" content="https://devtoolshive.com/assets/img/favicon.svg">
-<meta name="robots" content="index,follow">
-<meta name="theme-color" content="#0b0d12">
-<link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
-<link rel="stylesheet" href="/assets/css/styles.css">
-<script src="/assets/js/theme.js"></script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Unix Timestamp Converter", "applicationCategory": "DeveloperApplication", "operatingSystem": "Any (web)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "url": "https://devtoolshive.com/tools/timestamp.html"}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Are timestamps in seconds or milliseconds?", "acceptedAnswer": {"@type": "Answer", "text": "JavaScript and many web APIs use milliseconds. Most backend systems and Unix tools use seconds. This tool auto-detects based on magnitude."}}, {"@type": "Question", "name": "Does it handle negative timestamps (pre-1970)?", "acceptedAnswer": {"@type": "Answer", "text": "Yes \u2014 Date supports negative milliseconds back to about year -271,000."}}, {"@type": "Question", "name": "Why is the local time different from UTC?", "acceptedAnswer": {"@type": "Answer", "text": "Your browser converts to your operating system's timezone for display. Unix timestamps themselves are timezone-less."}}]}</script>
-</head>
-<body>
-<a class="skip-link" href="#main">Skip to content</a>
-<div id="site-header"></div>
-<main id="main" class="container tool-page">
-<div class="crumbs"><a href="/">Home</a> · <span data-i18n="nav.tools">Tools</span> · <span>Unix Timestamp Converter</span></div>
-<header class="tool-head"><h1 data-i18n="tool.timestamp.title">Unix Timestamp Converter</h1><p data-i18n="tool.timestamp.desc">Convert between Unix timestamps and human dates with live ticking clock.</p></header>
-<div class="row-inline">
-<div class="field" style="flex:2"><label>Unix timestamp (seconds or ms)</label><input type="text" id="ts" placeholder="1716239022"></div>
-<button class="btn primary" id="now" style="height:38px">Now</button>
-<button class="btn" id="convert" data-shortcut="run" style="height:38px" data-i18n="ui.convert">Convert</button>
-</div>
-<div class="row-inline" style="margin-top:10px">
-<div class="field" style="flex:2"><label>Date (any parseable string)</label><input type="text" id="dt" placeholder="2026-05-09T12:00:00Z"></div>
-<button class="btn" id="d2t" style="height:38px">→ Timestamp</button>
-</div>
-<div id="cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin-top:14px"></div>
-<section class="content narrow"><h2>Convert Unix timestamps to human-readable dates (and back)</h2>
-<p>A Unix timestamp is the number of seconds since January 1, 1970 UTC. JavaScript usually deals in milliseconds (since-epoch × 1000), and most backend APIs return seconds. This converter accepts either, auto-detects the unit, and shows the result in eight common formats — local time, UTC, ISO 8601, date-only, time-only, Unix seconds, Unix milliseconds, and a human relative phrase ("3 hours ago").</p>
-<h3>Seconds vs milliseconds</h3>
-<p>If your timestamp has 10 digits, it's seconds. 13 digits is milliseconds. The tool auto-detects: anything below 10<sup>12</sup> is treated as seconds and multiplied by 1000.</p>
-<h3>Use cases</h3>
-<ul><li>Decoding the <code>iat</code>, <code>exp</code>, or <code>nbf</code> claims in a JWT.</li>
-<li>Reading a Stripe webhook timestamp.</li>
-<li>Translating a database <code>created_at</code> column into your local timezone.</li>
-<li>Building a "last seen" relative-time string for a UI.</li></ul>
-<h3>Timezones</h3>
-<p>Unix timestamps are always UTC by definition — they have no timezone. The "Local" output uses your browser's timezone; the "UTC" output is the canonical one. When in doubt, share UTC strings.</p><h2 data-i18n="ui.related">Related tools</h2><div class="related"><a href="/tools/cron-generator.html" data-i18n="tool.cron.title">Cron Generator</a><a href="/tools/jwt-decoder.html" data-i18n="tool.jwt.title">JWT Decoder</a><a href="/tools/json-formatter.html" data-i18n="tool.json-formatter.title">JSON Formatter</a></div><h2 data-i18n=ui.faq>FAQ</h2><div class=faq><details class="faq-item"><summary>Are timestamps in seconds or milliseconds?</summary><div class="a">JavaScript and many web APIs use milliseconds. Most backend systems and Unix tools use seconds. This tool auto-detects based on magnitude.</div></details><details class="faq-item"><summary>Does it handle negative timestamps (pre-1970)?</summary><div class="a">Yes — Date supports negative milliseconds back to about year -271,000.</div></details><details class="faq-item"><summary>Why is the local time different from UTC?</summary><div class="a">Your browser converts to your operating system's timezone for display. Unix timestamps themselves are timezone-less.</div></details></div></section>
-</main>
-<div id="site-footer"></div>
-<script src="/assets/js/common.js"></script>
-<script src="/assets/js/i18n/translations.js"></script>
-<script src="/assets/js/i18n.js"></script>
-<script src="/assets/js/partials.js"></script>
-<script>const D=window.DTH,$=D.$;const TS=$('#ts'),DT=$('#dt'),C=$('#cards');
-function relative(then){const d=Date.now()-then,a=Math.abs(d),m=Math.floor(a/60000),h=Math.floor(m/60),da=Math.floor(h/24);
-let s=da?da+'d':h?h+'h':m?m+'m':Math.floor(a/1000)+'s';return d>=0?s+' ago':'in '+s;}
-function render(d){
-  const fmts=[['Local',d.toString()],['UTC',d.toUTCString()],['ISO 8601',d.toISOString()],['Date only',d.toLocaleDateString()],['Time only',d.toLocaleTimeString()],['Unix (s)',Math.floor(d.getTime()/1000)],['Unix (ms)',d.getTime()],['Relative',relative(d.getTime())]];
-  C.innerHTML='';fmts.forEach(([k,v])=>{const card=document.createElement('div');card.className='pane';card.style.minHeight='auto';
-    card.innerHTML=`<div class="pane-head">${k}<span class="spacer"></span><button class="btn" style="padding:3px 8px">copy</button></div><div style="padding:12px;font-family:var(--mono);font-size:13.5px;word-break:break-all">${v}</div>`;
-    card.querySelector('button').onclick=()=>D.copyText(String(v));C.appendChild(card);});
-}
-function fromTs(){let v=TS.value.trim();if(!v)return;let n=Number(v);if(!isFinite(n)){D.toast('Invalid number','err');return;}
-  if(n<1e12)n*=1000;render(new Date(n));}
-function fromDt(){const d=new Date(DT.value);if(isNaN(d)){D.toast('Invalid date','err');return;}render(d);}
-$('#now').onclick=()=>{const d=new Date();TS.value=Math.floor(d.getTime()/1000);render(d);};
-$('#convert').onclick=fromTs;$('#d2t').onclick=fromDt;
-TS.addEventListener('input',D.debounce(fromTs,250));DT.addEventListener('input',D.debounce(fromDt,250));
-TS.value=Math.floor(Date.now()/1000);render(new Date());
-setInterval(()=>{if(!TS.value || +TS.value*1000>Date.now()-2000){const d=new Date();TS.value=Math.floor(d.getTime()/1000);render(d);}},1000);</script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>
+      Unix Timestamp Converter — Epoch to Date in JavaScript | DevToolsHive
+    </title>
+    <meta
+      name="description"
+      content="Convert Unix timestamps to readable dates in 8 formats: local, UTC, ISO 8601, relative time. Auto-detects seconds vs milliseconds."
+    />
+    <link
+      rel="canonical"
+      href="https://devtoolshive.com/tools/timestamp.html"
+    />
+    <link
+      rel="alternate"
+      hreflang="en"
+      href="https://devtoolshive.com/tools/timestamp.html?lang=en"
+    />
+    <link
+      rel="alternate"
+      hreflang="es"
+      href="https://devtoolshive.com/tools/timestamp.html?lang=es"
+    />
+    <link
+      rel="alternate"
+      hreflang="de"
+      href="https://devtoolshive.com/tools/timestamp.html?lang=de"
+    />
+    <link
+      rel="alternate"
+      hreflang="fr"
+      href="https://devtoolshive.com/tools/timestamp.html?lang=fr"
+    />
+    <link
+      rel="alternate"
+      hreflang="ja"
+      href="https://devtoolshive.com/tools/timestamp.html?lang=ja"
+    />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href="https://devtoolshive.com/tools/timestamp.html"
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="Unix Timestamp Converter — Epoch to Date in JavaScript | DevToolsHive"
+    />
+    <meta
+      property="og:description"
+      content="Convert Unix timestamps to readable dates in 8 formats: local, UTC, ISO 8601, relative time. Auto-detects seconds vs milliseconds."
+    />
+    <meta
+      property="og:url"
+      content="https://devtoolshive.com/tools/timestamp.html"
+    />
+    <meta
+      property="og:image"
+      content="https://devtoolshive.com/assets/img/favicon.svg"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Unix Timestamp Converter — Epoch to Date in JavaScript | DevToolsHive"
+    />
+    <meta
+      name="twitter:description"
+      content="Convert Unix timestamps to readable dates in 8 formats: local, UTC, ISO 8601, relative time. Auto-detects seconds vs milliseconds."
+    />
+    <meta
+      name="twitter:image"
+      content="https://devtoolshive.com/assets/img/favicon.svg"
+    />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0b0d12" />
+    <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg" />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <script src="/assets/js/theme.js"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Unix Timestamp Converter",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any (web)",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "url": "https://devtoolshive.com/tools/timestamp.html"
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Are timestamps in seconds or milliseconds?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "JavaScript and many web APIs use milliseconds. Most backend systems and Unix tools use seconds. This tool auto-detects based on magnitude."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does it handle negative timestamps (pre-1970)?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes \u2014 Date supports negative milliseconds back to about year -271,000."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why is the local time different from UTC?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Your browser converts to your operating system's timezone for display. Unix timestamps themselves are timezone-less."
+            }
+          }
+        ]
+      }
+    </script>
+  </head>
+  <!-- Google tag (gtag.js) -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-82130N1ETD"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-82130N1ETD");
+  </script>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="site-header"></div>
+    <main id="main" class="container tool-page">
+      <div class="crumbs">
+        <a href="/">Home</a> · <span data-i18n="nav.tools">Tools</span> ·
+        <span>Unix Timestamp Converter</span>
+      </div>
+      <header class="tool-head">
+        <h1 data-i18n="tool.timestamp.title">Unix Timestamp Converter</h1>
+        <p data-i18n="tool.timestamp.desc">
+          Convert between Unix timestamps and human dates with live ticking
+          clock.
+        </p>
+      </header>
+      <div class="row-inline">
+        <div class="field" style="flex: 2">
+          <label>Unix timestamp (seconds or ms)</label
+          ><input type="text" id="ts" placeholder="1716239022" />
+        </div>
+        <button class="btn primary" id="now" style="height: 38px">Now</button>
+        <button
+          class="btn"
+          id="convert"
+          data-shortcut="run"
+          style="height: 38px"
+          data-i18n="ui.convert"
+        >
+          Convert
+        </button>
+      </div>
+      <div class="row-inline" style="margin-top: 10px">
+        <div class="field" style="flex: 2">
+          <label>Date (any parseable string)</label
+          ><input type="text" id="dt" placeholder="2026-05-09T12:00:00Z" />
+        </div>
+        <button class="btn" id="d2t" style="height: 38px">→ Timestamp</button>
+      </div>
+      <div
+        id="cards"
+        style="
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 10px;
+          margin-top: 14px;
+        "
+      ></div>
+      <section class="content narrow">
+        <h2>Convert Unix timestamps to human-readable dates (and back)</h2>
+        <p>
+          A Unix timestamp is the number of seconds since January 1, 1970 UTC.
+          JavaScript usually deals in milliseconds (since-epoch × 1000), and
+          most backend APIs return seconds. This converter accepts either,
+          auto-detects the unit, and shows the result in eight common formats —
+          local time, UTC, ISO 8601, date-only, time-only, Unix seconds, Unix
+          milliseconds, and a human relative phrase ("3 hours ago").
+        </p>
+        <h3>Seconds vs milliseconds</h3>
+        <p>
+          If your timestamp has 10 digits, it's seconds. 13 digits is
+          milliseconds. The tool auto-detects: anything below 10<sup>12</sup> is
+          treated as seconds and multiplied by 1000.
+        </p>
+        <h3>Use cases</h3>
+        <ul>
+          <li>
+            Decoding the <code>iat</code>, <code>exp</code>, or
+            <code>nbf</code> claims in a JWT.
+          </li>
+          <li>Reading a Stripe webhook timestamp.</li>
+          <li>
+            Translating a database <code>created_at</code> column into your
+            local timezone.
+          </li>
+          <li>Building a "last seen" relative-time string for a UI.</li>
+        </ul>
+        <h3>Timezones</h3>
+        <p>
+          Unix timestamps are always UTC by definition — they have no timezone.
+          The "Local" output uses your browser's timezone; the "UTC" output is
+          the canonical one. When in doubt, share UTC strings.
+        </p>
+        <h2 data-i18n="ui.related">Related tools</h2>
+        <div class="related">
+          <a href="/tools/cron-generator.html" data-i18n="tool.cron.title"
+            >Cron Generator</a
+          ><a href="/tools/jwt-decoder.html" data-i18n="tool.jwt.title"
+            >JWT Decoder</a
+          ><a
+            href="/tools/json-formatter.html"
+            data-i18n="tool.json-formatter.title"
+            >JSON Formatter</a
+          >
+        </div>
+        <h2 data-i18n="ui.faq">FAQ</h2>
+        <div class="faq">
+          <details class="faq-item">
+            <summary>Are timestamps in seconds or milliseconds?</summary>
+            <div class="a">
+              JavaScript and many web APIs use milliseconds. Most backend
+              systems and Unix tools use seconds. This tool auto-detects based
+              on magnitude.
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>Does it handle negative timestamps (pre-1970)?</summary>
+            <div class="a">
+              Yes — Date supports negative milliseconds back to about year
+              -271,000.
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>Why is the local time different from UTC?</summary>
+            <div class="a">
+              Your browser converts to your operating system's timezone for
+              display. Unix timestamps themselves are timezone-less.
+            </div>
+          </details>
+        </div>
+      </section>
+    </main>
+    <div id="site-footer"></div>
+    <script src="/assets/js/common.js"></script>
+    <script src="/assets/js/i18n/translations.js"></script>
+    <script src="/assets/js/i18n.js"></script>
+    <script src="/assets/js/partials.js"></script>
+    <script>
+      const D = window.DTH,
+        $ = D.$;
+      const TS = $("#ts"),
+        DT = $("#dt"),
+        C = $("#cards");
+      function relative(then) {
+        const d = Date.now() - then,
+          a = Math.abs(d),
+          m = Math.floor(a / 60000),
+          h = Math.floor(m / 60),
+          da = Math.floor(h / 24);
+        let s = da
+          ? da + "d"
+          : h
+            ? h + "h"
+            : m
+              ? m + "m"
+              : Math.floor(a / 1000) + "s";
+        return d >= 0 ? s + " ago" : "in " + s;
+      }
+      function render(d) {
+        const fmts = [
+          ["Local", d.toString()],
+          ["UTC", d.toUTCString()],
+          ["ISO 8601", d.toISOString()],
+          ["Date only", d.toLocaleDateString()],
+          ["Time only", d.toLocaleTimeString()],
+          ["Unix (s)", Math.floor(d.getTime() / 1000)],
+          ["Unix (ms)", d.getTime()],
+          ["Relative", relative(d.getTime())],
+        ];
+        C.innerHTML = "";
+        fmts.forEach(([k, v]) => {
+          const card = document.createElement("div");
+          card.className = "pane";
+          card.style.minHeight = "auto";
+          card.innerHTML = `<div class="pane-head">${k}<span class="spacer"></span><button class="btn" style="padding:3px 8px">copy</button></div><div style="padding:12px;font-family:var(--mono);font-size:13.5px;word-break:break-all">${v}</div>`;
+          card.querySelector("button").onclick = () => D.copyText(String(v));
+          C.appendChild(card);
+        });
+      }
+      function fromTs() {
+        let v = TS.value.trim();
+        if (!v) return;
+        let n = Number(v);
+        if (!isFinite(n)) {
+          D.toast("Invalid number", "err");
+          return;
+        }
+        if (n < 1e12) n *= 1000;
+        render(new Date(n));
+      }
+      function fromDt() {
+        const d = new Date(DT.value);
+        if (isNaN(d)) {
+          D.toast("Invalid date", "err");
+          return;
+        }
+        render(d);
+      }
+      $("#now").onclick = () => {
+        const d = new Date();
+        TS.value = Math.floor(d.getTime() / 1000);
+        render(d);
+      };
+      $("#convert").onclick = fromTs;
+      $("#d2t").onclick = fromDt;
+      TS.addEventListener("input", D.debounce(fromTs, 250));
+      DT.addEventListener("input", D.debounce(fromDt, 250));
+      TS.value = Math.floor(Date.now() / 1000);
+      render(new Date());
+      setInterval(() => {
+        if (!TS.value || +TS.value * 1000 > Date.now() - 2000) {
+          const d = new Date();
+          TS.value = Math.floor(d.getTime() / 1000);
+          render(d);
+        }
+      }, 1000);
+    </script>
+  </body>
 </html>

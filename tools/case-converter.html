@@ -1,87 +1,321 @@
 <!doctype html>
 <html lang="en" data-theme="dark">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Text Case Converter — camelCase, snake_case, kebab-case Online | DevToolsHive</title>
-<meta name="description" content="Convert between camelCase, PascalCase, snake_case, kebab-case, CONSTANT_CASE and more. Smart word splitting handles acronyms.">
-<link rel="canonical" href="https://devtoolshive.com/tools/case-converter.html">
-<link rel="alternate" hreflang="en" href="https://devtoolshive.com/tools/case-converter.html?lang=en" />
-    <link rel="alternate" hreflang="es" href="https://devtoolshive.com/tools/case-converter.html?lang=es" />
-    <link rel="alternate" hreflang="de" href="https://devtoolshive.com/tools/case-converter.html?lang=de" />
-    <link rel="alternate" hreflang="fr" href="https://devtoolshive.com/tools/case-converter.html?lang=fr" />
-    <link rel="alternate" hreflang="ja" href="https://devtoolshive.com/tools/case-converter.html?lang=ja" />
-    <link rel="alternate" hreflang="x-default" href="https://devtoolshive.com/tools/case-converter.html" />
-<meta property="og:type" content="website">
-<meta property="og:title" content="Text Case Converter — camelCase, snake_case, kebab-case Online | DevToolsHive">
-<meta property="og:description" content="Convert between camelCase, PascalCase, snake_case, kebab-case, CONSTANT_CASE and more. Smart word splitting handles acronyms.">
-<meta property="og:url" content="https://devtoolshive.com/tools/case-converter.html">
-<meta property="og:image" content="https://devtoolshive.com/assets/img/favicon.svg">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Text Case Converter — camelCase, snake_case, kebab-case Online | DevToolsHive">
-<meta name="twitter:description" content="Convert between camelCase, PascalCase, snake_case, kebab-case, CONSTANT_CASE and more. Smart word splitting handles acronyms.">
-<meta name="twitter:image" content="https://devtoolshive.com/assets/img/favicon.svg">
-<meta name="robots" content="index,follow">
-<meta name="theme-color" content="#0b0d12">
-<link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
-<link rel="stylesheet" href="/assets/css/styles.css">
-<script src="/assets/js/theme.js"></script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Text Case Converter", "applicationCategory": "DeveloperApplication", "operatingSystem": "Any (web)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "url": "https://devtoolshive.com/tools/case-converter.html"}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does it preserve numbers?", "acceptedAnswer": {"@type": "Answer", "text": "Numbers are kept attached to the surrounding word \u2014 getHTTPResponse2 \u2192 get_http_response2."}}, {"@type": "Question", "name": "How are acronyms handled?", "acceptedAnswer": {"@type": "Answer", "text": "Consecutive uppercase letters are treated as a single word, so userIDFromAPI splits to user, id, from, api."}}, {"@type": "Question", "name": "Will it work on multi-line input?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, but each line is treated as one identifier. For per-line conversion, paste line by line."}}]}</script>
-</head>
-<body>
-<a class="skip-link" href="#main">Skip to content</a>
-<div id="site-header"></div>
-<main id="main" class="container tool-page">
-<div class="crumbs"><a href="/">Home</a> · <span data-i18n="nav.tools">Tools</span> · <span>Text Case Converter</span></div>
-<header class="tool-head"><h1 data-i18n="tool.case.title">Text Case Converter</h1><p data-i18n="tool.case.desc">Convert between 10 common case styles with smart word splitting.</p></header>
-<div class="toolbar">
-<button class="btn" data-c="camel">camelCase</button>
-<button class="btn" data-c="pascal">PascalCase</button>
-<button class="btn" data-c="snake">snake_case</button>
-<button class="btn" data-c="kebab">kebab-case</button>
-<button class="btn" data-c="constant">CONSTANT_CASE</button>
-<button class="btn" data-c="dot">dot.case</button>
-<button class="btn" data-c="title">Title Case</button>
-<button class="btn" data-c="sentence">Sentence case</button>
-<button class="btn" data-c="upper">UPPERCASE</button>
-<button class="btn" data-c="lower">lowercase</button>
-<span class="spacer"></span><button class="btn" id="copy" data-shortcut="copy" data-i18n="ui.copy">Copy</button>
-<button class="btn ghost danger" id="clear" data-shortcut="clear" data-i18n="ui.clear">Clear</button></div>
-<div class="io-grid">
-<div class="pane"><div class="pane-head" data-i18n="ui.input">Input</div><textarea id="in" autofocus spellcheck="false" placeholder="hello world example string"></textarea></div>
-<div class="pane"><div class="pane-head" data-i18n="ui.output">Output</div><textarea id="out" spellcheck="false" readonly></textarea></div></div>
-<section class="content narrow"><h2>Convert text between camelCase, snake_case, kebab-case and more</h2>
-<p>Convert any string between ten common naming conventions used in code: camelCase, PascalCase, snake_case, kebab-case, CONSTANT_CASE, dot.case, Title Case, Sentence case, UPPERCASE and lowercase. The converter intelligently splits the input on word boundaries — spaces, underscores, hyphens, dots, and case transitions — so <code>userIDFromAPI</code>, <code>user_id_from_api</code>, and <code>user-id-from-api</code> all normalize to the same word list before reformatting.</p>
-<h3>When to use each</h3>
-<ul><li><strong>camelCase</strong> — JavaScript variables, JSON keys.</li>
-<li><strong>PascalCase</strong> — class names, React components, TypeScript types.</li>
-<li><strong>snake_case</strong> — Python, Ruby, Rust variables; SQL columns.</li>
-<li><strong>kebab-case</strong> — URL paths, CSS classes, npm packages.</li>
-<li><strong>CONSTANT_CASE</strong> — environment variables, JS constants.</li></ul><h2 data-i18n="ui.related">Related tools</h2><div class="related"><a href="/tools/regex.html" data-i18n="tool.regex.title">Regex Tester</a><a href="/tools/url-encoder.html" data-i18n="tool.url.title">URL Encoder</a><a href="/tools/json-formatter.html" data-i18n="tool.json-formatter.title">JSON Formatter</a></div><h2 data-i18n=ui.faq>FAQ</h2><div class=faq><details class="faq-item"><summary>Does it preserve numbers?</summary><div class="a">Numbers are kept attached to the surrounding word — getHTTPResponse2 → get_http_response2.</div></details><details class="faq-item"><summary>How are acronyms handled?</summary><div class="a">Consecutive uppercase letters are treated as a single word, so userIDFromAPI splits to user, id, from, api.</div></details><details class="faq-item"><summary>Will it work on multi-line input?</summary><div class="a">Yes, but each line is treated as one identifier. For per-line conversion, paste line by line.</div></details></div></section>
-</main>
-<div id="site-footer"></div>
-<script src="/assets/js/common.js"></script>
-<script src="/assets/js/i18n/translations.js"></script>
-<script src="/assets/js/i18n.js"></script>
-<script src="/assets/js/partials.js"></script>
-<script>const D=window.DTH,$=D.$;const I=$('#in'),O=$('#out');let last='camel';
-function words(s){return s.replace(/([a-z])([A-Z])/g,'$1 $2').replace(/[_\-.\/]+/g,' ').replace(/\s+/g,' ').trim().toLowerCase().split(' ').filter(Boolean);}
-const C={
-  camel:w=>w.map((x,i)=>i?x[0].toUpperCase()+x.slice(1):x).join(''),
-  pascal:w=>w.map(x=>x[0].toUpperCase()+x.slice(1)).join(''),
-  snake:w=>w.join('_'),
-  kebab:w=>w.join('-'),
-  constant:w=>w.join('_').toUpperCase(),
-  dot:w=>w.join('.'),
-  title:w=>w.map(x=>x[0].toUpperCase()+x.slice(1)).join(' '),
-  sentence:w=>{const s=w.join(' ');return s?s[0].toUpperCase()+s.slice(1):s;},
-  upper:w=>w.join(' ').toUpperCase(),
-  lower:w=>w.join(' ').toLowerCase()
-};
-function go(c){last=c;const w=words(I.value);O.value=w.length?C[c](w):'';}
-document.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>go(b.dataset.c));
-I.addEventListener('input',D.debounce(()=>go(last),150));
-$('#copy').onclick=()=>D.copyText(O.value);$('#clear').onclick=()=>{I.value='';O.value='';I.focus();};go('camel');</script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>
+      Text Case Converter — camelCase, snake_case, kebab-case Online |
+      DevToolsHive
+    </title>
+    <meta
+      name="description"
+      content="Convert between camelCase, PascalCase, snake_case, kebab-case, CONSTANT_CASE and more. Smart word splitting handles acronyms."
+    />
+    <link
+      rel="canonical"
+      href="https://devtoolshive.com/tools/case-converter.html"
+    />
+    <link
+      rel="alternate"
+      hreflang="en"
+      href="https://devtoolshive.com/tools/case-converter.html?lang=en"
+    />
+    <link
+      rel="alternate"
+      hreflang="es"
+      href="https://devtoolshive.com/tools/case-converter.html?lang=es"
+    />
+    <link
+      rel="alternate"
+      hreflang="de"
+      href="https://devtoolshive.com/tools/case-converter.html?lang=de"
+    />
+    <link
+      rel="alternate"
+      hreflang="fr"
+      href="https://devtoolshive.com/tools/case-converter.html?lang=fr"
+    />
+    <link
+      rel="alternate"
+      hreflang="ja"
+      href="https://devtoolshive.com/tools/case-converter.html?lang=ja"
+    />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href="https://devtoolshive.com/tools/case-converter.html"
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="Text Case Converter — camelCase, snake_case, kebab-case Online | DevToolsHive"
+    />
+    <meta
+      property="og:description"
+      content="Convert between camelCase, PascalCase, snake_case, kebab-case, CONSTANT_CASE and more. Smart word splitting handles acronyms."
+    />
+    <meta
+      property="og:url"
+      content="https://devtoolshive.com/tools/case-converter.html"
+    />
+    <meta
+      property="og:image"
+      content="https://devtoolshive.com/assets/img/favicon.svg"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Text Case Converter — camelCase, snake_case, kebab-case Online | DevToolsHive"
+    />
+    <meta
+      name="twitter:description"
+      content="Convert between camelCase, PascalCase, snake_case, kebab-case, CONSTANT_CASE and more. Smart word splitting handles acronyms."
+    />
+    <meta
+      name="twitter:image"
+      content="https://devtoolshive.com/assets/img/favicon.svg"
+    />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0b0d12" />
+    <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg" />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <script src="/assets/js/theme.js"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Text Case Converter",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any (web)",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "url": "https://devtoolshive.com/tools/case-converter.html"
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Does it preserve numbers?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Numbers are kept attached to the surrounding word \u2014 getHTTPResponse2 \u2192 get_http_response2."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How are acronyms handled?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Consecutive uppercase letters are treated as a single word, so userIDFromAPI splits to user, id, from, api."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Will it work on multi-line input?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, but each line is treated as one identifier. For per-line conversion, paste line by line."
+            }
+          }
+        ]
+      }
+    </script>
+  </head>
+    <!-- Google tag (gtag.js) -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-82130N1ETD"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-82130N1ETD");
+  </script>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="site-header"></div>
+    <main id="main" class="container tool-page">
+      <div class="crumbs">
+        <a href="/">Home</a> · <span data-i18n="nav.tools">Tools</span> ·
+        <span>Text Case Converter</span>
+      </div>
+      <header class="tool-head">
+        <h1 data-i18n="tool.case.title">Text Case Converter</h1>
+        <p data-i18n="tool.case.desc">
+          Convert between 10 common case styles with smart word splitting.
+        </p>
+      </header>
+      <div class="toolbar">
+        <button class="btn" data-c="camel">camelCase</button>
+        <button class="btn" data-c="pascal">PascalCase</button>
+        <button class="btn" data-c="snake">snake_case</button>
+        <button class="btn" data-c="kebab">kebab-case</button>
+        <button class="btn" data-c="constant">CONSTANT_CASE</button>
+        <button class="btn" data-c="dot">dot.case</button>
+        <button class="btn" data-c="title">Title Case</button>
+        <button class="btn" data-c="sentence">Sentence case</button>
+        <button class="btn" data-c="upper">UPPERCASE</button>
+        <button class="btn" data-c="lower">lowercase</button>
+        <span class="spacer"></span
+        ><button class="btn" id="copy" data-shortcut="copy" data-i18n="ui.copy">
+          Copy
+        </button>
+        <button
+          class="btn ghost danger"
+          id="clear"
+          data-shortcut="clear"
+          data-i18n="ui.clear"
+        >
+          Clear
+        </button>
+      </div>
+      <div class="io-grid">
+        <div class="pane">
+          <div class="pane-head" data-i18n="ui.input">Input</div>
+          <textarea
+            id="in"
+            autofocus
+            spellcheck="false"
+            placeholder="hello world example string"
+          ></textarea>
+        </div>
+        <div class="pane">
+          <div class="pane-head" data-i18n="ui.output">Output</div>
+          <textarea id="out" spellcheck="false" readonly></textarea>
+        </div>
+      </div>
+      <section class="content narrow">
+        <h2>Convert text between camelCase, snake_case, kebab-case and more</h2>
+        <p>
+          Convert any string between ten common naming conventions used in code:
+          camelCase, PascalCase, snake_case, kebab-case, CONSTANT_CASE,
+          dot.case, Title Case, Sentence case, UPPERCASE and lowercase. The
+          converter intelligently splits the input on word boundaries — spaces,
+          underscores, hyphens, dots, and case transitions — so
+          <code>userIDFromAPI</code>, <code>user_id_from_api</code>, and
+          <code>user-id-from-api</code> all normalize to the same word list
+          before reformatting.
+        </p>
+        <h3>When to use each</h3>
+        <ul>
+          <li><strong>camelCase</strong> — JavaScript variables, JSON keys.</li>
+          <li>
+            <strong>PascalCase</strong> — class names, React components,
+            TypeScript types.
+          </li>
+          <li>
+            <strong>snake_case</strong> — Python, Ruby, Rust variables; SQL
+            columns.
+          </li>
+          <li>
+            <strong>kebab-case</strong> — URL paths, CSS classes, npm packages.
+          </li>
+          <li>
+            <strong>CONSTANT_CASE</strong> — environment variables, JS
+            constants.
+          </li>
+        </ul>
+        <h2 data-i18n="ui.related">Related tools</h2>
+        <div class="related">
+          <a href="/tools/regex.html" data-i18n="tool.regex.title"
+            >Regex Tester</a
+          ><a href="/tools/url-encoder.html" data-i18n="tool.url.title"
+            >URL Encoder</a
+          ><a
+            href="/tools/json-formatter.html"
+            data-i18n="tool.json-formatter.title"
+            >JSON Formatter</a
+          >
+        </div>
+        <h2 data-i18n="ui.faq">FAQ</h2>
+        <div class="faq">
+          <details class="faq-item">
+            <summary>Does it preserve numbers?</summary>
+            <div class="a">
+              Numbers are kept attached to the surrounding word —
+              getHTTPResponse2 → get_http_response2.
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>How are acronyms handled?</summary>
+            <div class="a">
+              Consecutive uppercase letters are treated as a single word, so
+              userIDFromAPI splits to user, id, from, api.
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>Will it work on multi-line input?</summary>
+            <div class="a">
+              Yes, but each line is treated as one identifier. For per-line
+              conversion, paste line by line.
+            </div>
+          </details>
+        </div>
+      </section>
+    </main>
+    <div id="site-footer"></div>
+    <script src="/assets/js/common.js"></script>
+    <script src="/assets/js/i18n/translations.js"></script>
+    <script src="/assets/js/i18n.js"></script>
+    <script src="/assets/js/partials.js"></script>
+    <script>
+      const D = window.DTH,
+        $ = D.$;
+      const I = $("#in"),
+        O = $("#out");
+      let last = "camel";
+      function words(s) {
+        return s
+          .replace(/([a-z])([A-Z])/g, "$1 $2")
+          .replace(/[_\-.\/]+/g, " ")
+          .replace(/\s+/g, " ")
+          .trim()
+          .toLowerCase()
+          .split(" ")
+          .filter(Boolean);
+      }
+      const C = {
+        camel: (w) =>
+          w.map((x, i) => (i ? x[0].toUpperCase() + x.slice(1) : x)).join(""),
+        pascal: (w) => w.map((x) => x[0].toUpperCase() + x.slice(1)).join(""),
+        snake: (w) => w.join("_"),
+        kebab: (w) => w.join("-"),
+        constant: (w) => w.join("_").toUpperCase(),
+        dot: (w) => w.join("."),
+        title: (w) => w.map((x) => x[0].toUpperCase() + x.slice(1)).join(" "),
+        sentence: (w) => {
+          const s = w.join(" ");
+          return s ? s[0].toUpperCase() + s.slice(1) : s;
+        },
+        upper: (w) => w.join(" ").toUpperCase(),
+        lower: (w) => w.join(" ").toLowerCase(),
+      };
+      function go(c) {
+        last = c;
+        const w = words(I.value);
+        O.value = w.length ? C[c](w) : "";
+      }
+      document
+        .querySelectorAll("[data-c]")
+        .forEach((b) => (b.onclick = () => go(b.dataset.c)));
+      I.addEventListener(
+        "input",
+        D.debounce(() => go(last), 150),
+      );
+      $("#copy").onclick = () => D.copyText(O.value);
+      $("#clear").onclick = () => {
+        I.value = "";
+        O.value = "";
+        I.focus();
+      };
+      go("camel");
+    </script>
+  </body>
 </html>

@@ -1,166 +1,560 @@
 <!doctype html>
 <html lang="en" data-theme="dark">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>API Request Builder Online — Browser-Based REST Client | DevToolsHive</title>
-<meta name="description" content="Test REST APIs in your browser. GET, POST, PUT, DELETE with custom headers, JSON body, response viewer. Lightweight Postman alternative.">
-<link rel="canonical" href="https://devtoolshive.com/tools/api-builder.html">
-<link rel="alternate" hreflang="en" href="https://devtoolshive.com/tools/api-builder.html?lang=en" />
-    <link rel="alternate" hreflang="es" href="https://devtoolshive.com/tools/api-builder.html?lang=es" />
-    <link rel="alternate" hreflang="de" href="https://devtoolshive.com/tools/api-builder.html?lang=de" />
-    <link rel="alternate" hreflang="fr" href="https://devtoolshive.com/tools/api-builder.html?lang=fr" />
-    <link rel="alternate" hreflang="ja" href="https://devtoolshive.com/tools/api-builder.html?lang=ja" />
-    <link rel="alternate" hreflang="x-default" href="https://devtoolshive.com/tools/api-builder.html" />
-<meta property="og:type" content="website">
-<meta property="og:title" content="API Request Builder Online — Browser-Based REST Client | DevToolsHive">
-<meta property="og:description" content="Test REST APIs in your browser. GET, POST, PUT, DELETE with custom headers, JSON body, response viewer. Lightweight Postman alternative.">
-<meta property="og:url" content="https://devtoolshive.com/tools/api-builder.html">
-<meta property="og:image" content="https://devtoolshive.com/assets/img/favicon.svg">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="API Request Builder Online — Browser-Based REST Client | DevToolsHive">
-<meta name="twitter:description" content="Test REST APIs in your browser. GET, POST, PUT, DELETE with custom headers, JSON body, response viewer. Lightweight Postman alternative.">
-<meta name="twitter:image" content="https://devtoolshive.com/assets/img/favicon.svg">
-<meta name="robots" content="index,follow">
-<meta name="theme-color" content="#0b0d12">
-<link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
-<link rel="stylesheet" href="/assets/css/styles.css">
-<script src="/assets/js/theme.js"></script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "API Request Builder Online", "applicationCategory": "DeveloperApplication", "operatingSystem": "Any (web)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "url": "https://devtoolshive.com/tools/api-builder.html"}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why does my request fail with 'Failed to fetch'?", "acceptedAnswer": {"@type": "Answer", "text": "Almost always a CORS problem: the target API isn't sending Access-Control-Allow-Origin for your browser origin. Browsers enforce this \u2014 it can't be disabled by the page. Try an API that supports CORS or call from your backend."}}, {"@type": "Question", "name": "Where are saved requests stored?", "acceptedAnswer": {"@type": "Answer", "text": "In your browser's localStorage. They never leave your machine and aren't synced. Clearing site data removes them."}}, {"@type": "Question", "name": "Can I send form data or file uploads?", "acceptedAnswer": {"@type": "Answer", "text": "The current version only supports raw JSON bodies. For multipart/form-data, use a desktop client like Insomnia."}}, {"@type": "Question", "name": "Does this support OAuth flows or environment variables?", "acceptedAnswer": {"@type": "Answer", "text": "No. It's intentionally lightweight \u2014 paste a token directly into the Authorization header. For full OAuth dance support, use Postman or Insomnia."}}, {"@type": "Question", "name": "Is the request body limited in size?", "acceptedAnswer": {"@type": "Answer", "text": "Practically limited by your browser's memory; multi-megabyte JSON works fine but isn't ideal in a textarea."}}]}</script>
-</head>
-<body>
-<a class="skip-link" href="#main">Skip to content</a>
-<div id="site-header"></div>
-<main id="main" class="container tool-page">
-<div class="crumbs"><a href="/">Home</a> · <span data-i18n="nav.tools">Tools</span> · <span>API Request Builder</span></div>
-<header class="tool-head"><h1 data-i18n="tool.api.title">API Request Builder</h1><p data-i18n="tool.api.desc">A lightweight, browser-based HTTP client for testing REST APIs. Headers, JSON body, response viewer.</p></header>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>
+      API Request Builder Online — Browser-Based REST Client | DevToolsHive
+    </title>
+    <meta
+      name="description"
+      content="Test REST APIs in your browser. GET, POST, PUT, DELETE with custom headers, JSON body, response viewer. Lightweight Postman alternative."
+    />
+    <link
+      rel="canonical"
+      href="https://devtoolshive.com/tools/api-builder.html"
+    />
+    <link
+      rel="alternate"
+      hreflang="en"
+      href="https://devtoolshive.com/tools/api-builder.html?lang=en"
+    />
+    <link
+      rel="alternate"
+      hreflang="es"
+      href="https://devtoolshive.com/tools/api-builder.html?lang=es"
+    />
+    <link
+      rel="alternate"
+      hreflang="de"
+      href="https://devtoolshive.com/tools/api-builder.html?lang=de"
+    />
+    <link
+      rel="alternate"
+      hreflang="fr"
+      href="https://devtoolshive.com/tools/api-builder.html?lang=fr"
+    />
+    <link
+      rel="alternate"
+      hreflang="ja"
+      href="https://devtoolshive.com/tools/api-builder.html?lang=ja"
+    />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href="https://devtoolshive.com/tools/api-builder.html"
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="API Request Builder Online — Browser-Based REST Client | DevToolsHive"
+    />
+    <meta
+      property="og:description"
+      content="Test REST APIs in your browser. GET, POST, PUT, DELETE with custom headers, JSON body, response viewer. Lightweight Postman alternative."
+    />
+    <meta
+      property="og:url"
+      content="https://devtoolshive.com/tools/api-builder.html"
+    />
+    <meta
+      property="og:image"
+      content="https://devtoolshive.com/assets/img/favicon.svg"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="API Request Builder Online — Browser-Based REST Client | DevToolsHive"
+    />
+    <meta
+      name="twitter:description"
+      content="Test REST APIs in your browser. GET, POST, PUT, DELETE with custom headers, JSON body, response viewer. Lightweight Postman alternative."
+    />
+    <meta
+      name="twitter:image"
+      content="https://devtoolshive.com/assets/img/favicon.svg"
+    />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0b0d12" />
+    <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg" />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <script src="/assets/js/theme.js"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "API Request Builder Online",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any (web)",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "url": "https://devtoolshive.com/tools/api-builder.html"
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Why does my request fail with 'Failed to fetch'?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Almost always a CORS problem: the target API isn't sending Access-Control-Allow-Origin for your browser origin. Browsers enforce this \u2014 it can't be disabled by the page. Try an API that supports CORS or call from your backend."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Where are saved requests stored?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "In your browser's localStorage. They never leave your machine and aren't synced. Clearing site data removes them."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I send form data or file uploads?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The current version only supports raw JSON bodies. For multipart/form-data, use a desktop client like Insomnia."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does this support OAuth flows or environment variables?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. It's intentionally lightweight \u2014 paste a token directly into the Authorization header. For full OAuth dance support, use Postman or Insomnia."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is the request body limited in size?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Practically limited by your browser's memory; multi-megabyte JSON works fine but isn't ideal in a textarea."
+            }
+          }
+        ]
+      }
+    </script>
+  </head>
+  <!-- Google tag (gtag.js) -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-82130N1ETD"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
 
-<div class="row-inline" style="margin-bottom:10px">
-  <select id="method" class="btn" style="font-weight:600">
-    <option>GET</option><option>POST</option><option>PUT</option><option>PATCH</option><option>DELETE</option><option>HEAD</option>
-  </select>
-  <div class="field" style="flex:3"><input type="url" id="url" data-i18n-attr="placeholder:ui.placeholder.url" placeholder="https://api.example.com/users"></div>
-  <button class="btn primary" id="send" data-shortcut="run" data-i18n="ui.send">Send</button>
-</div>
-<div class="row" style="gap:6px;margin-bottom:6px">
-  <button class="btn" id="tab-h" style="font-weight:600">Headers</button>
-  <button class="btn" id="tab-b" style="font-weight:600">Body</button>
-  <button class="btn" id="tab-s" style="font-weight:600">Saved</button>
-  <span class="spacer"></span>
-  <button class="btn" id="save">Save request</button>
-</div>
-<div id="pane-h" class="pane"><div class="pane-head">Headers <span class="spacer"></span><button class="btn" id="add-h" style="padding:3px 8px">+ Add</button></div><div id="headers" style="padding:10px"></div></div>
-<div id="pane-b" class="pane hide"><div class="pane-head">JSON Body</div><textarea id="body" spellcheck="false" placeholder='{ "name": "alice" }' style="min-height:200px"></textarea></div>
-<div id="pane-s" class="pane hide"><div class="pane-head">Saved requests</div><div id="saved" style="padding:10px"></div></div>
+    gtag("config", "G-82130N1ETD");
+  </script>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="site-header"></div>
+    <main id="main" class="container tool-page">
+      <div class="crumbs">
+        <a href="/">Home</a> · <span data-i18n="nav.tools">Tools</span> ·
+        <span>API Request Builder</span>
+      </div>
+      <header class="tool-head">
+        <h1 data-i18n="tool.api.title">API Request Builder</h1>
+        <p data-i18n="tool.api.desc">
+          A lightweight, browser-based HTTP client for testing REST APIs.
+          Headers, JSON body, response viewer.
+        </p>
+      </header>
 
-<div class="pane" style="margin-top:14px">
-  <div class="pane-head">Response <span class="spacer"></span><span id="status" class="badge">—</span> <span id="time" class="badge"></span> <span id="size" class="badge"></span> <button class="btn" id="cp-r" style="padding:3px 8px">copy</button></div>
-  <pre id="resp" style="padding:14px;max-height:480px;overflow:auto;white-space:pre-wrap;word-break:break-word">No request sent yet. Press Send to make a request.</pre>
-</div>
+      <div class="row-inline" style="margin-bottom: 10px">
+        <select id="method" class="btn" style="font-weight: 600">
+          <option>GET</option>
+          <option>POST</option>
+          <option>PUT</option>
+          <option>PATCH</option>
+          <option>DELETE</option>
+          <option>HEAD</option>
+        </select>
+        <div class="field" style="flex: 3">
+          <input
+            type="url"
+            id="url"
+            data-i18n-attr="placeholder:ui.placeholder.url"
+            placeholder="https://api.example.com/users"
+          />
+        </div>
+        <button
+          class="btn primary"
+          id="send"
+          data-shortcut="run"
+          data-i18n="ui.send"
+        >
+          Send
+        </button>
+      </div>
+      <div class="row" style="gap: 6px; margin-bottom: 6px">
+        <button class="btn" id="tab-h" style="font-weight: 600">Headers</button>
+        <button class="btn" id="tab-b" style="font-weight: 600">Body</button>
+        <button class="btn" id="tab-s" style="font-weight: 600">Saved</button>
+        <span class="spacer"></span>
+        <button class="btn" id="save">Save request</button>
+      </div>
+      <div id="pane-h" class="pane">
+        <div class="pane-head">
+          Headers <span class="spacer"></span
+          ><button class="btn" id="add-h" style="padding: 3px 8px">
+            + Add
+          </button>
+        </div>
+        <div id="headers" style="padding: 10px"></div>
+      </div>
+      <div id="pane-b" class="pane hide">
+        <div class="pane-head">JSON Body</div>
+        <textarea
+          id="body"
+          spellcheck="false"
+          placeholder='{ "name": "alice" }'
+          style="min-height: 200px"
+        ></textarea>
+      </div>
+      <div id="pane-s" class="pane hide">
+        <div class="pane-head">Saved requests</div>
+        <div id="saved" style="padding: 10px"></div>
+      </div>
 
-<section class="content narrow">
-<h2>A lightweight Postman alternative that runs in your browser</h2>
-<p>This API request builder is a focused HTTP client for quickly hitting an endpoint, inspecting the response, and saving the request for later. No accounts, no Electron app, no telemetry — open the page, paste a URL, hit Send. It supports GET, POST, PUT, PATCH, DELETE, HEAD, custom headers, JSON bodies, and persistent saved requests via <code>localStorage</code>.</p>
+      <div class="pane" style="margin-top: 14px">
+        <div class="pane-head">
+          Response <span class="spacer"></span
+          ><span id="status" class="badge">—</span>
+          <span id="time" class="badge"></span>
+          <span id="size" class="badge"></span>
+          <button class="btn" id="cp-r" style="padding: 3px 8px">copy</button>
+        </div>
+        <pre
+          id="resp"
+          style="
+            padding: 14px;
+            max-height: 480px;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+          "
+        >
+No request sent yet. Press Send to make a request.</pre
+        >
+      </div>
 
-<h3>What you can do</h3>
-<ul>
-<li>Send any HTTP method to any URL.</li>
-<li>Add and remove arbitrary request headers.</li>
-<li>Send a raw JSON request body (Content-Type is auto-set if you don't override it).</li>
-<li>Inspect the full response: status code, headers, body (auto-pretty-printed if JSON), latency, and size.</li>
-<li>Save requests with a name and reload them later — all kept in your browser, never synced anywhere.</li>
-</ul>
+      <section class="content narrow">
+        <h2>A lightweight Postman alternative that runs in your browser</h2>
+        <p>
+          This API request builder is a focused HTTP client for quickly hitting
+          an endpoint, inspecting the response, and saving the request for
+          later. No accounts, no Electron app, no telemetry — open the page,
+          paste a URL, hit Send. It supports GET, POST, PUT, PATCH, DELETE,
+          HEAD, custom headers, JSON bodies, and persistent saved requests via
+          <code>localStorage</code>.
+        </p>
 
-<h3>Important: CORS is real</h3>
-<p>This is a browser-based client, so it follows the same security rules every web app does: the target server must send the right <code>Access-Control-Allow-Origin</code> header, otherwise the browser will block the response and you'll see a generic "Request failed" error. This is not a bug in the tool — it's the browser protecting users. <strong>It is not possible to bypass CORS from a static page.</strong> If you're hitting an internal API that doesn't allow your origin, you have three options:</p>
-<ol>
-<li>Configure the API to allow your origin (best, when you control it).</li>
-<li>Run a temporary CORS-disabling browser flag for testing (Chrome <code>--disable-web-security</code> with a separate profile).</li>
-<li>Use a desktop client (curl, HTTPie, Insomnia) when CORS isn't allowed.</li>
-</ol>
+        <h3>What you can do</h3>
+        <ul>
+          <li>Send any HTTP method to any URL.</li>
+          <li>Add and remove arbitrary request headers.</li>
+          <li>
+            Send a raw JSON request body (Content-Type is auto-set if you don't
+            override it).
+          </li>
+          <li>
+            Inspect the full response: status code, headers, body
+            (auto-pretty-printed if JSON), latency, and size.
+          </li>
+          <li>
+            Save requests with a name and reload them later — all kept in your
+            browser, never synced anywhere.
+          </li>
+        </ul>
 
-<h3>When to reach for this vs Postman / Insomnia</h3>
-<p>This tool is great for: quick prototyping, testing public APIs that already support CORS (Stripe, GitHub, OpenAI, etc.), debugging a webhook payload format, sharing a one-line curl-equivalent with a teammate. It's deliberately not great for: workspace-style team collaboration, GraphQL introspection, mock servers, or environment variable management — that's what the heavyweight clients exist for.</p>
+        <h3>Important: CORS is real</h3>
+        <p>
+          This is a browser-based client, so it follows the same security rules
+          every web app does: the target server must send the right
+          <code>Access-Control-Allow-Origin</code> header, otherwise the browser
+          will block the response and you'll see a generic "Request failed"
+          error. This is not a bug in the tool — it's the browser protecting
+          users.
+          <strong>It is not possible to bypass CORS from a static page.</strong>
+          If you're hitting an internal API that doesn't allow your origin, you
+          have three options:
+        </p>
+        <ol>
+          <li>
+            Configure the API to allow your origin (best, when you control it).
+          </li>
+          <li>
+            Run a temporary CORS-disabling browser flag for testing (Chrome
+            <code>--disable-web-security</code> with a separate profile).
+          </li>
+          <li>
+            Use a desktop client (curl, HTTPie, Insomnia) when CORS isn't
+            allowed.
+          </li>
+        </ol>
 
-<h3>Where saved requests live</h3>
-<p>Saved requests are stored in your browser's <code>localStorage</code> under the key <code>dth-api-saved</code>. They never leave your machine, never sync to another device, and disappear if you clear site data. This is intentional: zero account, zero server, zero risk of leaking a saved bearer token.</p>
+        <h3>When to reach for this vs Postman / Insomnia</h3>
+        <p>
+          This tool is great for: quick prototyping, testing public APIs that
+          already support CORS (Stripe, GitHub, OpenAI, etc.), debugging a
+          webhook payload format, sharing a one-line curl-equivalent with a
+          teammate. It's deliberately not great for: workspace-style team
+          collaboration, GraphQL introspection, mock servers, or environment
+          variable management — that's what the heavyweight clients exist for.
+        </p>
 
-<h3>Headers cheat sheet</h3>
-<ul>
-<li><code>Authorization: Bearer &lt;token&gt;</code> — most OAuth APIs.</li>
-<li><code>Content-Type: application/json</code> — auto-set when you have a body. Override for form data.</li>
-<li><code>Accept: application/json</code> — pre-filled by default; tells the server what response shape you want.</li>
-<li><code>X-Api-Key: ...</code> — common pattern for server-to-server APIs.</li>
-</ul>
+        <h3>Where saved requests live</h3>
+        <p>
+          Saved requests are stored in your browser's
+          <code>localStorage</code> under the key <code>dth-api-saved</code>.
+          They never leave your machine, never sync to another device, and
+          disappear if you clear site data. This is intentional: zero account,
+          zero server, zero risk of leaking a saved bearer token.
+        </p>
 
-<h3>Privacy</h3>
-<p>The page itself does not phone home. It only makes the requests you explicitly send to the URLs you type. There is no analytics and no third-party scripts loaded.</p>
-<h2 data-i18n="ui.related">Related tools</h2><div class="related"><a href="/tools/json-formatter.html" data-i18n="tool.json-formatter.title">JSON Formatter</a><a href="/tools/jwt-decoder.html" data-i18n="tool.jwt.title">JWT Decoder</a><a href="/tools/env-parser.html" data-i18n="tool.env.title">ENV Parser</a></div><h2 data-i18n=ui.faq>FAQ</h2><div class=faq><details class="faq-item"><summary>Why does my request fail with &#x27;Failed to fetch&#x27;?</summary><div class="a">Almost always a CORS problem: the target API isn't sending Access-Control-Allow-Origin for your browser origin. Browsers enforce this — it can't be disabled by the page. Try an API that supports CORS or call from your backend.</div></details><details class="faq-item"><summary>Where are saved requests stored?</summary><div class="a">In your browser's localStorage. They never leave your machine and aren't synced. Clearing site data removes them.</div></details><details class="faq-item"><summary>Can I send form data or file uploads?</summary><div class="a">The current version only supports raw JSON bodies. For multipart/form-data, use a desktop client like Insomnia.</div></details><details class="faq-item"><summary>Does this support OAuth flows or environment variables?</summary><div class="a">No. It's intentionally lightweight — paste a token directly into the Authorization header. For full OAuth dance support, use Postman or Insomnia.</div></details><details class="faq-item"><summary>Is the request body limited in size?</summary><div class="a">Practically limited by your browser's memory; multi-megabyte JSON works fine but isn't ideal in a textarea.</div></details></div></section>
-</main>
-<div id="site-footer"></div>
-<script src="/assets/js/common.js"></script>
-<script src="/assets/js/i18n/translations.js"></script>
-<script src="/assets/js/i18n.js"></script>
-<script src="/assets/js/partials.js"></script>
-<script>
-const D=window.DTH,$=D.$;
-const HS=$('#headers'),URL=$('#url'),M=$('#method'),BODY=$('#body'),RESP=$('#resp'),ST=$('#status'),TM=$('#time'),SZ=$('#size'),SAVED=$('#saved');
-const KEY='dth-api-saved';
-function tab(id){['h','b','s'].forEach(t=>$('#pane-'+t).classList.toggle('hide',t!==id));}
-$('#tab-h').onclick=()=>tab('h');$('#tab-b').onclick=()=>tab('b');$('#tab-s').onclick=()=>{tab('s');renderSaved();};
-function addHeader(k,v){
-  const row=document.createElement('div');row.className='row gap-sm';row.style.marginBottom='6px';
-  row.innerHTML=`<input class="btn" placeholder="Header" value="${k||''}" style="flex:1"><input class="btn" placeholder="Value" value="${v||''}" style="flex:2"><button class="btn ghost danger" style="padding:6px 10px">×</button>`;
-  row.children[2].onclick=()=>row.remove();
-  HS.appendChild(row);
-}
-$('#add-h').onclick=()=>addHeader('','');
-addHeader('Accept','application/json');
-function getHeaders(){
-  const h={};HS.querySelectorAll('div.row').forEach(r=>{const k=r.children[0].value.trim();const v=r.children[1].value;if(k)h[k]=v;});
-  return h;
-}
-async function send(){
-  const url=URL.value.trim();if(!url){D.toast('Enter a URL','err');return;}
-  const method=M.value;const headers=getHeaders();let body;
-  if(['POST','PUT','PATCH'].includes(method) && BODY.value.trim()){body=BODY.value;if(!headers['Content-Type'])headers['Content-Type']='application/json';}
-  ST.textContent='…';ST.className='badge';TM.textContent='';SZ.textContent='';RESP.textContent='Loading…';
-  const t0=performance.now();
-  try{
-    const r=await fetch(url,{method,headers,body,mode:'cors'});
-    const txt=await r.text();
-    const dt=Math.round(performance.now()-t0);
-    ST.textContent=r.status+' '+r.statusText;ST.className='badge '+(r.ok?'ok':'err');
-    TM.textContent=dt+' ms';SZ.textContent=(new Blob([txt]).size)+' B';
-    let out=txt;try{out=JSON.stringify(JSON.parse(txt),null,2);}catch(e){}
-    const headerDump=Array.from(r.headers.entries()).map(([k,v])=>k+': '+v).join('\n');
-    RESP.textContent=`${headerDump}\n\n${out}`;
-  }catch(e){
-    ST.textContent='Error';ST.className='badge err';
-    RESP.textContent=`Request failed: ${e.message}\n\nThis is usually a CORS issue when the target API doesn't send the Access-Control-Allow-Origin header. Try:\n  • An API that supports CORS (most public APIs do)\n  • A browser extension that disables CORS for testing\n  • Calling the API from your backend instead`;
-  }
-}
-$('#send').onclick=send;
-$('#cp-r').onclick=()=>D.copyText(RESP.textContent);
-function loadSaved(){try{return JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){return [];}}
-function persist(arr){try{localStorage.setItem(KEY,JSON.stringify(arr));}catch(e){}}
-$('#save').onclick=()=>{
-  const name=prompt('Name this request:');if(!name)return;
-  const arr=loadSaved();arr.push({name,method:M.value,url:URL.value,headers:getHeaders(),body:BODY.value});
-  persist(arr);D.toast('Saved','ok');
-};
-function renderSaved(){
-  const arr=loadSaved();
-  if(!arr.length){SAVED.innerHTML='<p class="muted" style="margin:0">No saved requests yet.</p>';return;}
-  SAVED.innerHTML='';arr.forEach((s,i)=>{
-    const row=document.createElement('div');row.className='row gap-sm';row.style.marginBottom='6px';
-    row.innerHTML=`<span class="badge">${s.method}</span><strong style="flex:1">${s.name}</strong><span class="muted" style="font-size:12px">${s.url}</span><button class="btn">Load</button><button class="btn ghost danger">×</button>`;
-    row.children[3].onclick=()=>{M.value=s.method;URL.value=s.url;BODY.value=s.body||'';HS.innerHTML='';Object.entries(s.headers||{}).forEach(([k,v])=>addHeader(k,v));tab('h');};
-    row.children[4].onclick=()=>{const a=loadSaved();a.splice(i,1);persist(a);renderSaved();};
-    SAVED.appendChild(row);
-  });
-}
-</script>
-</body>
+        <h3>Headers cheat sheet</h3>
+        <ul>
+          <li>
+            <code>Authorization: Bearer &lt;token&gt;</code> — most OAuth APIs.
+          </li>
+          <li>
+            <code>Content-Type: application/json</code> — auto-set when you have
+            a body. Override for form data.
+          </li>
+          <li>
+            <code>Accept: application/json</code> — pre-filled by default; tells
+            the server what response shape you want.
+          </li>
+          <li>
+            <code>X-Api-Key: ...</code> — common pattern for server-to-server
+            APIs.
+          </li>
+        </ul>
+
+        <h3>Privacy</h3>
+        <p>
+          The page itself does not phone home. It only makes the requests you
+          explicitly send to the URLs you type. There is no analytics and no
+          third-party scripts loaded.
+        </p>
+        <h2 data-i18n="ui.related">Related tools</h2>
+        <div class="related">
+          <a
+            href="/tools/json-formatter.html"
+            data-i18n="tool.json-formatter.title"
+            >JSON Formatter</a
+          ><a href="/tools/jwt-decoder.html" data-i18n="tool.jwt.title"
+            >JWT Decoder</a
+          ><a href="/tools/env-parser.html" data-i18n="tool.env.title"
+            >ENV Parser</a
+          >
+        </div>
+        <h2 data-i18n="ui.faq">FAQ</h2>
+        <div class="faq">
+          <details class="faq-item">
+            <summary>
+              Why does my request fail with &#x27;Failed to fetch&#x27;?
+            </summary>
+            <div class="a">
+              Almost always a CORS problem: the target API isn't sending
+              Access-Control-Allow-Origin for your browser origin. Browsers
+              enforce this — it can't be disabled by the page. Try an API that
+              supports CORS or call from your backend.
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>Where are saved requests stored?</summary>
+            <div class="a">
+              In your browser's localStorage. They never leave your machine and
+              aren't synced. Clearing site data removes them.
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>Can I send form data or file uploads?</summary>
+            <div class="a">
+              The current version only supports raw JSON bodies. For
+              multipart/form-data, use a desktop client like Insomnia.
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>
+              Does this support OAuth flows or environment variables?
+            </summary>
+            <div class="a">
+              No. It's intentionally lightweight — paste a token directly into
+              the Authorization header. For full OAuth dance support, use
+              Postman or Insomnia.
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>Is the request body limited in size?</summary>
+            <div class="a">
+              Practically limited by your browser's memory; multi-megabyte JSON
+              works fine but isn't ideal in a textarea.
+            </div>
+          </details>
+        </div>
+      </section>
+    </main>
+    <div id="site-footer"></div>
+    <script src="/assets/js/common.js"></script>
+    <script src="/assets/js/i18n/translations.js"></script>
+    <script src="/assets/js/i18n.js"></script>
+    <script src="/assets/js/partials.js"></script>
+    <script>
+      const D = window.DTH,
+        $ = D.$;
+      const HS = $("#headers"),
+        URL = $("#url"),
+        M = $("#method"),
+        BODY = $("#body"),
+        RESP = $("#resp"),
+        ST = $("#status"),
+        TM = $("#time"),
+        SZ = $("#size"),
+        SAVED = $("#saved");
+      const KEY = "dth-api-saved";
+      function tab(id) {
+        ["h", "b", "s"].forEach((t) =>
+          $("#pane-" + t).classList.toggle("hide", t !== id),
+        );
+      }
+      $("#tab-h").onclick = () => tab("h");
+      $("#tab-b").onclick = () => tab("b");
+      $("#tab-s").onclick = () => {
+        tab("s");
+        renderSaved();
+      };
+      function addHeader(k, v) {
+        const row = document.createElement("div");
+        row.className = "row gap-sm";
+        row.style.marginBottom = "6px";
+        row.innerHTML = `<input class="btn" placeholder="Header" value="${k || ""}" style="flex:1"><input class="btn" placeholder="Value" value="${v || ""}" style="flex:2"><button class="btn ghost danger" style="padding:6px 10px">×</button>`;
+        row.children[2].onclick = () => row.remove();
+        HS.appendChild(row);
+      }
+      $("#add-h").onclick = () => addHeader("", "");
+      addHeader("Accept", "application/json");
+      function getHeaders() {
+        const h = {};
+        HS.querySelectorAll("div.row").forEach((r) => {
+          const k = r.children[0].value.trim();
+          const v = r.children[1].value;
+          if (k) h[k] = v;
+        });
+        return h;
+      }
+      async function send() {
+        const url = URL.value.trim();
+        if (!url) {
+          D.toast("Enter a URL", "err");
+          return;
+        }
+        const method = M.value;
+        const headers = getHeaders();
+        let body;
+        if (["POST", "PUT", "PATCH"].includes(method) && BODY.value.trim()) {
+          body = BODY.value;
+          if (!headers["Content-Type"])
+            headers["Content-Type"] = "application/json";
+        }
+        ST.textContent = "…";
+        ST.className = "badge";
+        TM.textContent = "";
+        SZ.textContent = "";
+        RESP.textContent = "Loading…";
+        const t0 = performance.now();
+        try {
+          const r = await fetch(url, { method, headers, body, mode: "cors" });
+          const txt = await r.text();
+          const dt = Math.round(performance.now() - t0);
+          ST.textContent = r.status + " " + r.statusText;
+          ST.className = "badge " + (r.ok ? "ok" : "err");
+          TM.textContent = dt + " ms";
+          SZ.textContent = new Blob([txt]).size + " B";
+          let out = txt;
+          try {
+            out = JSON.stringify(JSON.parse(txt), null, 2);
+          } catch (e) {}
+          const headerDump = Array.from(r.headers.entries())
+            .map(([k, v]) => k + ": " + v)
+            .join("\n");
+          RESP.textContent = `${headerDump}\n\n${out}`;
+        } catch (e) {
+          ST.textContent = "Error";
+          ST.className = "badge err";
+          RESP.textContent = `Request failed: ${e.message}\n\nThis is usually a CORS issue when the target API doesn't send the Access-Control-Allow-Origin header. Try:\n  • An API that supports CORS (most public APIs do)\n  • A browser extension that disables CORS for testing\n  • Calling the API from your backend instead`;
+        }
+      }
+      $("#send").onclick = send;
+      $("#cp-r").onclick = () => D.copyText(RESP.textContent);
+      function loadSaved() {
+        try {
+          return JSON.parse(localStorage.getItem(KEY) || "[]");
+        } catch (e) {
+          return [];
+        }
+      }
+      function persist(arr) {
+        try {
+          localStorage.setItem(KEY, JSON.stringify(arr));
+        } catch (e) {}
+      }
+      $("#save").onclick = () => {
+        const name = prompt("Name this request:");
+        if (!name) return;
+        const arr = loadSaved();
+        arr.push({
+          name,
+          method: M.value,
+          url: URL.value,
+          headers: getHeaders(),
+          body: BODY.value,
+        });
+        persist(arr);
+        D.toast("Saved", "ok");
+      };
+      function renderSaved() {
+        const arr = loadSaved();
+        if (!arr.length) {
+          SAVED.innerHTML =
+            '<p class="muted" style="margin:0">No saved requests yet.</p>';
+          return;
+        }
+        SAVED.innerHTML = "";
+        arr.forEach((s, i) => {
+          const row = document.createElement("div");
+          row.className = "row gap-sm";
+          row.style.marginBottom = "6px";
+          row.innerHTML = `<span class="badge">${s.method}</span><strong style="flex:1">${s.name}</strong><span class="muted" style="font-size:12px">${s.url}</span><button class="btn">Load</button><button class="btn ghost danger">×</button>`;
+          row.children[3].onclick = () => {
+            M.value = s.method;
+            URL.value = s.url;
+            BODY.value = s.body || "";
+            HS.innerHTML = "";
+            Object.entries(s.headers || {}).forEach(([k, v]) =>
+              addHeader(k, v),
+            );
+            tab("h");
+          };
+          row.children[4].onclick = () => {
+            const a = loadSaved();
+            a.splice(i, 1);
+            persist(a);
+            renderSaved();
+          };
+          SAVED.appendChild(row);
+        });
+      }
+    </script>
+  </body>
 </html>
