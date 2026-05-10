@@ -1,95 +1,416 @@
 <!doctype html>
 <html lang="en" data-theme="dark">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Regex Tester Online with Examples — JavaScript RegExp Tool | DevToolsHive</title>
-<meta name="description" content="Test JavaScript regex live with capture-group highlighting and 8 ready-made presets (email, URL, UUID, IPv4, more).">
-<link rel="canonical" href="https://devtoolshive.com/tools/regex.html">
-<link rel="alternate" hreflang="en" href="https://devtoolshive.com/tools/regex.html?lang=en" />
-    <link rel="alternate" hreflang="es" href="https://devtoolshive.com/tools/regex.html?lang=es" />
-    <link rel="alternate" hreflang="de" href="https://devtoolshive.com/tools/regex.html?lang=de" />
-    <link rel="alternate" hreflang="fr" href="https://devtoolshive.com/tools/regex.html?lang=fr" />
-    <link rel="alternate" hreflang="ja" href="https://devtoolshive.com/tools/regex.html?lang=ja" />
-    <link rel="alternate" hreflang="x-default" href="https://devtoolshive.com/tools/regex.html" />
-<meta property="og:type" content="website">
-<meta property="og:title" content="Regex Tester Online with Examples — JavaScript RegExp Tool | DevToolsHive">
-<meta property="og:description" content="Test JavaScript regex live with capture-group highlighting and 8 ready-made presets (email, URL, UUID, IPv4, more).">
-<meta property="og:url" content="https://devtoolshive.com/tools/regex.html">
-<meta property="og:image" content="https://devtoolshive.com/assets/img/favicon.svg">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Regex Tester Online with Examples — JavaScript RegExp Tool | DevToolsHive">
-<meta name="twitter:description" content="Test JavaScript regex live with capture-group highlighting and 8 ready-made presets (email, URL, UUID, IPv4, more).">
-<meta name="twitter:image" content="https://devtoolshive.com/assets/img/favicon.svg">
-<meta name="robots" content="index,follow">
-<meta name="theme-color" content="#0b0d12">
-<link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
-<link rel="stylesheet" href="/assets/css/styles.css">
-<script src="/assets/js/theme.js"></script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Regex Tester Online with Examples", "applicationCategory": "DeveloperApplication", "operatingSystem": "Any (web)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "url": "https://devtoolshive.com/tools/regex.html"}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why does my pattern hang the page?", "acceptedAnswer": {"@type": "Answer", "text": "Catastrophic backtracking. Patterns like (a+)+ on long input have exponential time. Simplify alternations or anchor the pattern."}}, {"@type": "Question", "name": "Can I use lookbehind?", "acceptedAnswer": {"@type": "Answer", "text": "Modern Chrome, Edge, Firefox 78+ and Safari 16.4+ support it. Older Safari does not."}}, {"@type": "Question", "name": "Are matches limited?", "acceptedAnswer": {"@type": "Answer", "text": "Yes \u2014 the tester stops at 10,000 matches to keep the UI responsive."}}, {"@type": "Question", "name": "Does it test PCRE/Python regex?", "acceptedAnswer": {"@type": "Answer", "text": "No, this uses JavaScript's RegExp engine. Patterns mostly transfer but exact behavior differs."}}]}</script>
-</head>
-<body>
-<a class="skip-link" href="#main">Skip to content</a>
-<div id="site-header"></div>
-<main id="main" class="container tool-page">
-<div class="crumbs"><a href="/">Home</a> · <span data-i18n="nav.tools">Tools</span> · <span>Regex Tester</span></div>
-<header class="tool-head"><h1 data-i18n="tool.regex.title">Regex Tester</h1><p data-i18n="tool.regex.desc">Test regular expressions with live highlights, capture groups and presets.</p></header>
-<div class="row-inline">
-<div class="field" style="flex:1"><label>Pattern</label><input type="text" id="pat" autofocus placeholder="\b[A-Z][a-z]+\b" spellcheck="false" style="font-family:var(--mono)"></div>
-<div class="field" style="width:120px"><label>Flags</label><input type="text" id="flg" value="g" maxlength="6" spellcheck="false" style="font-family:var(--mono)"></div>
-</div>
-<div class="row" style="flex-wrap:wrap;gap:6px;margin-bottom:10px">
-<button class="btn" data-rx="^[\w.+-]+@[\w-]+\.[\w.-]+$|gi">Email</button>
-<button class="btn" data-rx="https?://[^\s]+|gi">URL</button>
-<button class="btn" data-rx="\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b|gi">UUID</button>
-<button class="btn" data-rx="\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b|g">IPv4</button>
-<button class="btn" data-rx="^\+?[1-9]\d{1,14}$|gm">Phone (E.164)</button>
-<button class="btn" data-rx="#[0-9a-f]{6}\b|gi">Hex color</button>
-<button class="btn" data-rx="\d{4}-\d{2}-\d{2}|g">ISO date</button>
-<button class="btn" data-rx="\b[A-Z]{2,}\b|g">Acronyms</button>
-</div>
-<div class="pane"><div class="pane-head">Test string <span class="spacer"></span><span id="cnt" class="badge">0 matches</span></div>
-<textarea id="txt" spellcheck="false" placeholder="Paste text to test against…" style="min-height:160px"></textarea></div>
-<div class="pane" style="margin-top:10px"><div class="pane-head">Highlighted</div><div id="hi" class="rx-output"></div></div>
-<div class="pane" style="margin-top:10px"><div class="pane-head">Matches & groups</div><pre id="grp" style="padding:14px;margin:0;font-size:13px;max-height:240px;overflow:auto"></pre></div>
-<section class="content narrow"><h2>Regex tester with live highlighting and capture groups</h2>
-<p>Test JavaScript regular expressions with live highlights, colored capture groups, and a full match table. Includes presets for the patterns you actually need (email, URL, UUID, IPv4, hex color, E.164 phone) so you don't have to hunt them down again.</p>
-<h3>What's highlighted</h3>
-<p>Each full match gets a purple background. Capture groups inside that match get cycling colors (cyan, green, amber, red) so you can see at a glance what each parenthesized group caught. The match table below shows position, full match, and group values.</p>
-<h3>Flags supported</h3>
-<ul><li><code>g</code> — global, find all matches (auto-added by the tool).</li>
-<li><code>i</code> — case-insensitive.</li>
-<li><code>m</code> — multiline, <code>^</code>/<code>$</code> match line start/end.</li>
-<li><code>s</code> — dotall, <code>.</code> matches newlines.</li>
-<li><code>u</code> — Unicode mode.</li>
-<li><code>y</code> — sticky.</li></ul>
-<h3>Notes on JavaScript regex</h3>
-<p>JS regex is mostly PCRE-compatible but has quirks: no possessive quantifiers, lookbehind support varies by browser age, and named groups use <code>(?&lt;name&gt;...)</code>. The tester runs in your actual browser so the behavior here matches your runtime exactly.</p><h2 data-i18n="ui.related">Related tools</h2><div class="related"><a href="/tools/json-formatter.html" data-i18n="tool.json-formatter.title">JSON Formatter</a><a href="/tools/case-converter.html" data-i18n="tool.case.title">Text Case</a><a href="/tools/user-agent.html" data-i18n="tool.user-agent.title">User Agent Parser</a></div><h2 data-i18n=ui.faq>FAQ</h2><div class=faq><details class="faq-item"><summary>Why does my pattern hang the page?</summary><div class="a">Catastrophic backtracking. Patterns like (a+)+ on long input have exponential time. Simplify alternations or anchor the pattern.</div></details><details class="faq-item"><summary>Can I use lookbehind?</summary><div class="a">Modern Chrome, Edge, Firefox 78+ and Safari 16.4+ support it. Older Safari does not.</div></details><details class="faq-item"><summary>Are matches limited?</summary><div class="a">Yes — the tester stops at 10,000 matches to keep the UI responsive.</div></details><details class="faq-item"><summary>Does it test PCRE/Python regex?</summary><div class="a">No, this uses JavaScript's RegExp engine. Patterns mostly transfer but exact behavior differs.</div></details></div></section>
-</main>
-<div id="site-footer"></div>
-<script src="/assets/js/common.js"></script>
-<script src="/assets/js/i18n/translations.js"></script>
-<script src="/assets/js/i18n.js"></script>
-<script src="/assets/js/partials.js"></script>
-<script>const D=window.DTH,$=D.$;const P=$('#pat'),F=$('#flg'),T=$('#txt'),HI=$('#hi'),GR=$('#grp'),CNT=$('#cnt');
-function esc(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
-function go(){
-  const p=P.value;if(!p){HI.textContent='';GR.textContent='';CNT.textContent='0 matches';return;}
-  let re;try{re=new RegExp(p, F.value.includes('g')?F.value:F.value+'g');}catch(e){HI.innerHTML='<span class="muted">'+esc(e.message)+'</span>';CNT.textContent='invalid';return;}
-  const t=T.value;const matches=[];let m,safety=0;
-  while((m=re.exec(t))!==null){matches.push(m);if(m.index===re.lastIndex)re.lastIndex++;if(safety++>10000)break;}
-  CNT.textContent=matches.length+' match'+(matches.length===1?'':'es');
-  let html='',last=0;matches.forEach(m=>{
-    html+=esc(t.slice(last,m.index));
-    let inner=esc(m[0]);
-    if(m.length>1){let pos=0,parts='';for(let i=1;i<m.length;i++){if(m[i]===undefined)continue;const idx=m[0].indexOf(m[i],pos);if(idx>=0){parts+=esc(m[0].slice(pos,idx))+`<span class="rx-g${((i-1)%4)+1}">${esc(m[i])}</span>`;pos=idx+m[i].length;}}parts+=esc(m[0].slice(pos));inner=parts;}
-    html+=`<span class="rx-match">${inner}</span>`;last=m.index+m[0].length;
-  });html+=esc(t.slice(last));HI.innerHTML=html||'<span class="muted">No matches</span>';
-  GR.textContent=matches.map((m,i)=>`#${i+1} @${m.index}: ${JSON.stringify(m[0])}`+(m.length>1?'\n  groups: '+JSON.stringify(m.slice(1)):'')).join('\n')||'—';
-}
-[P,F,T].forEach(el=>el.addEventListener('input',D.debounce(go,200)));
-document.querySelectorAll('[data-rx]').forEach(b=>b.onclick=()=>{const [pat,fl]=b.dataset.rx.split('|');P.value=pat;F.value=fl;go();});
-T.value='Contact: alice@example.com or bob.smith+work@dev.io\nVisit https://example.com/path?q=1\nUUID 550e8400-e29b-41d4-a716-446655440000';go();</script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>
+      Regex Tester Online with Examples — JavaScript RegExp Tool | DevToolsHive
+    </title>
+    <meta
+      name="description"
+      content="Test JavaScript regex live with capture-group highlighting and 8 ready-made presets (email, URL, UUID, IPv4, more)."
+    />
+    <link rel="canonical" href="https://devtoolshive.com/tools/regex.html" />
+    <link
+      rel="alternate"
+      hreflang="en"
+      href="https://devtoolshive.com/tools/regex.html?lang=en"
+    />
+    <link
+      rel="alternate"
+      hreflang="es"
+      href="https://devtoolshive.com/tools/regex.html?lang=es"
+    />
+    <link
+      rel="alternate"
+      hreflang="de"
+      href="https://devtoolshive.com/tools/regex.html?lang=de"
+    />
+    <link
+      rel="alternate"
+      hreflang="fr"
+      href="https://devtoolshive.com/tools/regex.html?lang=fr"
+    />
+    <link
+      rel="alternate"
+      hreflang="ja"
+      href="https://devtoolshive.com/tools/regex.html?lang=ja"
+    />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href="https://devtoolshive.com/tools/regex.html"
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="Regex Tester Online with Examples — JavaScript RegExp Tool | DevToolsHive"
+    />
+    <meta
+      property="og:description"
+      content="Test JavaScript regex live with capture-group highlighting and 8 ready-made presets (email, URL, UUID, IPv4, more)."
+    />
+    <meta
+      property="og:url"
+      content="https://devtoolshive.com/tools/regex.html"
+    />
+    <meta
+      property="og:image"
+      content="https://devtoolshive.com/assets/img/favicon.svg"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Regex Tester Online with Examples — JavaScript RegExp Tool | DevToolsHive"
+    />
+    <meta
+      name="twitter:description"
+      content="Test JavaScript regex live with capture-group highlighting and 8 ready-made presets (email, URL, UUID, IPv4, more)."
+    />
+    <meta
+      name="twitter:image"
+      content="https://devtoolshive.com/assets/img/favicon.svg"
+    />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0b0d12" />
+    <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg" />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <script src="/assets/js/theme.js"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Regex Tester Online with Examples",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any (web)",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "url": "https://devtoolshive.com/tools/regex.html"
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Why does my pattern hang the page?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Catastrophic backtracking. Patterns like (a+)+ on long input have exponential time. Simplify alternations or anchor the pattern."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I use lookbehind?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Modern Chrome, Edge, Firefox 78+ and Safari 16.4+ support it. Older Safari does not."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Are matches limited?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes \u2014 the tester stops at 10,000 matches to keep the UI responsive."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does it test PCRE/Python regex?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No, this uses JavaScript's RegExp engine. Patterns mostly transfer but exact behavior differs."
+            }
+          }
+        ]
+      }
+    </script>
+  </head>
+  <!-- Google tag (gtag.js) -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-82130N1ETD"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-82130N1ETD");
+  </script>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="site-header"></div>
+    <main id="main" class="container tool-page">
+      <div class="crumbs">
+        <a href="/">Home</a> · <span data-i18n="nav.tools">Tools</span> ·
+        <span>Regex Tester</span>
+      </div>
+      <header class="tool-head">
+        <h1 data-i18n="tool.regex.title">Regex Tester</h1>
+        <p data-i18n="tool.regex.desc">
+          Test regular expressions with live highlights, capture groups and
+          presets.
+        </p>
+      </header>
+      <div class="row-inline">
+        <div class="field" style="flex: 1">
+          <label>Pattern</label
+          ><input
+            type="text"
+            id="pat"
+            autofocus
+            placeholder="\b[A-Z][a-z]+\b"
+            spellcheck="false"
+            style="font-family: var(--mono)"
+          />
+        </div>
+        <div class="field" style="width: 120px">
+          <label>Flags</label
+          ><input
+            type="text"
+            id="flg"
+            value="g"
+            maxlength="6"
+            spellcheck="false"
+            style="font-family: var(--mono)"
+          />
+        </div>
+      </div>
+      <div class="row" style="flex-wrap: wrap; gap: 6px; margin-bottom: 10px">
+        <button class="btn" data-rx="^[\w.+-]+@[\w-]+\.[\w.-]+$|gi">
+          Email
+        </button>
+        <button class="btn" data-rx="https?://[^\s]+|gi">URL</button>
+        <button
+          class="btn"
+          data-rx="\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b|gi"
+        >
+          UUID
+        </button>
+        <button class="btn" data-rx="\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b|g">
+          IPv4
+        </button>
+        <button class="btn" data-rx="^\+?[1-9]\d{1,14}$|gm">
+          Phone (E.164)
+        </button>
+        <button class="btn" data-rx="#[0-9a-f]{6}\b|gi">Hex color</button>
+        <button class="btn" data-rx="\d{4}-\d{2}-\d{2}|g">ISO date</button>
+        <button class="btn" data-rx="\b[A-Z]{2,}\b|g">Acronyms</button>
+      </div>
+      <div class="pane">
+        <div class="pane-head">
+          Test string <span class="spacer"></span
+          ><span id="cnt" class="badge">0 matches</span>
+        </div>
+        <textarea
+          id="txt"
+          spellcheck="false"
+          placeholder="Paste text to test against…"
+          style="min-height: 160px"
+        ></textarea>
+      </div>
+      <div class="pane" style="margin-top: 10px">
+        <div class="pane-head">Highlighted</div>
+        <div id="hi" class="rx-output"></div>
+      </div>
+      <div class="pane" style="margin-top: 10px">
+        <div class="pane-head">Matches & groups</div>
+        <pre
+          id="grp"
+          style="
+            padding: 14px;
+            margin: 0;
+            font-size: 13px;
+            max-height: 240px;
+            overflow: auto;
+          "
+        ></pre>
+      </div>
+      <section class="content narrow">
+        <h2>Regex tester with live highlighting and capture groups</h2>
+        <p>
+          Test JavaScript regular expressions with live highlights, colored
+          capture groups, and a full match table. Includes presets for the
+          patterns you actually need (email, URL, UUID, IPv4, hex color, E.164
+          phone) so you don't have to hunt them down again.
+        </p>
+        <h3>What's highlighted</h3>
+        <p>
+          Each full match gets a purple background. Capture groups inside that
+          match get cycling colors (cyan, green, amber, red) so you can see at a
+          glance what each parenthesized group caught. The match table below
+          shows position, full match, and group values.
+        </p>
+        <h3>Flags supported</h3>
+        <ul>
+          <li>
+            <code>g</code> — global, find all matches (auto-added by the tool).
+          </li>
+          <li><code>i</code> — case-insensitive.</li>
+          <li>
+            <code>m</code> — multiline, <code>^</code>/<code>$</code> match line
+            start/end.
+          </li>
+          <li><code>s</code> — dotall, <code>.</code> matches newlines.</li>
+          <li><code>u</code> — Unicode mode.</li>
+          <li><code>y</code> — sticky.</li>
+        </ul>
+        <h3>Notes on JavaScript regex</h3>
+        <p>
+          JS regex is mostly PCRE-compatible but has quirks: no possessive
+          quantifiers, lookbehind support varies by browser age, and named
+          groups use <code>(?&lt;name&gt;...)</code>. The tester runs in your
+          actual browser so the behavior here matches your runtime exactly.
+        </p>
+        <h2 data-i18n="ui.related">Related tools</h2>
+        <div class="related">
+          <a
+            href="/tools/json-formatter.html"
+            data-i18n="tool.json-formatter.title"
+            >JSON Formatter</a
+          ><a href="/tools/case-converter.html" data-i18n="tool.case.title"
+            >Text Case</a
+          ><a href="/tools/user-agent.html" data-i18n="tool.user-agent.title"
+            >User Agent Parser</a
+          >
+        </div>
+        <h2 data-i18n="ui.faq">FAQ</h2>
+        <div class="faq">
+          <details class="faq-item">
+            <summary>Why does my pattern hang the page?</summary>
+            <div class="a">
+              Catastrophic backtracking. Patterns like (a+)+ on long input have
+              exponential time. Simplify alternations or anchor the pattern.
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>Can I use lookbehind?</summary>
+            <div class="a">
+              Modern Chrome, Edge, Firefox 78+ and Safari 16.4+ support it.
+              Older Safari does not.
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>Are matches limited?</summary>
+            <div class="a">
+              Yes — the tester stops at 10,000 matches to keep the UI
+              responsive.
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>Does it test PCRE/Python regex?</summary>
+            <div class="a">
+              No, this uses JavaScript's RegExp engine. Patterns mostly transfer
+              but exact behavior differs.
+            </div>
+          </details>
+        </div>
+      </section>
+    </main>
+    <div id="site-footer"></div>
+    <script src="/assets/js/common.js"></script>
+    <script src="/assets/js/i18n/translations.js"></script>
+    <script src="/assets/js/i18n.js"></script>
+    <script src="/assets/js/partials.js"></script>
+    <script>
+      const D = window.DTH,
+        $ = D.$;
+      const P = $("#pat"),
+        F = $("#flg"),
+        T = $("#txt"),
+        HI = $("#hi"),
+        GR = $("#grp"),
+        CNT = $("#cnt");
+      function esc(s) {
+        return s.replace(
+          /[&<>"]/g,
+          (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c],
+        );
+      }
+      function go() {
+        const p = P.value;
+        if (!p) {
+          HI.textContent = "";
+          GR.textContent = "";
+          CNT.textContent = "0 matches";
+          return;
+        }
+        let re;
+        try {
+          re = new RegExp(p, F.value.includes("g") ? F.value : F.value + "g");
+        } catch (e) {
+          HI.innerHTML = '<span class="muted">' + esc(e.message) + "</span>";
+          CNT.textContent = "invalid";
+          return;
+        }
+        const t = T.value;
+        const matches = [];
+        let m,
+          safety = 0;
+        while ((m = re.exec(t)) !== null) {
+          matches.push(m);
+          if (m.index === re.lastIndex) re.lastIndex++;
+          if (safety++ > 10000) break;
+        }
+        CNT.textContent =
+          matches.length + " match" + (matches.length === 1 ? "" : "es");
+        let html = "",
+          last = 0;
+        matches.forEach((m) => {
+          html += esc(t.slice(last, m.index));
+          let inner = esc(m[0]);
+          if (m.length > 1) {
+            let pos = 0,
+              parts = "";
+            for (let i = 1; i < m.length; i++) {
+              if (m[i] === undefined) continue;
+              const idx = m[0].indexOf(m[i], pos);
+              if (idx >= 0) {
+                parts +=
+                  esc(m[0].slice(pos, idx)) +
+                  `<span class="rx-g${((i - 1) % 4) + 1}">${esc(m[i])}</span>`;
+                pos = idx + m[i].length;
+              }
+            }
+            parts += esc(m[0].slice(pos));
+            inner = parts;
+          }
+          html += `<span class="rx-match">${inner}</span>`;
+          last = m.index + m[0].length;
+        });
+        html += esc(t.slice(last));
+        HI.innerHTML = html || '<span class="muted">No matches</span>';
+        GR.textContent =
+          matches
+            .map(
+              (m, i) =>
+                `#${i + 1} @${m.index}: ${JSON.stringify(m[0])}` +
+                (m.length > 1
+                  ? "\n  groups: " + JSON.stringify(m.slice(1))
+                  : ""),
+            )
+            .join("\n") || "—";
+      }
+      [P, F, T].forEach((el) =>
+        el.addEventListener("input", D.debounce(go, 200)),
+      );
+      document.querySelectorAll("[data-rx]").forEach(
+        (b) =>
+          (b.onclick = () => {
+            const [pat, fl] = b.dataset.rx.split("|");
+            P.value = pat;
+            F.value = fl;
+            go();
+          }),
+      );
+      T.value =
+        "Contact: alice@example.com or bob.smith+work@dev.io\nVisit https://example.com/path?q=1\nUUID 550e8400-e29b-41d4-a716-446655440000";
+      go();
+    </script>
+  </body>
 </html>

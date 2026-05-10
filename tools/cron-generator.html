@@ -1,186 +1,524 @@
 <!doctype html>
 <html lang="en" data-theme="dark">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Cron Expression Generator — Build &amp; Explain Cron Schedules | DevToolsHive</title>
-<meta name="description" content="Build cron expressions visually with presets and a plain-English explanation. Preview next 5 runs. Free, fast, in your browser.">
-<link rel="canonical" href="https://devtoolshive.com/tools/cron-generator.html">
-<link rel="alternate" hreflang="en" href="https://devtoolshive.com/tools/cron-generator.html?lang=en" />
-    <link rel="alternate" hreflang="es" href="https://devtoolshive.com/tools/cron-generator.html?lang=es" />
-    <link rel="alternate" hreflang="de" href="https://devtoolshive.com/tools/cron-generator.html?lang=de" />
-    <link rel="alternate" hreflang="fr" href="https://devtoolshive.com/tools/cron-generator.html?lang=fr" />
-    <link rel="alternate" hreflang="ja" href="https://devtoolshive.com/tools/cron-generator.html?lang=ja" />
-    <link rel="alternate" hreflang="x-default" href="https://devtoolshive.com/tools/cron-generator.html" />
-<meta property="og:type" content="website">
-<meta property="og:title" content="Cron Expression Generator — Build &amp; Explain Cron Schedules | DevToolsHive">
-<meta property="og:description" content="Build cron expressions visually with presets and a plain-English explanation. Preview next 5 runs. Free, fast, in your browser.">
-<meta property="og:url" content="https://devtoolshive.com/tools/cron-generator.html">
-<meta property="og:image" content="https://devtoolshive.com/assets/img/favicon.svg">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Cron Expression Generator — Build &amp; Explain Cron Schedules | DevToolsHive">
-<meta name="twitter:description" content="Build cron expressions visually with presets and a plain-English explanation. Preview next 5 runs. Free, fast, in your browser.">
-<meta name="twitter:image" content="https://devtoolshive.com/assets/img/favicon.svg">
-<meta name="robots" content="index,follow">
-<meta name="theme-color" content="#0b0d12">
-<link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
-<link rel="stylesheet" href="/assets/css/styles.css">
-<script src="/assets/js/theme.js"></script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Cron Expression Generator", "applicationCategory": "DeveloperApplication", "operatingSystem": "Any (web)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "url": "https://devtoolshive.com/tools/cron-generator.html"}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What does the asterisk (*) mean?", "acceptedAnswer": {"@type": "Answer", "text": "An asterisk means 'every value' for that field. So * in the minute field means every minute, * in the hour field means every hour, etc."}}, {"@type": "Question", "name": "How is the next-run preview calculated?", "acceptedAnswer": {"@type": "Answer", "text": "Entirely in your browser. The tool starts at the next minute and walks forward minute by minute, checking each field against the expression until it finds 5 matches."}}, {"@type": "Question", "name": "Why is my schedule firing twice when both day-of-month and day-of-week are set?", "acceptedAnswer": {"@type": "Answer", "text": "Standard Unix cron treats those two fields as an OR \u2014 the job fires when either matches. To restrict to a specific day-of-week on a specific day-of-month, use only one field."}}, {"@type": "Question", "name": "Does this support Quartz-style 6 or 7 field cron?", "acceptedAnswer": {"@type": "Answer", "text": "Not currently. Quartz, Spring, and AWS EventBridge use extended cron formats with seconds and/or year. This tool generates standard 5-field Unix cron."}}, {"@type": "Question", "name": "How are timezones handled?", "acceptedAnswer": {"@type": "Answer", "text": "Your cron server (Linux box, GitHub Actions, Vercel, etc.) interprets the expression in its own timezone. The next-run preview uses your browser's local time. Always confirm what timezone your scheduler is configured for."}}]}</script>
-</head>
-<body>
-<a class="skip-link" href="#main">Skip to content</a>
-<div id="site-header"></div>
-<main id="main" class="container tool-page">
-<div class="crumbs"><a href="/">Home</a> · <span data-i18n="nav.tools">Tools</span> · <span>Cron Expression Generator</span></div>
-<header class="tool-head"><h1 data-i18n="tool.cron.title">Cron Expression Generator</h1><p data-i18n="tool.cron.desc">Build, explain, and preview cron expressions for Linux crontab, GitHub Actions, Vercel and more.</p></header>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>
+      Cron Expression Generator — Build &amp; Explain Cron Schedules |
+      DevToolsHive
+    </title>
+    <meta
+      name="description"
+      content="Build cron expressions visually with presets and a plain-English explanation. Preview next 5 runs. Free, fast, in your browser."
+    />
+    <link
+      rel="canonical"
+      href="https://devtoolshive.com/tools/cron-generator.html"
+    />
+    <link
+      rel="alternate"
+      hreflang="en"
+      href="https://devtoolshive.com/tools/cron-generator.html?lang=en"
+    />
+    <link
+      rel="alternate"
+      hreflang="es"
+      href="https://devtoolshive.com/tools/cron-generator.html?lang=es"
+    />
+    <link
+      rel="alternate"
+      hreflang="de"
+      href="https://devtoolshive.com/tools/cron-generator.html?lang=de"
+    />
+    <link
+      rel="alternate"
+      hreflang="fr"
+      href="https://devtoolshive.com/tools/cron-generator.html?lang=fr"
+    />
+    <link
+      rel="alternate"
+      hreflang="ja"
+      href="https://devtoolshive.com/tools/cron-generator.html?lang=ja"
+    />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href="https://devtoolshive.com/tools/cron-generator.html"
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="Cron Expression Generator — Build &amp; Explain Cron Schedules | DevToolsHive"
+    />
+    <meta
+      property="og:description"
+      content="Build cron expressions visually with presets and a plain-English explanation. Preview next 5 runs. Free, fast, in your browser."
+    />
+    <meta
+      property="og:url"
+      content="https://devtoolshive.com/tools/cron-generator.html"
+    />
+    <meta
+      property="og:image"
+      content="https://devtoolshive.com/assets/img/favicon.svg"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Cron Expression Generator — Build &amp; Explain Cron Schedules | DevToolsHive"
+    />
+    <meta
+      name="twitter:description"
+      content="Build cron expressions visually with presets and a plain-English explanation. Preview next 5 runs. Free, fast, in your browser."
+    />
+    <meta
+      name="twitter:image"
+      content="https://devtoolshive.com/assets/img/favicon.svg"
+    />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0b0d12" />
+    <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg" />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <script src="/assets/js/theme.js"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Cron Expression Generator",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any (web)",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "url": "https://devtoolshive.com/tools/cron-generator.html"
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What does the asterisk (*) mean?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "An asterisk means 'every value' for that field. So * in the minute field means every minute, * in the hour field means every hour, etc."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How is the next-run preview calculated?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Entirely in your browser. The tool starts at the next minute and walks forward minute by minute, checking each field against the expression until it finds 5 matches."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why is my schedule firing twice when both day-of-month and day-of-week are set?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Standard Unix cron treats those two fields as an OR \u2014 the job fires when either matches. To restrict to a specific day-of-week on a specific day-of-month, use only one field."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does this support Quartz-style 6 or 7 field cron?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Not currently. Quartz, Spring, and AWS EventBridge use extended cron formats with seconds and/or year. This tool generates standard 5-field Unix cron."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How are timezones handled?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Your cron server (Linux box, GitHub Actions, Vercel, etc.) interprets the expression in its own timezone. The next-run preview uses your browser's local time. Always confirm what timezone your scheduler is configured for."
+            }
+          }
+        ]
+      }
+    </script>
+  </head>
+    <!-- Google tag (gtag.js) -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-82130N1ETD"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
 
-<div class="row-inline" style="margin-bottom:14px">
-  <div class="field"><label>Minute</label><input type="text" id="m" value="*"></div>
-  <div class="field"><label>Hour</label><input type="text" id="h" value="*"></div>
-  <div class="field"><label>Day (month)</label><input type="text" id="dom" value="*"></div>
-  <div class="field"><label>Month</label><input type="text" id="mon" value="*"></div>
-  <div class="field"><label>Day (week)</label><input type="text" id="dow" value="*"></div>
-</div>
-<div class="row" style="flex-wrap:wrap;gap:6px;margin-bottom:14px">
-  <button class="btn" data-cron="* * * * *">Every minute</button>
-  <button class="btn" data-cron="*/5 * * * *">Every 5 min</button>
-  <button class="btn" data-cron="0 * * * *">Hourly</button>
-  <button class="btn" data-cron="0 0 * * *">Daily 00:00</button>
-  <button class="btn" data-cron="0 9 * * 1-5">Weekdays 9am</button>
-  <button class="btn" data-cron="0 0 * * 0">Sundays</button>
-  <button class="btn" data-cron="0 0 1 * *">Monthly 1st</button>
-  <button class="btn" data-cron="0 0 1 1 *">Yearly Jan 1</button>
-</div>
-<div class="pane">
-  <div class="pane-head">Expression <span class="spacer"></span><button class="btn" id="copy" data-shortcut="copy" data-i18n="ui.copy">Copy</button></div>
-  <pre id="expr" style="padding:14px;font-size:18px"></pre>
-</div>
-<div class="pane" style="margin-top:10px">
-  <div class="pane-head">Human readable</div>
-  <p id="human" style="padding:14px;margin:0"></p>
-</div>
-<div class="pane" style="margin-top:10px">
-  <div class="pane-head">Next 5 runs (your local time)</div>
-  <ol id="next" style="padding:14px 14px 14px 32px;margin:0;color:var(--text-dim)"></ol>
-</div>
+    gtag("config", "G-82130N1ETD");
+  </script>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="site-header"></div>
+    <main id="main" class="container tool-page">
+      <div class="crumbs">
+        <a href="/">Home</a> · <span data-i18n="nav.tools">Tools</span> ·
+        <span>Cron Expression Generator</span>
+      </div>
+      <header class="tool-head">
+        <h1 data-i18n="tool.cron.title">Cron Expression Generator</h1>
+        <p data-i18n="tool.cron.desc">
+          Build, explain, and preview cron expressions for Linux crontab, GitHub
+          Actions, Vercel and more.
+        </p>
+      </header>
 
-<section class="content narrow">
-<h2>Cron expression generator with human-readable explanation</h2>
-<p>A cron expression is five fields — minute, hour, day-of-month, month, day-of-week — that tell a scheduler when to run a job. The syntax is famously hostile: <code>0 0 * * 0</code> means "every Sunday at midnight" and <code>*/15 9-17 * * 1-5</code> means "every 15 minutes, business hours, weekdays". This tool lets you build expressions visually, see a plain-English description, and preview the next 5 actual run times in your local timezone.</p>
+      <div class="row-inline" style="margin-bottom: 14px">
+        <div class="field">
+          <label>Minute</label><input type="text" id="m" value="*" />
+        </div>
+        <div class="field">
+          <label>Hour</label><input type="text" id="h" value="*" />
+        </div>
+        <div class="field">
+          <label>Day (month)</label><input type="text" id="dom" value="*" />
+        </div>
+        <div class="field">
+          <label>Month</label><input type="text" id="mon" value="*" />
+        </div>
+        <div class="field">
+          <label>Day (week)</label><input type="text" id="dow" value="*" />
+        </div>
+      </div>
+      <div class="row" style="flex-wrap: wrap; gap: 6px; margin-bottom: 14px">
+        <button class="btn" data-cron="* * * * *">Every minute</button>
+        <button class="btn" data-cron="*/5 * * * *">Every 5 min</button>
+        <button class="btn" data-cron="0 * * * *">Hourly</button>
+        <button class="btn" data-cron="0 0 * * *">Daily 00:00</button>
+        <button class="btn" data-cron="0 9 * * 1-5">Weekdays 9am</button>
+        <button class="btn" data-cron="0 0 * * 0">Sundays</button>
+        <button class="btn" data-cron="0 0 1 * *">Monthly 1st</button>
+        <button class="btn" data-cron="0 0 1 1 *">Yearly Jan 1</button>
+      </div>
+      <div class="pane">
+        <div class="pane-head">
+          Expression <span class="spacer"></span
+          ><button
+            class="btn"
+            id="copy"
+            data-shortcut="copy"
+            data-i18n="ui.copy"
+          >
+            Copy
+          </button>
+        </div>
+        <pre id="expr" style="padding: 14px; font-size: 18px"></pre>
+      </div>
+      <div class="pane" style="margin-top: 10px">
+        <div class="pane-head">Human readable</div>
+        <p id="human" style="padding: 14px; margin: 0"></p>
+      </div>
+      <div class="pane" style="margin-top: 10px">
+        <div class="pane-head">Next 5 runs (your local time)</div>
+        <ol
+          id="next"
+          style="
+            padding: 14px 14px 14px 32px;
+            margin: 0;
+            color: var(--text-dim);
+          "
+        ></ol>
+      </div>
 
-<h3>How to read a cron expression</h3>
-<pre><code>┌──────────── minute (0-59)
+      <section class="content narrow">
+        <h2>Cron expression generator with human-readable explanation</h2>
+        <p>
+          A cron expression is five fields — minute, hour, day-of-month, month,
+          day-of-week — that tell a scheduler when to run a job. The syntax is
+          famously hostile: <code>0 0 * * 0</code> means "every Sunday at
+          midnight" and <code>*/15 9-17 * * 1-5</code> means "every 15 minutes,
+          business hours, weekdays". This tool lets you build expressions
+          visually, see a plain-English description, and preview the next 5
+          actual run times in your local timezone.
+        </p>
+
+        <h3>How to read a cron expression</h3>
+        <pre><code>┌──────────── minute (0-59)
 │ ┌────────── hour (0-23)
 │ │ ┌──────── day of month (1-31)
 │ │ │ ┌────── month (1-12)
 │ │ │ │ ┌──── day of week (0-6, Sunday=0)
 │ │ │ │ │
 * * * * *</code></pre>
-<p>Each field accepts: a number (<code>5</code>), a range (<code>1-5</code>), a list (<code>1,3,5</code>), a wildcard (<code>*</code>), or a step (<code>*/15</code>, <code>0-30/5</code>). Steps are the trickiest part: <code>*/15</code> in the minute field means "every 15 minutes starting at 0" — so 0, 15, 30, 45.</p>
+        <p>
+          Each field accepts: a number (<code>5</code>), a range
+          (<code>1-5</code>), a list (<code>1,3,5</code>), a wildcard
+          (<code>*</code>), or a step (<code>*/15</code>, <code>0-30/5</code>).
+          Steps are the trickiest part: <code>*/15</code> in the minute field
+          means "every 15 minutes starting at 0" — so 0, 15, 30, 45.
+        </p>
 
-<h3>Common patterns</h3>
-<ul>
-<li><code>* * * * *</code> — every minute</li>
-<li><code>*/5 * * * *</code> — every 5 minutes</li>
-<li><code>0 * * * *</code> — every hour on the hour</li>
-<li><code>0 9 * * 1-5</code> — 9 AM on weekdays</li>
-<li><code>0 0 1 * *</code> — midnight on the 1st of every month</li>
-<li><code>0 2 * * 0</code> — 2 AM every Sunday</li>
-<li><code>15,45 * * * *</code> — at :15 and :45 of every hour</li>
-</ul>
+        <h3>Common patterns</h3>
+        <ul>
+          <li><code>* * * * *</code> — every minute</li>
+          <li><code>*/5 * * * *</code> — every 5 minutes</li>
+          <li><code>0 * * * *</code> — every hour on the hour</li>
+          <li><code>0 9 * * 1-5</code> — 9 AM on weekdays</li>
+          <li><code>0 0 1 * *</code> — midnight on the 1st of every month</li>
+          <li><code>0 2 * * 0</code> — 2 AM every Sunday</li>
+          <li><code>15,45 * * * *</code> — at :15 and :45 of every hour</li>
+        </ul>
 
-<h3>Pitfalls people hit</h3>
-<ul>
-<li><strong>Day-of-month + day-of-week:</strong> in standard Unix cron, when both are specified, the job runs when <em>either</em> matches — not both. <code>0 0 1 * 1</code> runs on the 1st of every month <em>and</em> every Monday.</li>
-<li><strong>Step starts at 0:</strong> <code>*/15</code> in the hour field is <code>0,15</code> — but the hour field is 0-23, so this only fires at midnight and quarter-past midnight, not what most people expect.</li>
-<li><strong>Timezone:</strong> the cron daemon runs in the server's timezone, not yours. The "next run" preview here uses your browser's local timezone — translate carefully when deploying.</li>
-<li><strong>Jenkins / Quartz are different:</strong> Quartz cron has 6 or 7 fields (with seconds and year). Spring's cron has 6. AWS EventBridge uses 6 with year. This tool generates standard 5-field Unix cron.</li>
-</ul>
+        <h3>Pitfalls people hit</h3>
+        <ul>
+          <li>
+            <strong>Day-of-month + day-of-week:</strong> in standard Unix cron,
+            when both are specified, the job runs when <em>either</em> matches —
+            not both. <code>0 0 1 * 1</code> runs on the 1st of every month
+            <em>and</em> every Monday.
+          </li>
+          <li>
+            <strong>Step starts at 0:</strong> <code>*/15</code> in the hour
+            field is <code>0,15</code> — but the hour field is 0-23, so this
+            only fires at midnight and quarter-past midnight, not what most
+            people expect.
+          </li>
+          <li>
+            <strong>Timezone:</strong> the cron daemon runs in the server's
+            timezone, not yours. The "next run" preview here uses your browser's
+            local timezone — translate carefully when deploying.
+          </li>
+          <li>
+            <strong>Jenkins / Quartz are different:</strong> Quartz cron has 6
+            or 7 fields (with seconds and year). Spring's cron has 6. AWS
+            EventBridge uses 6 with year. This tool generates standard 5-field
+            Unix cron.
+          </li>
+        </ul>
 
-<h3>Where this format applies</h3>
-<p>Standard 5-field cron is used by Linux <code>crontab</code>, GitHub Actions schedules, GitLab CI scheduled pipelines, Vercel Cron Jobs, Cloudflare Workers cron triggers, Supabase pg_cron (with seconds), Kubernetes CronJob, and most other modern schedulers. If your scheduler uses a different dialect (Quartz, Spring, AWS), validate the generated expression in their docs before deploying.</p>
+        <h3>Where this format applies</h3>
+        <p>
+          Standard 5-field cron is used by Linux <code>crontab</code>, GitHub
+          Actions schedules, GitLab CI scheduled pipelines, Vercel Cron Jobs,
+          Cloudflare Workers cron triggers, Supabase pg_cron (with seconds),
+          Kubernetes CronJob, and most other modern schedulers. If your
+          scheduler uses a different dialect (Quartz, Spring, AWS), validate the
+          generated expression in their docs before deploying.
+        </p>
 
-<h3>Testing your expression</h3>
-<p>Always check the "Next 5 runs" preview before saving. The most common bugs are typos that produce a valid-looking expression that fires at the wrong time — for example <code>0 0 * * 7</code> (invalid: day-of-week is 0-6) silently becomes "never" on some implementations.</p>
-<h2 data-i18n="ui.related">Related tools</h2><div class="related"><a href="/tools/timestamp.html" data-i18n="tool.timestamp.title">Unix Timestamp</a><a href="/tools/json-formatter.html" data-i18n="tool.json-formatter.title">JSON Formatter</a><a href="/tools/env-parser.html" data-i18n="tool.env.title">ENV Parser</a></div><h2 data-i18n=ui.faq>FAQ</h2><div class=faq><details class="faq-item"><summary>What does the asterisk (*) mean?</summary><div class="a">An asterisk means 'every value' for that field. So * in the minute field means every minute, * in the hour field means every hour, etc.</div></details><details class="faq-item"><summary>How is the next-run preview calculated?</summary><div class="a">Entirely in your browser. The tool starts at the next minute and walks forward minute by minute, checking each field against the expression until it finds 5 matches.</div></details><details class="faq-item"><summary>Why is my schedule firing twice when both day-of-month and day-of-week are set?</summary><div class="a">Standard Unix cron treats those two fields as an OR — the job fires when either matches. To restrict to a specific day-of-week on a specific day-of-month, use only one field.</div></details><details class="faq-item"><summary>Does this support Quartz-style 6 or 7 field cron?</summary><div class="a">Not currently. Quartz, Spring, and AWS EventBridge use extended cron formats with seconds and/or year. This tool generates standard 5-field Unix cron.</div></details><details class="faq-item"><summary>How are timezones handled?</summary><div class="a">Your cron server (Linux box, GitHub Actions, Vercel, etc.) interprets the expression in its own timezone. The next-run preview uses your browser's local time. Always confirm what timezone your scheduler is configured for.</div></details></div></section>
-</main>
-<div id="site-footer"></div>
-<script src="/assets/js/common.js"></script>
-<script src="/assets/js/i18n/translations.js"></script>
-<script src="/assets/js/i18n.js"></script>
-<script src="/assets/js/partials.js"></script>
-<script>
-const D=window.DTH,$=D.$;
-const fields=['m','h','dom','mon','dow'].map(id=>$('#'+id));
-const E=$('#expr'),HU=$('#human'),NX=$('#next');
-const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-function expr(){return fields.map(f=>f.value.trim()||'*').join(' ');}
-function describePart(v,kind){
-  if(v==='*') return 'every '+kind;
-  const stepM=/^\*\/(\d+)$/.exec(v); if(stepM) return 'every '+stepM[1]+' '+kind+'s';
-  const rangeStep=/^(\d+)-(\d+)\/(\d+)$/.exec(v); if(rangeStep) return `every ${rangeStep[3]} ${kind}s from ${rangeStep[1]} to ${rangeStep[2]}`;
-  const range=/^(\d+)-(\d+)$/.exec(v); if(range) return `${kind}s ${range[1]} to ${range[2]}`;
-  if(v.includes(',')) return kind+'s '+v;
-  return kind+' '+v;
-}
-function describe(){
-  const [m,h,dom,mon,dow]=expr().split(' ');
-  const parts=[];
-  if(m==='*' && h==='*') parts.push('every minute');
-  else if(m==='0' && h==='*') parts.push('at the top of every hour');
-  else if(h==='*'){parts.push('at minute '+m+' of every hour');}
-  else if(m.match(/^\d+$/) && h.match(/^\d+$/)){parts.push(`at ${h.padStart(2,'0')}:${m.padStart(2,'0')}`);}
-  else parts.push(describePart(m,'minute')+', '+describePart(h,'hour'));
-  if(dow!=='*'){
-    const names=dow.split(',').map(d=>{const r=/^(\d)-(\d)$/.exec(d);if(r)return DOW[+r[1]]+'–'+DOW[+r[2]];return DOW[+d]||d;}).join(', ');
-    parts.push('on '+names);
-  }
-  if(dom!=='*') parts.push('on day '+dom+' of the month');
-  if(mon!=='*'){const names=mon.split(',').map(x=>MON[+x-1]||x).join(', ');parts.push('in '+names);}
-  return parts.join(', ');
-}
-function matches(n, field, min, max){
-  if(field==='*') return true;
-  for(const part of field.split(',')){
-    const step=/^(\*|\d+|\d+-\d+)\/(\d+)$/.exec(part);
-    if(step){
-      let lo=min, hi=max;
-      if(step[1]!=='*'){const r=/^(\d+)-(\d+)$/.exec(step[1]);if(r){lo=+r[1];hi=+r[2];}else{lo=+step[1];}}
-      if(n>=lo && n<=hi && (n-lo)%(+step[2])===0) return true;
-      continue;
-    }
-    const range=/^(\d+)-(\d+)$/.exec(part);
-    if(range){if(n>=+range[1]&&n<=+range[2])return true;continue;}
-    if(+part===n) return true;
-  }
-  return false;
-}
-function nextRuns(n){
-  const [m,h,dom,mon,dow]=expr().split(' ');
-  const out=[];let d=new Date();d.setSeconds(0,0);d.setMinutes(d.getMinutes()+1);
-  let safety=0;
-  while(out.length<n && safety<525600){
-    safety++;
-    const ok = matches(d.getMinutes(),m,0,59) && matches(d.getHours(),h,0,23) &&
-               matches(d.getDate(),dom,1,31) && matches(d.getMonth()+1,mon,1,12) &&
-               (dow==='*' || matches(d.getDay(),dow,0,6));
-    if(ok) out.push(new Date(d));
-    d.setMinutes(d.getMinutes()+1);
-  }
-  return out;
-}
-function update(){
-  const e=expr();E.textContent=e;
-  HU.textContent=describe();
-  NX.innerHTML='';nextRuns(5).forEach(d=>{const li=document.createElement('li');li.textContent=d.toLocaleString();NX.appendChild(li);});
-}
-fields.forEach(f=>f.addEventListener('input',D.debounce(update,150)));
-document.querySelectorAll('[data-cron]').forEach(b=>b.onclick=()=>{const v=b.dataset.cron.split(' ');fields.forEach((f,i)=>f.value=v[i]);update();});
-$('#copy').onclick=()=>D.copyText(expr());
-update();
-</script>
-</body>
+        <h3>Testing your expression</h3>
+        <p>
+          Always check the "Next 5 runs" preview before saving. The most common
+          bugs are typos that produce a valid-looking expression that fires at
+          the wrong time — for example <code>0 0 * * 7</code> (invalid:
+          day-of-week is 0-6) silently becomes "never" on some implementations.
+        </p>
+        <h2 data-i18n="ui.related">Related tools</h2>
+        <div class="related">
+          <a href="/tools/timestamp.html" data-i18n="tool.timestamp.title"
+            >Unix Timestamp</a
+          ><a
+            href="/tools/json-formatter.html"
+            data-i18n="tool.json-formatter.title"
+            >JSON Formatter</a
+          ><a href="/tools/env-parser.html" data-i18n="tool.env.title"
+            >ENV Parser</a
+          >
+        </div>
+        <h2 data-i18n="ui.faq">FAQ</h2>
+        <div class="faq">
+          <details class="faq-item">
+            <summary>What does the asterisk (*) mean?</summary>
+            <div class="a">
+              An asterisk means 'every value' for that field. So * in the minute
+              field means every minute, * in the hour field means every hour,
+              etc.
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>How is the next-run preview calculated?</summary>
+            <div class="a">
+              Entirely in your browser. The tool starts at the next minute and
+              walks forward minute by minute, checking each field against the
+              expression until it finds 5 matches.
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>
+              Why is my schedule firing twice when both day-of-month and
+              day-of-week are set?
+            </summary>
+            <div class="a">
+              Standard Unix cron treats those two fields as an OR — the job
+              fires when either matches. To restrict to a specific day-of-week
+              on a specific day-of-month, use only one field.
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>Does this support Quartz-style 6 or 7 field cron?</summary>
+            <div class="a">
+              Not currently. Quartz, Spring, and AWS EventBridge use extended
+              cron formats with seconds and/or year. This tool generates
+              standard 5-field Unix cron.
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>How are timezones handled?</summary>
+            <div class="a">
+              Your cron server (Linux box, GitHub Actions, Vercel, etc.)
+              interprets the expression in its own timezone. The next-run
+              preview uses your browser's local time. Always confirm what
+              timezone your scheduler is configured for.
+            </div>
+          </details>
+        </div>
+      </section>
+    </main>
+    <div id="site-footer"></div>
+    <script src="/assets/js/common.js"></script>
+    <script src="/assets/js/i18n/translations.js"></script>
+    <script src="/assets/js/i18n.js"></script>
+    <script src="/assets/js/partials.js"></script>
+    <script>
+      const D = window.DTH,
+        $ = D.$;
+      const fields = ["m", "h", "dom", "mon", "dow"].map((id) => $("#" + id));
+      const E = $("#expr"),
+        HU = $("#human"),
+        NX = $("#next");
+      const MON = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      function expr() {
+        return fields.map((f) => f.value.trim() || "*").join(" ");
+      }
+      function describePart(v, kind) {
+        if (v === "*") return "every " + kind;
+        const stepM = /^\*\/(\d+)$/.exec(v);
+        if (stepM) return "every " + stepM[1] + " " + kind + "s";
+        const rangeStep = /^(\d+)-(\d+)\/(\d+)$/.exec(v);
+        if (rangeStep)
+          return `every ${rangeStep[3]} ${kind}s from ${rangeStep[1]} to ${rangeStep[2]}`;
+        const range = /^(\d+)-(\d+)$/.exec(v);
+        if (range) return `${kind}s ${range[1]} to ${range[2]}`;
+        if (v.includes(",")) return kind + "s " + v;
+        return kind + " " + v;
+      }
+      function describe() {
+        const [m, h, dom, mon, dow] = expr().split(" ");
+        const parts = [];
+        if (m === "*" && h === "*") parts.push("every minute");
+        else if (m === "0" && h === "*") parts.push("at the top of every hour");
+        else if (h === "*") {
+          parts.push("at minute " + m + " of every hour");
+        } else if (m.match(/^\d+$/) && h.match(/^\d+$/)) {
+          parts.push(`at ${h.padStart(2, "0")}:${m.padStart(2, "0")}`);
+        } else
+          parts.push(
+            describePart(m, "minute") + ", " + describePart(h, "hour"),
+          );
+        if (dow !== "*") {
+          const names = dow
+            .split(",")
+            .map((d) => {
+              const r = /^(\d)-(\d)$/.exec(d);
+              if (r) return DOW[+r[1]] + "–" + DOW[+r[2]];
+              return DOW[+d] || d;
+            })
+            .join(", ");
+          parts.push("on " + names);
+        }
+        if (dom !== "*") parts.push("on day " + dom + " of the month");
+        if (mon !== "*") {
+          const names = mon
+            .split(",")
+            .map((x) => MON[+x - 1] || x)
+            .join(", ");
+          parts.push("in " + names);
+        }
+        return parts.join(", ");
+      }
+      function matches(n, field, min, max) {
+        if (field === "*") return true;
+        for (const part of field.split(",")) {
+          const step = /^(\*|\d+|\d+-\d+)\/(\d+)$/.exec(part);
+          if (step) {
+            let lo = min,
+              hi = max;
+            if (step[1] !== "*") {
+              const r = /^(\d+)-(\d+)$/.exec(step[1]);
+              if (r) {
+                lo = +r[1];
+                hi = +r[2];
+              } else {
+                lo = +step[1];
+              }
+            }
+            if (n >= lo && n <= hi && (n - lo) % +step[2] === 0) return true;
+            continue;
+          }
+          const range = /^(\d+)-(\d+)$/.exec(part);
+          if (range) {
+            if (n >= +range[1] && n <= +range[2]) return true;
+            continue;
+          }
+          if (+part === n) return true;
+        }
+        return false;
+      }
+      function nextRuns(n) {
+        const [m, h, dom, mon, dow] = expr().split(" ");
+        const out = [];
+        let d = new Date();
+        d.setSeconds(0, 0);
+        d.setMinutes(d.getMinutes() + 1);
+        let safety = 0;
+        while (out.length < n && safety < 525600) {
+          safety++;
+          const ok =
+            matches(d.getMinutes(), m, 0, 59) &&
+            matches(d.getHours(), h, 0, 23) &&
+            matches(d.getDate(), dom, 1, 31) &&
+            matches(d.getMonth() + 1, mon, 1, 12) &&
+            (dow === "*" || matches(d.getDay(), dow, 0, 6));
+          if (ok) out.push(new Date(d));
+          d.setMinutes(d.getMinutes() + 1);
+        }
+        return out;
+      }
+      function update() {
+        const e = expr();
+        E.textContent = e;
+        HU.textContent = describe();
+        NX.innerHTML = "";
+        nextRuns(5).forEach((d) => {
+          const li = document.createElement("li");
+          li.textContent = d.toLocaleString();
+          NX.appendChild(li);
+        });
+      }
+      fields.forEach((f) =>
+        f.addEventListener("input", D.debounce(update, 150)),
+      );
+      document.querySelectorAll("[data-cron]").forEach(
+        (b) =>
+          (b.onclick = () => {
+            const v = b.dataset.cron.split(" ");
+            fields.forEach((f, i) => (f.value = v[i]));
+            update();
+          }),
+      );
+      $("#copy").onclick = () => D.copyText(expr());
+      update();
+    </script>
+  </body>
 </html>
