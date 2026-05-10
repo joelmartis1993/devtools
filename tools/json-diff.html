@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JSON Diff Tool Online — Compare Two JSON Files Side by Side | DevToolsHive</title>
+<meta name="description" content="Compare two JSON documents online. Color-coded added, removed, modified keys. Ignore order, upload files, copy diff. Free, fast, in-browser.">
+<link rel="canonical" href="https://devtoolshive.com/tools/json-diff.html">
+<link rel="alternate" hreflang="en" href="https://devtoolshive.com/tools/json-diff.html?lang=en" />
+    <link rel="alternate" hreflang="es" href="https://devtoolshive.com/tools/json-diff.html?lang=es" />
+    <link rel="alternate" hreflang="de" href="https://devtoolshive.com/tools/json-diff.html?lang=de" />
+    <link rel="alternate" hreflang="fr" href="https://devtoolshive.com/tools/json-diff.html?lang=fr" />
+    <link rel="alternate" hreflang="ja" href="https://devtoolshive.com/tools/json-diff.html?lang=ja" />
+    <link rel="alternate" hreflang="x-default" href="https://devtoolshive.com/tools/json-diff.html" />
+<meta property="og:type" content="website">
+<meta property="og:title" content="JSON Diff Tool Online — Compare Two JSON Files Side by Side | DevToolsHive">
+<meta property="og:description" content="Compare two JSON documents online. Color-coded added, removed, modified keys. Ignore order, upload files, copy diff. Free, fast, in-browser.">
+<meta property="og:url" content="https://devtoolshive.com/tools/json-diff.html">
+<meta property="og:image" content="https://devtoolshive.com/assets/img/favicon.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="JSON Diff Tool Online — Compare Two JSON Files Side by Side | DevToolsHive">
+<meta name="twitter:description" content="Compare two JSON documents online. Color-coded added, removed, modified keys. Ignore order, upload files, copy diff. Free, fast, in-browser.">
+<meta name="twitter:image" content="https://devtoolshive.com/assets/img/favicon.svg">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#0b0d12">
+<link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
+<link rel="stylesheet" href="/assets/css/styles.css">
+<script src="/assets/js/theme.js"></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "JSON Diff Tool Online", "applicationCategory": "DeveloperApplication", "operatingSystem": "Any (web)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "url": "https://devtoolshive.com/tools/json-diff.html"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can I upload JSON files instead of pasting?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, click 'Upload' on either pane to load a local .json file. Files are read in the browser using FileReader; nothing is uploaded."}}, {"@type": "Question", "name": "Why are reordered arrays still showing as different?", "acceptedAnswer": {"@type": "Answer", "text": "By default arrays are compared by index. Toggle 'Ignore array order' to compare them as multisets \u2014 useful for tags, roles, and other unordered lists."}}, {"@type": "Question", "name": "Does the diff support nested objects?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The output uses dotted JSON paths like user.address.city for objects and user.tags[2] for array indices, so deeply nested differences are easy to locate."}}, {"@type": "Question", "name": "Can I diff JSON against YAML or another format?", "acceptedAnswer": {"@type": "Answer", "text": "Not directly. Convert YAML to JSON first with our ENV/JSON/YAML converter, then paste both as JSON."}}]}</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div id="site-header"></div>
+<main id="main" class="container tool-page">
+<div class="crumbs"><a href="/">Home</a> · <span data-i18n="nav.tools">Tools</span> · <span>JSON Diff</span></div>
+<header class="tool-head"><h1 data-i18n="tool.json-diff.title">JSON Diff</h1><p data-i18n="tool.json-diff.desc">Compare two JSON documents and see exactly what changed.</p></header>
+
+<div class="toolbar">
+  <button class="btn primary" id="compare" data-shortcut="run" data-i18n="ui.compare">Compare</button>
+  <label class="row gap-sm muted" style="font-size:13px"><input type="checkbox" id="ignore-order" checked> Ignore array order</label>
+  <label class="row gap-sm muted" style="font-size:13px"><input type="checkbox" id="ignore-keys"> Ignore key order</label>
+  <span class="spacer"></span>
+  <button class="btn" id="copy-diff" data-shortcut="copy" data-i18n="ui.copy">Copy diff</button>
+  <button class="btn" id="download-diff" data-i18n="ui.download">Download</button>
+  <button class="btn ghost danger" id="clear" data-shortcut="clear" data-i18n="ui.clear">Clear</button>
+</div>
+<div class="io-grid">
+  <div class="pane">
+    <div class="pane-head">A (left) <span class="spacer"></span><label class="btn" for="up-a" style="padding:3px 8px"><span data-i18n="ui.upload">Upload</span></label><input id="up-a" type="file" hidden accept=".json"></div>
+    <textarea id="left" spellcheck="false" autofocus placeholder='{ "name": "alice", "age": 30 }'></textarea>
+  </div>
+  <div class="pane">
+    <div class="pane-head">B (right) <span class="spacer"></span><label class="btn" for="up-b" style="padding:3px 8px"><span data-i18n="ui.upload">Upload</span></label><input id="up-b" type="file" hidden accept=".json"></div>
+    <textarea id="right" spellcheck="false" placeholder='{ "name": "alice", "age": 31, "city": "NYC" }'></textarea>
+  </div>
+</div>
+<div class="pane" style="margin-top:12px">
+  <div class="pane-head">Diff <span class="spacer"></span><span id="diff-stats" class="badge"></span></div>
+  <div id="diff" style="padding:8px 0;max-height:520px;overflow:auto"></div>
+</div>
+
+<section class="content narrow">
+<h2>Compare two JSON files online — actually useful diff output</h2>
+<p>The JSON diff tool compares two documents and tells you exactly what changed: which keys were added, removed, modified, and where. The output is a flat list of paths (e.g. <code>user.address.city</code>) so you can copy them into a Jira ticket, a code review comment, or a debug log without anyone having to squint at two giant blobs side by side.</p>
+
+<h3>Why a JSON-aware diff beats a text diff</h3>
+<p>A line diff (the kind <code>git diff</code> gives you) treats JSON as text, so it gets confused by reordered keys, formatting changes, and trailing commas. Adding a single field can blow up into a 200-line diff because every subsequent line shifts. A JSON-aware diff parses both documents into objects and compares them <em>structurally</em>, so it ignores whitespace and key order while catching real semantic changes — added fields, removed fields, type changes, value changes.</p>
+
+<h3>Options that match real-world API testing</h3>
+<ul>
+<li><strong>Ignore array order</strong> — useful for unordered collections like tags or permissions where <code>["read","write"]</code> and <code>["write","read"]</code> should be considered equal.</li>
+<li><strong>Ignore key order</strong> — sorts keys alphabetically before diffing so two endpoints that serialize fields in different orders aren't reported as different.</li>
+</ul>
+
+<h3>Use cases</h3>
+<ul>
+<li><strong>API regression tests</strong> — compare a recorded baseline response with the current production response.</li>
+<li><strong>Config drift</strong> — diff <code>config.json</code> across two environments to find unexpected overrides.</li>
+<li><strong>GraphQL response validation</strong> — make sure a refactor didn't change the shape of a response.</li>
+<li><strong>Database export comparisons</strong> — compare two seed files before pushing.</li>
+</ul>
+
+<h3>Output format</h3>
+<p>Every changed field is shown with a sigil and a JSON path:</p>
+<pre><code>+ user.email: "alice@new.com"
+- user.email: "alice@old.com"
+~ user.age: 30 → 31
++ user.permissions[2]: "admin"</code></pre>
+<p>Plus (<code>+</code>) means added in B, minus (<code>-</code>) means removed from A, tilde (<code>~</code>) means the value changed. The status badge shows the totals (<code>+3 -1 ~2</code>) at a glance.</p>
+
+<h3>Privacy</h3>
+<p>Both inputs stay in your browser. The tool does not POST to any server, does not log payloads, and does not load any third-party scripts. Safe to paste production JSON.</p>
+<h2 data-i18n="ui.related">Related tools</h2><div class="related"><a href="/tools/json-formatter.html" data-i18n="tool.json-formatter.title">JSON Formatter</a><a href="/tools/jwt-decoder.html" data-i18n="tool.jwt.title">JWT Decoder</a><a href="/tools/api-builder.html" data-i18n="tool.api.title">API Request Builder</a></div><h2 data-i18n=ui.faq>FAQ</h2><div class=faq><details class="faq-item"><summary>Can I upload JSON files instead of pasting?</summary><div class="a">Yes, click 'Upload' on either pane to load a local .json file. Files are read in the browser using FileReader; nothing is uploaded.</div></details><details class="faq-item"><summary>Why are reordered arrays still showing as different?</summary><div class="a">By default arrays are compared by index. Toggle 'Ignore array order' to compare them as multisets — useful for tags, roles, and other unordered lists.</div></details><details class="faq-item"><summary>Does the diff support nested objects?</summary><div class="a">Yes. The output uses dotted JSON paths like user.address.city for objects and user.tags[2] for array indices, so deeply nested differences are easy to locate.</div></details><details class="faq-item"><summary>Can I diff JSON against YAML or another format?</summary><div class="a">Not directly. Convert YAML to JSON first with our ENV/JSON/YAML converter, then paste both as JSON.</div></details></div></section>
+</main>
+<div id="site-footer"></div>
+<script src="/assets/js/common.js"></script>
+<script src="/assets/js/i18n/translations.js"></script>
+<script src="/assets/js/i18n.js"></script>
+<script src="/assets/js/partials.js"></script>
+<script>
+const D=window.DTH,$=D.$;
+const L=$('#left'),R=$('#right'),OUT=$('#diff'),STATS=$('#diff-stats');
+function tryParse(s,name){try{return JSON.parse(s);}catch(e){throw new Error(name+': '+e.message);}}
+function sortKeys(o){
+  if(Array.isArray(o)) return o.map(sortKeys);
+  if(o && typeof o==='object'){const r={};Object.keys(o).sort().forEach(k=>r[k]=sortKeys(o[k]));return r;}
+  return o;
+}
+function diff(a,b,path,acc,opts){
+  const ta=typeOf(a), tb=typeOf(b);
+  if(ta!==tb || ta==='primitive'){
+    if(JSON.stringify(a)===JSON.stringify(b)) acc.push({k:'eq',p:path,v:a});
+    else acc.push({k:'mod',p:path,a,b});
+    return;
+  }
+  if(ta==='array'){
+    if(opts.ignoreOrder){
+      const used=new Set();
+      a.forEach((x,i)=>{
+        const j=b.findIndex((y,k)=>!used.has(k)&&JSON.stringify(x)===JSON.stringify(y));
+        if(j>=0){used.add(j);acc.push({k:'eq',p:path+'['+i+']',v:x});}
+        else acc.push({k:'del',p:path+'['+i+']',v:x});
+      });
+      b.forEach((y,i)=>{if(!used.has(i)){const j=a.findIndex(x=>JSON.stringify(x)===JSON.stringify(y));if(j<0)acc.push({k:'add',p:path+'['+i+']',v:y});}});
+    } else {
+      const max=Math.max(a.length,b.length);
+      for(let i=0;i<max;i++){
+        if(i>=a.length) acc.push({k:'add',p:path+'['+i+']',v:b[i]});
+        else if(i>=b.length) acc.push({k:'del',p:path+'['+i+']',v:a[i]});
+        else diff(a[i],b[i],path+'['+i+']',acc,opts);
+      }
+    }
+    return;
+  }
+  if(ta==='object'){
+    const ka=Object.keys(a), kb=Object.keys(b);
+    const all=[...new Set([...ka,...kb])];
+    all.forEach(k=>{
+      const np=path?path+'.'+k:k;
+      if(!(k in a)) acc.push({k:'add',p:np,v:b[k]});
+      else if(!(k in b)) acc.push({k:'del',p:np,v:a[k]});
+      else diff(a[k],b[k],np,acc,opts);
+    });
+  }
+}
+function typeOf(v){if(v===null||v===undefined)return 'primitive';if(Array.isArray(v))return 'array';if(typeof v==='object')return 'object';return 'primitive';}
+function render(items){
+  OUT.innerHTML='';
+  let add=0,del=0,mod=0;
+  items.forEach(it=>{
+    if(it.k==='eq')return;
+    const div=document.createElement('div');
+    div.className='diff-line '+it.k;
+    const sym={add:'+',del:'-',mod:'~'}[it.k];
+    if(it.k==='mod'){
+      div.textContent = `${sym} ${it.p}: ${JSON.stringify(it.a)} → ${JSON.stringify(it.b)}`;
+      mod++;
+    } else {
+      div.textContent = `${sym} ${it.p}: ${JSON.stringify(it.v)}`;
+      it.k==='add'?add++:del++;
+    }
+    OUT.appendChild(div);
+  });
+  STATS.textContent = `+${add}  -${del}  ~${mod}`;
+  STATS.className = 'badge '+ (add+del+mod===0?'ok':'');
+  if(add+del+mod===0){OUT.innerHTML='<div class="diff-line eq" style="padding:14px">Identical ✓</div>';}
+  return {add,del,mod};
+}
+function go(){
+  try{
+    let a=tryParse(L.value||'null','A'), b=tryParse(R.value||'null','B');
+    const opts={ignoreOrder:$('#ignore-order').checked};
+    if($('#ignore-keys').checked){a=sortKeys(a);b=sortKeys(b);}
+    const acc=[];diff(a,b,'',acc,opts);render(acc);
+  }catch(e){OUT.innerHTML='<div class="error-box" style="margin:10px">'+e.message+'</div>';}
+}
+$('#compare').onclick=go;
+[L,R].forEach(el=>el.addEventListener('input', D.debounce(go,250)));
+$('#copy-diff').onclick=()=>D.copyText(Array.from(OUT.querySelectorAll('.diff-line')).map(d=>d.textContent).join('\n'));
+$('#download-diff').onclick=()=>D.downloadText('diff.txt',Array.from(OUT.querySelectorAll('.diff-line')).map(d=>d.textContent).join('\n'));
+$('#clear').onclick=()=>{L.value='';R.value='';OUT.innerHTML='';STATS.textContent='';L.focus();};
+$('#up-a').onchange=async e=>{L.value=await D.readFileAsText(e.target.files[0]);go();};
+$('#up-b').onchange=async e=>{R.value=await D.readFileAsText(e.target.files[0]);go();};
+</script>
+</body>
+</html>

@@ -1,363 +1,93 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Base64 Encoder & Decoder — Free Online Tool | DevToolsHive</title>
-    <meta
-      name="description"
-      content="Encode and decode Base64 strings instantly online. Supports UTF-8, URL-safe Base64, and large payloads. Free, private, and works without uploading data."
-    />
-    <meta name="theme-color" content="#0b0d10" />
-    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
-    <link rel="canonical" href="./base64.html" />
-    <meta
-      property="og:title"
-      content="Base64 Encoder & Decoder — DevToolsHive"
-    />
-    <meta
-      property="og:description"
-      content="Encode/decode Base64 in your browser. UTF-8 and URL-safe support."
-    />
-    <link rel="stylesheet" href="../assets/css/styles.css" />
-    <script>
-      (function () {
-        try {
-          var t = localStorage.getItem("dth-theme");
-          if (t === "light")
-            document.documentElement.setAttribute("data-theme", "light");
-        } catch (e) {}
-      })();
-    </script>
-  </head>
-  <!-- Google tag (gtag.js) -->
-  <script
-    async
-    src="https://www.googletagmanager.com/gtag/js?id=G-82130N1ETD"
-  ></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag("js", new Date());
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Base64 Encoder &amp; Decoder Online — UTF-8 + URL-safe | DevToolsHive</title>
+<meta name="description" content="Encode and decode Base64 in your browser. Full UTF-8 support, URL-safe variant for JWTs and tokens. Free, instant, no uploads.">
+<link rel="canonical" href="https://devtoolshive.com/tools/base64.html">
+<link rel="alternate" hreflang="en" href="https://devtoolshive.com/tools/base64.html?lang=en" />
+    <link rel="alternate" hreflang="es" href="https://devtoolshive.com/tools/base64.html?lang=es" />
+    <link rel="alternate" hreflang="de" href="https://devtoolshive.com/tools/base64.html?lang=de" />
+    <link rel="alternate" hreflang="fr" href="https://devtoolshive.com/tools/base64.html?lang=fr" />
+    <link rel="alternate" hreflang="ja" href="https://devtoolshive.com/tools/base64.html?lang=ja" />
+    <link rel="alternate" hreflang="x-default" href="https://devtoolshive.com/tools/base64.html" />
+<meta property="og:type" content="website">
+<meta property="og:title" content="Base64 Encoder &amp; Decoder Online — UTF-8 + URL-safe | DevToolsHive">
+<meta property="og:description" content="Encode and decode Base64 in your browser. Full UTF-8 support, URL-safe variant for JWTs and tokens. Free, instant, no uploads.">
+<meta property="og:url" content="https://devtoolshive.com/tools/base64.html">
+<meta property="og:image" content="https://devtoolshive.com/assets/img/favicon.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Base64 Encoder &amp; Decoder Online — UTF-8 + URL-safe | DevToolsHive">
+<meta name="twitter:description" content="Encode and decode Base64 in your browser. Full UTF-8 support, URL-safe variant for JWTs and tokens. Free, instant, no uploads.">
+<meta name="twitter:image" content="https://devtoolshive.com/assets/img/favicon.svg">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#0b0d12">
+<link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
+<link rel="stylesheet" href="/assets/css/styles.css">
+<script src="/assets/js/theme.js"></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Base64 Encoder & Decoder Online", "applicationCategory": "DeveloperApplication", "operatingSystem": "Any (web)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "url": "https://devtoolshive.com/tools/base64.html"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why does my Base64 fail to decode?", "acceptedAnswer": {"@type": "Answer", "text": "Common causes: missing padding (we add it automatically), URL-safe characters (toggle the URL-safe option), or stray whitespace pasted from email. Strip whitespace and try again."}}, {"@type": "Question", "name": "Is Base64 encryption?", "acceptedAnswer": {"@type": "Answer", "text": "No. Base64 is encoding, not encryption \u2014 anyone can decode it. Never use Base64 to 'hide' a secret."}}, {"@type": "Question", "name": "Will it handle emoji and non-ASCII characters?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Encoding wraps btoa with proper UTF-8 conversion, so every Unicode character round-trips correctly."}}, {"@type": "Question", "name": "What's the difference between standard and URL-safe Base64?", "acceptedAnswer": {"@type": "Answer", "text": "URL-safe replaces + with - and / with _, and drops = padding. JWTs and many tokens use URL-safe."}}]}</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div id="site-header"></div>
+<main id="main" class="container tool-page">
+<div class="crumbs"><a href="/">Home</a> · <span data-i18n="nav.tools">Tools</span> · <span>Base64 Encoder / Decoder</span></div>
+<header class="tool-head"><h1 data-i18n="tool.base64.title">Base64 Encoder / Decoder</h1><p data-i18n="tool.base64.desc">Encode or decode Base64 with full UTF-8 and URL-safe variants.</p></header>
 
-    gtag("config", "G-82130N1ETD");
-  </script>
-  <body>
-    <div id="site-header"></div>
+<div class="toolbar">
+  <button class="btn primary" id="encode" data-i18n="ui.encode">Encode</button>
+  <button class="btn primary" id="decode" data-i18n="ui.decode">Decode</button>
+  <label class="row gap-sm muted" style="font-size:13px"><input type="checkbox" id="urlsafe"> URL-safe</label>
+  <span class="spacer"></span>
+  <button class="btn" id="swap" data-i18n="ui.swap">Swap</button>
+  <button class="btn" id="copy" data-shortcut="copy" data-i18n="ui.copy">Copy</button>
+  <button class="btn ghost danger" id="clear" data-shortcut="clear" data-i18n="ui.clear">Clear</button>
+</div>
+<div class="io-grid">
+  <div class="pane"><div class="pane-head" data-i18n="ui.input">Input</div><textarea id="in" spellcheck="false" autofocus></textarea></div>
+  <div class="pane"><div class="pane-head" data-i18n="ui.output">Output</div><textarea id="out" spellcheck="false" readonly></textarea></div>
+</div>
 
-    <main>
-      <div class="container">
-        <div class="tool-header">
-          <div class="breadcrumb">
-            <a href="/">Tools</a> / Base64
-          </div>
-          <h1>Base64 Encoder / Decoder</h1>
-          <p>
-            Convert text to and from Base64. Supports UTF-8 characters and
-            URL-safe variants.
-          </p>
-        </div>
+<section class="content narrow">
+<h2>Base64 encoder and decoder with full UTF-8 support</h2>
+<p>Base64 is the standard way to encode binary or non-ASCII text into a 64-character ASCII alphabet so it can travel through systems that only handle text — HTTP headers, JSON strings, data URIs, JWT segments. This tool encodes and decodes Base64 with proper UTF-8 handling and an optional URL-safe variant for tokens, query parameters, and JWT.</p>
 
-        <div class="input-row">
-          <label for="mode">Mode:</label>
-          <select id="mode" style="flex: 0 0 auto; min-width: 130px">
-            <option value="encode">Encode → Base64</option>
-            <option value="decode">Decode ← Base64</option>
-          </select>
-          <label style="margin-left: 8px"
-            ><input type="checkbox" id="urlsafe" /> URL-safe</label
-          >
-          <div class="toolbar-spacer"></div>
-          <span id="status" class="status muted">Awaiting input</span>
-        </div>
+<h3>Standard vs URL-safe</h3>
+<p>Standard Base64 uses <code>+</code>, <code>/</code>, and <code>=</code> padding — three characters that have special meaning in URLs. The URL-safe variant (RFC 4648 §5) replaces <code>+</code> with <code>-</code>, <code>/</code> with <code>_</code>, and drops the padding. JWTs and many modern APIs use URL-safe Base64 — toggle the option here if your input doesn't decode as standard.</p>
 
-        <div class="sticky-actions">
-          <button class="btn btn-primary" onclick="run()">
-            Convert <span class="kbd">⌘↵</span>
-          </button>
-          <button class="btn" onclick="swap()">Swap ⇄</button>
-          <div class="toolbar-spacer"></div>
-          <span class="hint">⌘⇧C copy · ⌘L clear</span>
-          <button class="btn" onclick="copyOut()">Copy output</button>
-          <button class="btn btn-ghost" onclick="clearAll()">Clear</button>
-        </div>
+<h3>UTF-8 done right</h3>
+<p>The naive <code>btoa(input)</code> call fails on any non-ASCII character ("InvalidCharacterError"). This tool encodes via <code>btoa(unescape(encodeURIComponent(s)))</code> and decodes via <code>decodeURIComponent(escape(atob(s)))</code>, which round-trips emoji, CJK characters, and accented Latin correctly. So <code>カフェ</code> encodes to <code>44Kr44OV44Kn</code> and back, exactly like in your backend.</p>
 
-        <div class="io-grid">
-          <div class="io-panel">
-            <div class="io-head">
-              <span id="inLabel">Plain text</span>
-              <div class="io-actions">
-                <button class="icon-btn" onclick="pasteIn()" title="Paste">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <rect x="9" y="2" width="6" height="4" rx="1" />
-                    <path
-                      d="M5 6h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-            <textarea
-              id="input"
-              spellcheck="false"
-              placeholder="Type or paste text…"
-            ></textarea>
-          </div>
-          <div class="io-panel">
-            <div class="io-head">
-              <span id="outLabel">Base64</span>
-              <div class="io-actions">
-                <button class="icon-btn" onclick="copyOut()" title="Copy">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <rect x="9" y="9" width="13" height="13" rx="2" />
-                    <path
-                      d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-            <textarea
-              id="output"
-              spellcheck="false"
-              readonly
-              placeholder="Result appears here"
-            ></textarea>
-          </div>
-        </div>
+<h3>Common use cases</h3>
+<ul>
+<li><strong>Inspect a JWT segment</strong> — copy the payload chunk and decode (or use our <a href="/tools/jwt-decoder.html">JWT Decoder</a>).</li>
+<li><strong>Build a data URI</strong> — encode an SVG or small PNG to embed inline in CSS or HTML.</li>
+<li><strong>Read an HTTP Basic Authorization header</strong> — decode <code>dXNlcjpwYXNz</code> to <code>user:pass</code>.</li>
+<li><strong>Round-trip a config secret</strong> through Kubernetes Secrets, which expects values Base64-encoded.</li>
+</ul>
 
-        <section class="content">
-          <h2>About Base64 encoding</h2>
-          <p>
-            Base64 is a binary-to-text encoding that represents arbitrary bytes
-            using 64 printable ASCII characters. It's used everywhere in modern
-            web development: embedding small images in CSS as
-            <code>data:</code> URIs, storing binary fields in JSON, signing JWT
-            tokens, and transmitting credentials in HTTP
-            <code>Authorization</code> headers.
-          </p>
-
-          <h3>Encode vs decode</h3>
-          <p>
-            Use <strong>encode</strong> to turn human-readable text or binary
-            data into a transport-safe ASCII string. Use
-            <strong>decode</strong> to reverse the operation. The optional
-            <strong>URL-safe</strong> mode replaces the characters
-            <code>+</code> and <code>/</code> with <code>-</code> and
-            <code>_</code> and removes padding — the variant required by JWT,
-            OAuth, and most URL-embedded tokens.
-          </p>
-
-          <h3>Practical examples</h3>
-          <ul>
-            <li>
-              Decoding a JWT payload to inspect its claims (paste the middle
-              segment).
-            </li>
-            <li>
-              Building a Basic Auth header: encode
-              <code>username:password</code> and prefix with
-              <code>Basic&nbsp;</code>.
-            </li>
-            <li>
-              Inspecting <code>data:image/png;base64,…</code> blobs from CSS or
-              HTML.
-            </li>
-            <li>
-              Sending UTF-8 strings through systems that mangle non-ASCII bytes.
-            </li>
-          </ul>
-
-          <h3>UTF-8 handling</h3>
-          <p>
-            Unlike many naive Base64 tools, this encoder correctly handles
-            multi-byte UTF-8 characters — emoji, accented Latin, Cyrillic, CJK,
-            and so on — by encoding the byte representation rather than the code
-            points. Decoding will round-trip these characters losslessly.
-          </p>
-
-          <p>
-            Need to encode for a query string instead? Use the
-            <a href="url-encoder.html">URL encoder</a>.
-          </p>
-
-          <h2>Frequently asked questions</h2>
-          <div class="faq">
-            <details open>
-              <summary>What is Base64 encoding used for?</summary>
-              <p>
-                Base64 makes binary data safe to transport through text-only
-                channels: HTTP headers, URLs, JSON payloads, JWTs, email
-                attachments, and inline images in CSS or HTML.
-              </p>
-            </details>
-            <details>
-              <summary>
-                Why do I get "InvalidCharacterError" when decoding?
-              </summary>
-              <p>
-                The input contains characters outside the Base64 alphabet, or
-                has the wrong padding. If your token uses <code>-</code> and
-                <code>_</code>, enable URL-safe mode.
-              </p>
-            </details>
-            <details>
-              <summary>Does Base64 encrypt my data?</summary>
-              <p>
-                No. Base64 is encoding, not encryption. Anyone can decode it.
-                Use it for transport safety only — never as a security measure.
-              </p>
-            </details>
-            <details>
-              <summary>How do I decode a JWT with Base64?</summary>
-              <p>
-                A JWT has three dot-separated parts. Copy the middle (payload)
-                segment and decode it with URL-safe mode on. The result is JSON
-                you can pretty-print in the
-                <a href="json-formatter.html">JSON formatter</a>.
-              </p>
-            </details>
-            <details>
-              <summary>Does this support UTF-8 characters like emoji?</summary>
-              <p>
-                Yes. The encoder converts strings to UTF-8 bytes first, so emoji
-                and CJK characters round-trip losslessly.
-              </p>
-            </details>
-          </div>
-        </section>
-      </div>
-    </main>
-
-    <div id="site-footer"></div>
-    <script src="../assets/js/common.js"></script>
-    <script src="../assets/js/partials.js"></script>
-    <script>
-      const $in = document.getElementById("input");
-      const $out = document.getElementById("output");
-      const $mode = document.getElementById("mode");
-      const $url = document.getElementById("urlsafe");
-      const $status = document.getElementById("status");
-      const $inLabel = document.getElementById("inLabel");
-      const $outLabel = document.getElementById("outLabel");
-
-      function setStatus(m, t) {
-        $status.className = "status " + (t || "muted");
-        $status.textContent = m;
-      }
-
-      function utf8ToB64(str) {
-        const bytes = new TextEncoder().encode(str);
-        let bin = "";
-        for (let i = 0; i < bytes.length; i++)
-          bin += String.fromCharCode(bytes[i]);
-        return btoa(bin);
-      }
-      function b64ToUtf8(str) {
-        const bin = atob(str);
-        const bytes = new Uint8Array(bin.length);
-        for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-        return new TextDecoder("utf-8", { fatal: true }).decode(bytes);
-      }
-      function toUrlSafe(b) {
-        return b.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-      }
-      function fromUrlSafe(b) {
-        let s = b.replace(/-/g, "+").replace(/_/g, "/");
-        while (s.length % 4) s += "=";
-        return s;
-      }
-
-      function updateLabels() {
-        if ($mode.value === "encode") {
-          $inLabel.textContent = "Plain text";
-          $outLabel.textContent = "Base64";
-        } else {
-          $inLabel.textContent = "Base64";
-          $outLabel.textContent = "Plain text";
-        }
-      }
-
-      function run() {
-        const v = $in.value;
-        if (!v) {
-          $out.value = "";
-          setStatus("Awaiting input", "muted");
-          return;
-        }
-        try {
-          if ($mode.value === "encode") {
-            let r = utf8ToB64(v);
-            if ($url.checked) r = toUrlSafe(r);
-            $out.value = r;
-            setStatus("Encoded · " + r.length + " chars", "ok");
-          } else {
-            let s = v.trim();
-            if ($url.checked || /[-_]/.test(s)) s = fromUrlSafe(s);
-            $out.value = b64ToUtf8(s);
-            setStatus("Decoded · " + $out.value.length + " chars", "ok");
-          }
-        } catch (e) {
-          $out.value = "";
-          setStatus("Invalid Base64: " + e.message, "err");
-        }
-      }
-
-      function clearAll() {
-        $in.value = $out.value = "";
-        setStatus("Awaiting input", "muted");
-        $in.focus();
-      }
-      function copyOut() {
-        copyText($out.value, "Copied");
-      }
-      function swap() {
-        const a = $in.value,
-          b = $out.value;
-        $in.value = b;
-        $mode.value = $mode.value === "encode" ? "decode" : "encode";
-        updateLabels();
-        run();
-      }
-      async function pasteIn() {
-        try {
-          $in.value = await navigator.clipboard.readText();
-          run();
-        } catch {
-          showToast("Clipboard blocked");
-        }
-      }
-
-      const live = debounce(run, 200);
-      $in.addEventListener("input", live);
-      $mode.addEventListener("change", () => {
-        updateLabels();
-        run();
-      });
-      $url.addEventListener("change", run);
-      window.toolShortcuts = {
-        process: run,
-        copyOutput: copyOut,
-        clearInput: clearAll,
-      };
-      updateLabels();
-      $in.focus();
-    </script>
-  </body>
+<h3>Privacy</h3>
+<p>All encoding happens in your browser via the built-in <code>btoa</code>/<code>atob</code> functions. The tool never sends your input to a server.</p>
+<h2 data-i18n="ui.related">Related tools</h2><div class="related"><a href="/tools/jwt-decoder.html" data-i18n="tool.jwt.title">JWT Decoder</a><a href="/tools/url-encoder.html" data-i18n="tool.url.title">URL Encoder</a><a href="/tools/json-formatter.html" data-i18n="tool.json-formatter.title">JSON Formatter</a></div><h2 data-i18n=ui.faq>FAQ</h2><div class=faq><details class="faq-item"><summary>Why does my Base64 fail to decode?</summary><div class="a">Common causes: missing padding (we add it automatically), URL-safe characters (toggle the URL-safe option), or stray whitespace pasted from email. Strip whitespace and try again.</div></details><details class="faq-item"><summary>Is Base64 encryption?</summary><div class="a">No. Base64 is encoding, not encryption — anyone can decode it. Never use Base64 to 'hide' a secret.</div></details><details class="faq-item"><summary>Will it handle emoji and non-ASCII characters?</summary><div class="a">Yes. Encoding wraps btoa with proper UTF-8 conversion, so every Unicode character round-trips correctly.</div></details><details class="faq-item"><summary>What&#x27;s the difference between standard and URL-safe Base64?</summary><div class="a">URL-safe replaces + with - and / with _, and drops = padding. JWTs and many tokens use URL-safe.</div></details></div></section>
+</main>
+<div id="site-footer"></div>
+<script src="/assets/js/common.js"></script>
+<script src="/assets/js/i18n/translations.js"></script>
+<script src="/assets/js/i18n.js"></script>
+<script src="/assets/js/partials.js"></script>
+<script>
+const D=window.DTH,$=D.$;
+const I=$('#in'),O=$('#out');
+function enc(s,url){const b=btoa(unescape(encodeURIComponent(s)));return url?b.replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''):b;}
+function dec(s,url){if(url)s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return decodeURIComponent(escape(atob(s)));}
+$('#encode').onclick=()=>{try{O.value=enc(I.value,$('#urlsafe').checked);D.toast('Encoded','ok');}catch(e){D.toast(e.message,'err');}};
+$('#decode').onclick=()=>{try{O.value=dec(I.value.trim(),$('#urlsafe').checked);D.toast('Decoded','ok');}catch(e){D.toast('Invalid Base64','err');}};
+$('#swap').onclick=()=>{const t=I.value;I.value=O.value;O.value=t;};
+$('#copy').onclick=()=>D.copyText(O.value);
+$('#clear').onclick=()=>{I.value='';O.value='';I.focus();};
+I.addEventListener('input',D.debounce(()=>{try{O.value=enc(I.value,$('#urlsafe').checked);}catch(e){}},200));
+</script>
+</body>
 </html>

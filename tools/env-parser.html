@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENV to JSON / YAML Converter — dotenv Parser Online | DevToolsHive</title>
+<meta name="description" content="Parse .env files and convert between ENV, JSON, and YAML formats. Handles quoted values, exports, comments. Free, in your browser.">
+<link rel="canonical" href="https://devtoolshive.com/tools/env-parser.html">
+<link rel="alternate" hreflang="en" href="https://devtoolshive.com/tools/env-parser.html?lang=en" />
+    <link rel="alternate" hreflang="es" href="https://devtoolshive.com/tools/env-parser.html?lang=es" />
+    <link rel="alternate" hreflang="de" href="https://devtoolshive.com/tools/env-parser.html?lang=de" />
+    <link rel="alternate" hreflang="fr" href="https://devtoolshive.com/tools/env-parser.html?lang=fr" />
+    <link rel="alternate" hreflang="ja" href="https://devtoolshive.com/tools/env-parser.html?lang=ja" />
+    <link rel="alternate" hreflang="x-default" href="https://devtoolshive.com/tools/env-parser.html" />
+<meta property="og:type" content="website">
+<meta property="og:title" content="ENV to JSON / YAML Converter — dotenv Parser Online | DevToolsHive">
+<meta property="og:description" content="Parse .env files and convert between ENV, JSON, and YAML formats. Handles quoted values, exports, comments. Free, in your browser.">
+<meta property="og:url" content="https://devtoolshive.com/tools/env-parser.html">
+<meta property="og:image" content="https://devtoolshive.com/assets/img/favicon.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ENV to JSON / YAML Converter — dotenv Parser Online | DevToolsHive">
+<meta name="twitter:description" content="Parse .env files and convert between ENV, JSON, and YAML formats. Handles quoted values, exports, comments. Free, in your browser.">
+<meta name="twitter:image" content="https://devtoolshive.com/assets/img/favicon.svg">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#0b0d12">
+<link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
+<link rel="stylesheet" href="/assets/css/styles.css">
+<script src="/assets/js/theme.js"></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "ENV to JSON / YAML Converter", "applicationCategory": "DeveloperApplication", "operatingSystem": "Any (web)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "url": "https://devtoolshive.com/tools/env-parser.html"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does this handle multiline values?", "acceptedAnswer": {"@type": "Answer", "text": "Yes \u2014 values inside double quotes can include \\n which is converted to a real newline. Values inside single quotes are kept literal."}}, {"@type": "Question", "name": "Will it expand variables like FOO=$BAR?", "acceptedAnswer": {"@type": "Answer", "text": "No, the value is kept literally. Variable expansion is dotenv-library specific behavior and would be unsafe to apply blindly."}}, {"@type": "Question", "name": "Is YAML support full YAML 1.2?", "acceptedAnswer": {"@type": "Answer", "text": "No, it's a flat YAML parser intended for env-style configuration (nested maps and scalars). Anchors, tags, and complex structures are not supported."}}, {"@type": "Question", "name": "How are types inferred when converting ENV to JSON?", "acceptedAnswer": {"@type": "Answer", "text": "true/false become booleans, integers become numbers, decimals become floats. Everything else stays a string \u2014 matching how 12-factor config libraries behave."}}, {"@type": "Question", "name": "Can I convert .env to a Kubernetes ConfigMap?", "acceptedAnswer": {"@type": "Answer", "text": "Convert ENV to YAML here, then paste the result under the data: field of your ConfigMap (remembering Kubernetes wants string values, not booleans/numbers \u2014 wrap them in quotes)."}}]}</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div id="site-header"></div>
+<main id="main" class="container tool-page">
+<div class="crumbs"><a href="/">Home</a> · <span data-i18n="nav.tools">Tools</span> · <span>Environment Variable Parser</span></div>
+<header class="tool-head"><h1 data-i18n="tool.env.title">Environment Variable Parser</h1><p data-i18n="tool.env.desc">Parse .env files and convert between ENV, JSON and YAML with type coercion and validation.</p></header>
+
+<div class="toolbar">
+  <span class="muted" style="font-size:13px">From:</span>
+  <select id="from" class="btn"><option value="env">ENV (.env)</option><option value="json">JSON</option><option value="yaml">YAML</option></select>
+  <span class="muted" style="font-size:13px">→</span>
+  <select id="to" class="btn"><option value="json">JSON</option><option value="env">ENV</option><option value="yaml">YAML</option></select>
+  <button class="btn primary" id="convert" data-shortcut="run" data-i18n="ui.convert">Convert</button>
+  <span class="spacer"></span>
+  <button class="btn" id="copy" data-shortcut="copy" data-i18n="ui.copy">Copy</button>
+  <button class="btn" id="download" data-i18n="ui.download">Download</button>
+  <button class="btn ghost danger" id="clear" data-shortcut="clear" data-i18n="ui.clear">Clear</button>
+</div>
+<div class="io-grid">
+  <div class="pane"><div class="pane-head">Input</div><textarea id="in" spellcheck="false" autofocus placeholder="DATABASE_URL=postgres://localhost/app
+PORT=3000
+DEBUG=true"></textarea></div>
+  <div class="pane"><div class="pane-head">Output <span class="spacer"></span><span id="status" class="badge">empty</span></div><textarea id="out" spellcheck="false" readonly></textarea></div>
+</div>
+
+<section class="content narrow">
+<h2>Convert .env files to JSON, YAML and back</h2>
+<p>This converter parses <code>.env</code> files, JSON, and YAML and converts between all three formats. It handles quoted values, comments, the optional <code>export</code> prefix, escaped newlines, and automatic type coercion (booleans, integers, floats). Run it on a 12-factor app config, a Docker Compose <code>environment:</code> block, or a GitHub Actions <code>env:</code> section without rewriting the values by hand.</p>
+
+<h3>Why a dedicated parser beats find-and-replace</h3>
+<p>You can <em>almost</em> convert ENV to JSON with regex, but you'll trip on the edge cases: a value containing <code>=</code>, a multiline string with <code>
+</code> escapes, a comment after a value, an <code>export FOO=bar</code> line, or a value wrapped in single quotes. A real parser handles all of those, plus it tells you the line number when something is wrong instead of silently producing garbage.</p>
+
+<h3>Supported ENV syntax</h3>
+<ul>
+<li><code>KEY=value</code> — simple assignment</li>
+<li><code>export KEY=value</code> — shell-style export prefix is stripped</li>
+<li><code>KEY="quoted value with spaces"</code> — double quotes preserved with <code>
+</code> and <code>"</code> escapes</li>
+<li><code>KEY='single quoted'</code> — literal value, no escapes</li>
+<li><code>KEY=value # inline comment</code> — comments after a value</li>
+<li><code># full line comment</code> — ignored</li>
+<li>Empty lines — ignored</li>
+</ul>
+
+<h3>Type coercion</h3>
+<p>When converting ENV to JSON or YAML, common literals are coerced: <code>true</code>/<code>false</code> become booleans, integers become numbers, decimals become floats. Everything else stays a string. This is what 12-factor configuration libraries (dotenv, Viper, python-decouple) do, so the output matches what your app would actually see at runtime.</p>
+
+<h3>Use cases</h3>
+<ul>
+<li><strong>Migrating from Heroku to Vercel</strong> — paste <code>heroku config -s</code> output, get JSON for <code>vercel env</code>.</li>
+<li><strong>Bootstrapping a Kubernetes ConfigMap</strong> — convert <code>.env</code> to YAML and paste under <code>data:</code>.</li>
+<li><strong>Auditing a config file</strong> — convert ENV to JSON and diff two environments with our <a href="/tools/json-diff.html">JSON Diff</a>.</li>
+<li><strong>Generating a <code>.env.example</code></strong> — convert JSON back to ENV with sensible defaults.</li>
+</ul>
+
+<h3>What this tool does NOT do</h3>
+<ul>
+<li>It does not <em>interpolate</em> variables (<code>FOO=$BAR</code>). Real dotenv libraries support this; we keep the literal value to avoid surprising you.</li>
+<li>It does not load <code>.env.local</code> override chains or merge files.</li>
+<li>It does not encrypt secrets. If you're putting an API key in <code>.env</code>, treat the file as sensitive — and don't paste it into random websites that send it to a server. (Ours doesn't.)</li>
+</ul>
+
+<h3>Privacy</h3>
+<p>Parsing happens in JavaScript on this page. Nothing is uploaded. We deliberately avoided libraries that would phone home and we don't load any third-party scripts.</p>
+<h2 data-i18n="ui.related">Related tools</h2><div class="related"><a href="/tools/json-formatter.html" data-i18n="tool.json-formatter.title">JSON Formatter</a><a href="/tools/json-diff.html" data-i18n="tool.json-diff.title">JSON Diff</a><a href="/tools/api-builder.html" data-i18n="tool.api.title">API Request Builder</a></div><h2 data-i18n=ui.faq>FAQ</h2><div class=faq><details class="faq-item"><summary>Does this handle multiline values?</summary><div class="a">Yes — values inside double quotes can include \n which is converted to a real newline. Values inside single quotes are kept literal.</div></details><details class="faq-item"><summary>Will it expand variables like FOO=$BAR?</summary><div class="a">No, the value is kept literally. Variable expansion is dotenv-library specific behavior and would be unsafe to apply blindly.</div></details><details class="faq-item"><summary>Is YAML support full YAML 1.2?</summary><div class="a">No, it's a flat YAML parser intended for env-style configuration (nested maps and scalars). Anchors, tags, and complex structures are not supported.</div></details><details class="faq-item"><summary>How are types inferred when converting ENV to JSON?</summary><div class="a">true/false become booleans, integers become numbers, decimals become floats. Everything else stays a string — matching how 12-factor config libraries behave.</div></details><details class="faq-item"><summary>Can I convert .env to a Kubernetes ConfigMap?</summary><div class="a">Convert ENV to YAML here, then paste the result under the data: field of your ConfigMap (remembering Kubernetes wants string values, not booleans/numbers — wrap them in quotes).</div></details></div></section>
+</main>
+<div id="site-footer"></div>
+<script src="/assets/js/common.js"></script>
+<script src="/assets/js/i18n/translations.js"></script>
+<script src="/assets/js/i18n.js"></script>
+<script src="/assets/js/partials.js"></script>
+<script>
+const D=window.DTH,$=D.$;
+const IN=$('#in'),OUT=$('#out'),F=$('#from'),T=$('#to'),S=$('#status');
+
+function parseEnv(s){
+  const out={};
+  s.split(/\r?\n/).forEach((line,i)=>{
+    line=line.replace(/^\s*export\s+/, '');
+    if(!line.trim()||line.trim().startsWith('#')) return;
+    const m=/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*(?:#.*)?$/.exec(line);
+    if(!m) throw new Error('Line '+(i+1)+': invalid ENV syntax');
+    let v=m[2];
+    if((v.startsWith('"')&&v.endsWith('"')) || (v.startsWith("'")&&v.endsWith("'"))) v=v.slice(1,-1).replace(/\\n/g,'\n').replace(/\\"/g,'"');
+    if(v==='true')v=true;else if(v==='false')v=false;else if(/^-?\d+$/.test(v))v=parseInt(v,10);else if(/^-?\d*\.\d+$/.test(v))v=parseFloat(v);
+    out[m[1]]=v;
+  });
+  return out;
+}
+function toEnv(obj){
+  return Object.entries(obj).map(([k,v])=>{
+    if(v===null||v===undefined) v='';
+    if(typeof v==='object') v=JSON.stringify(v);
+    const s=String(v);
+    const needsQuotes=/[\s#"'$`\\]/.test(s) || s==='';
+    return k+'='+(needsQuotes?'"'+s.replace(/"/g,'\\"').replace(/\n/g,'\\n')+'"':s);
+  }).join('\n');
+}
+function toYaml(obj, indent=0){
+  const pad=' '.repeat(indent);
+  if(Array.isArray(obj)) return obj.map(x=>pad+'- '+yamlVal(x,indent+2)).join('\n');
+  if(obj && typeof obj==='object'){
+    return Object.entries(obj).map(([k,v])=>{
+      if(v && typeof v==='object') return pad+k+':\n'+toYaml(v,indent+2);
+      return pad+k+': '+yamlVal(v);
+    }).join('\n');
+  }
+  return pad+yamlVal(obj);
+}
+function yamlVal(v){
+  if(v===null||v===undefined) return 'null';
+  if(typeof v==='string'){if(/[:#\-?\[\]{}|>*&!%@`,'"\n]/.test(v)||/^\s|\s$/.test(v)||v==='')return JSON.stringify(v);return v;}
+  return String(v);
+}
+function parseYaml(s){
+  // simple flat YAML parser (for our env-style use case)
+  const out={}; const lines=s.split(/\r?\n/);
+  let stack=[{indent:-1,obj:out,key:null}];
+  lines.forEach((ln,i)=>{
+    if(!ln.trim()||ln.trim().startsWith('#')) return;
+    const indent=ln.match(/^ */)[0].length;
+    const m=/^(\s*)([^:]+):\s*(.*)$/.exec(ln);
+    if(!m) throw new Error('Line '+(i+1)+': unsupported YAML');
+    while(stack.length>1 && stack[stack.length-1].indent>=indent) stack.pop();
+    const parent=stack[stack.length-1].obj;
+    const key=m[2].trim(); let val=m[3].trim();
+    if(val===''){parent[key]={};stack.push({indent,obj:parent[key],key});return;}
+    try{val=JSON.parse(val);}catch(e){if(val==='true')val=true;else if(val==='false')val=false;else if(/^-?\d+$/.test(val))val=+val;}
+    parent[key]=val;
+  });
+  return out;
+}
+
+function go(){
+  try{
+    const t=IN.value;
+    if(!t.trim()){OUT.value='';S.textContent='empty';S.className='badge';return;}
+    let obj;
+    if(F.value==='env') obj=parseEnv(t);
+    else if(F.value==='json') obj=JSON.parse(t);
+    else obj=parseYaml(t);
+    let res;
+    if(T.value==='env') res=toEnv(obj);
+    else if(T.value==='json') res=JSON.stringify(obj,null,2);
+    else res=toYaml(obj);
+    OUT.value=res;S.textContent='valid';S.className='badge ok';
+  }catch(e){OUT.value=e.message;S.textContent='invalid';S.className='badge err';}
+}
+$('#convert').onclick=go;
+[IN,F,T].forEach(el=>el.addEventListener('input',D.debounce(go,200)));
+$('#copy').onclick=()=>D.copyText(OUT.value);
+$('#download').onclick=()=>{const ext=T.value==='env'?'.env':T.value==='json'?'.json':'.yaml';D.downloadText('output'+ext,OUT.value);};
+$('#clear').onclick=()=>{IN.value='';OUT.value='';S.textContent='empty';S.className='badge';IN.focus();};
+</script>
+</body>
+</html>

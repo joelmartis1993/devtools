@@ -1,284 +1,69 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>UUID Generator — RFC 4122 v4 Online Free | DevToolsHive</title>
-    <meta
-      name="description"
-      content="Generate cryptographically random UUID v4 identifiers in bulk. Free online RFC 4122 UUID generator with copy and download. Works entirely in your browser."
-    />
-    <meta name="theme-color" content="#0b0d10" />
-    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
-    <link rel="canonical" href="./uuid.html" />
-    <meta property="og:title" content="UUID v4 Generator — DevToolsHive" />
-    <meta
-      property="og:description"
-      content="Generate cryptographically secure UUIDs in bulk."
-    />
-    <link rel="stylesheet" href="../assets/css/styles.css" />
-    <script>
-      (function () {
-        try {
-          var t = localStorage.getItem("dth-theme");
-          if (t === "light")
-            document.documentElement.setAttribute("data-theme", "light");
-        } catch (e) {}
-      })();
-    </script>
-  </head>
-  <!-- Google tag (gtag.js) -->
-  <script
-    async
-    src="https://www.googletagmanager.com/gtag/js?id=G-82130N1ETD"
-  ></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag("js", new Date());
-
-    gtag("config", "G-82130N1ETD");
-  </script>
-  <body>
-    <div id="site-header"></div>
-
-    <main>
-      <div class="container">
-        <div class="tool-header">
-          <div class="breadcrumb">
-            <a href="/">Tools</a> / UUID Generator
-          </div>
-          <h1>UUID v4 Generator</h1>
-          <p>
-            Generate cryptographically random RFC 4122 version-4 UUIDs, one or
-            many at a time.
-          </p>
-        </div>
-
-        <div class="input-row">
-          <label for="count">Count:</label>
-          <input
-            type="number"
-            id="count"
-            value="10"
-            min="1"
-            max="1000"
-            style="flex: 0 0 100px"
-          />
-          <label><input type="checkbox" id="upper" /> UPPERCASE</label>
-          <label><input type="checkbox" id="nodash" /> No dashes</label>
-          <label><input type="checkbox" id="braces" /> {Braces}</label>
-          <div class="toolbar-spacer"></div>
-          <span id="status" class="status muted">Ready</span>
-        </div>
-
-        <div class="sticky-actions">
-          <button class="btn btn-primary" onclick="generate()">
-            Generate <span class="kbd">⌘↵</span>
-          </button>
-          <button class="btn" onclick="copyAll()">Copy all</button>
-          <button class="btn" onclick="downloadAll()">Download .txt</button>
-          <div class="toolbar-spacer"></div>
-          <span class="hint">⌘⇧C copy · ⌘L clear</span>
-          <button
-            class="btn btn-ghost"
-            onclick="document.getElementById('list').innerHTML = ''"
-          >
-            Clear
-          </button>
-        </div>
-
-        <div class="io-panel">
-          <div class="io-head"><span>Generated UUIDs</span></div>
-          <div id="list" class="uuid-list"></div>
-        </div>
-
-        <section class="content">
-          <h2>About UUIDs</h2>
-          <p>
-            A UUID (Universally Unique Identifier), also called a GUID, is a
-            128-bit identifier that's statistically guaranteed to be unique
-            across space and time without coordination. It's the standard way to
-            assign primary keys when you can't (or don't want to) rely on a
-            centralized counter.
-          </p>
-
-          <h3>Why version 4?</h3>
-          <p>
-            Version 4 UUIDs are derived from
-            <strong>cryptographically secure random numbers</strong>, with two
-            fixed bits identifying the variant and four fixed bits identifying
-            the version. They're the most common variant for general application
-            use because they leak no information about the host or the time of
-            generation, unlike v1 (MAC + timestamp) or v3/v5 (hashed).
-          </p>
-
-          <h3>Common uses</h3>
-          <ul>
-            <li>Primary keys for distributed databases and event logs</li>
-            <li>Idempotency tokens for API requests</li>
-            <li>Session and correlation identifiers</li>
-            <li>File names that must not collide across uploads</li>
-            <li>OAuth state parameters and CSRF tokens</li>
-          </ul>
-
-          <h3>How this generator works</h3>
-          <p>
-            It uses the browser's native <code>crypto.randomUUID()</code> when
-            available (modern Chrome, Firefox, Safari) and falls back to
-            <code>crypto.getRandomValues()</code> with the correct version and
-            variant bits. Either way, the randomness comes from the operating
-            system's CSPRNG — never <code>Math.random()</code>. All IDs are
-            generated locally; the server never sees them.
-          </p>
-
-          <h3>Format options</h3>
-          <p>
-            The standard string form is
-            <code>xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx</code> (lowercase hex
-            with dashes). Toggle the options above for uppercase, no dashes
-            (32-character hex), or curly braces (<code>{…}</code>) — common in
-            Microsoft and SQL Server contexts.
-          </p>
-
-          <p>
-            Need a hash or signed token instead? See the
-            <a href="base64.html">Base64 encoder</a> for JWT-style payloads.
-          </p>
-
-          <h2>Frequently asked questions</h2>
-          <div class="faq">
-            <details open>
-              <summary>Are these UUIDs cryptographically random?</summary>
-              <p>
-                Yes. They use the browser's CSPRNG via
-                <code>crypto.randomUUID()</code> or
-                <code>crypto.getRandomValues()</code> — never
-                <code>Math.random()</code>.
-              </p>
-            </details>
-            <details>
-              <summary>Can I use UUID v4 as a primary key?</summary>
-              <p>
-                Yes, but expect index fragmentation in B-tree databases. For
-                high-write tables, consider ULID or UUID v7 (time-ordered)
-                variants.
-              </p>
-            </details>
-            <details>
-              <summary>What does the "4" in v4 mean?</summary>
-              <p>
-                It's the version digit. UUID v4 means "fully random". Other
-                versions encode time, namespace, or MAC addresses.
-              </p>
-            </details>
-            <details>
-              <summary>How many UUIDs can I generate at once?</summary>
-              <p>
-                Up to 1000 per click. Use Download .txt to save them as a file
-                for seeding databases or test data.
-              </p>
-            </details>
-          </div>
-        </section>
-      </div>
-    </main>
-
-    <div id="site-footer"></div>
-    <script src="../assets/js/common.js"></script>
-    <script src="../assets/js/partials.js"></script>
-    <script>
-      const $list = document.getElementById("list");
-      const $count = document.getElementById("count");
-      const $upper = document.getElementById("upper");
-      const $nodash = document.getElementById("nodash");
-      const $braces = document.getElementById("braces");
-      const $status = document.getElementById("status");
-
-      function uuidv4() {
-        if (crypto && typeof crypto.randomUUID === "function")
-          return crypto.randomUUID();
-        const b = new Uint8Array(16);
-        crypto.getRandomValues(b);
-        b[6] = (b[6] & 0x0f) | 0x40;
-        b[8] = (b[8] & 0x3f) | 0x80;
-        const h = [...b].map((x) => x.toString(16).padStart(2, "0"));
-        return (
-          h.slice(0, 4).join("") +
-          "-" +
-          h.slice(4, 6).join("") +
-          "-" +
-          h.slice(6, 8).join("") +
-          "-" +
-          h.slice(8, 10).join("") +
-          "-" +
-          h.slice(10, 16).join("")
-        );
-      }
-
-      function fmt(u) {
-        if ($nodash.checked) u = u.replace(/-/g, "");
-        if ($upper.checked) u = u.toUpperCase();
-        if ($braces.checked) u = "{" + u + "}";
-        return u;
-      }
-
-      function generate() {
-        let n = parseInt($count.value, 10);
-        if (isNaN(n) || n < 1) n = 1;
-        if (n > 1000) n = 1000;
-        $count.value = n;
-        const ids = [];
-        let html = "";
-        for (let i = 0; i < n; i++) {
-          const id = fmt(uuidv4());
-          ids.push(id);
-          html +=
-            '<div class="uuid-row"><span>' +
-            id +
-            '</span><button class="icon-btn" onclick="copyText(this.previousElementSibling.textContent, \'Copied\')" title="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div>';
-        }
-        $list.innerHTML = html;
-        $status.className = "status ok";
-        $status.textContent = "Generated " + n;
-      }
-
-      function getAllText() {
-        return [...$list.querySelectorAll(".uuid-row span")]
-          .map((s) => s.textContent)
-          .join("\n");
-      }
-      function copyAll() {
-        const t = getAllText();
-        if (!t) {
-          showToast("Nothing to copy");
-          return;
-        }
-        copyText(t, "All copied");
-      }
-      function downloadAll() {
-        const t = getAllText();
-        if (!t) {
-          showToast("Nothing to download");
-          return;
-        }
-        downloadText(t, "uuids.txt");
-      }
-
-      [$upper, $nodash, $braces].forEach((el) =>
-        el.addEventListener("change", generate),
-      );
-      $count.addEventListener("change", generate);
-      window.toolShortcuts = {
-        process: generate,
-        copyOutput: copyAll,
-        clearInput: () => {
-          document.getElementById("list").innerHTML = "";
-        },
-      };
-      generate();
-    </script>
-  </body>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UUID Generator Online — Bulk UUID v4 (Cryptographically Secure) | DevToolsHive</title>
+<meta name="description" content="Generate UUID v4 in bulk using the Web Crypto API. Uppercase, no-dashes options, copy and download. Production-safe randomness.">
+<link rel="canonical" href="https://devtoolshive.com/tools/uuid.html">
+<link rel="alternate" hreflang="en" href="https://devtoolshive.com/tools/uuid.html?lang=en" />
+    <link rel="alternate" hreflang="es" href="https://devtoolshive.com/tools/uuid.html?lang=es" />
+    <link rel="alternate" hreflang="de" href="https://devtoolshive.com/tools/uuid.html?lang=de" />
+    <link rel="alternate" hreflang="fr" href="https://devtoolshive.com/tools/uuid.html?lang=fr" />
+    <link rel="alternate" hreflang="ja" href="https://devtoolshive.com/tools/uuid.html?lang=ja" />
+    <link rel="alternate" hreflang="x-default" href="https://devtoolshive.com/tools/uuid.html" />
+<meta property="og:type" content="website">
+<meta property="og:title" content="UUID Generator Online — Bulk UUID v4 (Cryptographically Secure) | DevToolsHive">
+<meta property="og:description" content="Generate UUID v4 in bulk using the Web Crypto API. Uppercase, no-dashes options, copy and download. Production-safe randomness.">
+<meta property="og:url" content="https://devtoolshive.com/tools/uuid.html">
+<meta property="og:image" content="https://devtoolshive.com/assets/img/favicon.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="UUID Generator Online — Bulk UUID v4 (Cryptographically Secure) | DevToolsHive">
+<meta name="twitter:description" content="Generate UUID v4 in bulk using the Web Crypto API. Uppercase, no-dashes options, copy and download. Production-safe randomness.">
+<meta name="twitter:image" content="https://devtoolshive.com/assets/img/favicon.svg">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#0b0d12">
+<link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
+<link rel="stylesheet" href="/assets/css/styles.css">
+<script src="/assets/js/theme.js"></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "UUID Generator Online", "applicationCategory": "DeveloperApplication", "operatingSystem": "Any (web)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "url": "https://devtoolshive.com/tools/uuid.html"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is UUID v4 truly unique?", "acceptedAnswer": {"@type": "Answer", "text": "Practically yes. With 122 random bits the probability of collision is astronomically low \u2014 a billion UUIDs per second for a hundred years has roughly a 50% chance of one collision."}}, {"@type": "Question", "name": "Can I use this output in production?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. We use crypto.randomUUID / getRandomValues which are cryptographically secure RNGs."}}, {"@type": "Question", "name": "Why no UUID v1 or v3/v5?", "acceptedAnswer": {"@type": "Answer", "text": "v1 leaks MAC addresses and timestamps. v3/v5 are namespace-based and rarely needed in app code. We default to v4 because it covers 95% of real use cases."}}]}</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div id="site-header"></div>
+<main id="main" class="container tool-page">
+<div class="crumbs"><a href="/">Home</a> · <span data-i18n="nav.tools">Tools</span> · <span>UUID Generator</span></div>
+<header class="tool-head"><h1 data-i18n="tool.uuid.title">UUID Generator</h1><p data-i18n="tool.uuid.desc">Generate cryptographically secure UUID v4 in bulk.</p></header>
+<div class="toolbar">
+<div class="field" style="margin:0"><label>How many?</label><input id="count" type="number" min="1" max="1000" value="10" style="width:100px;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:6px 10px"></div>
+<button class="btn primary" id="gen" data-shortcut="run" data-i18n="ui.generate">Generate</button>
+<label class="row gap-sm muted"><input type="checkbox" id="upper"> Uppercase</label>
+<label class="row gap-sm muted"><input type="checkbox" id="nodash"> No dashes</label>
+<span class="spacer"></span><button class="btn" id="copy" data-shortcut="copy" data-i18n="ui.copy">Copy all</button>
+<button class="btn" id="dl" data-i18n="ui.download">Download</button></div>
+<pre id="out" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;margin:0;min-height:300px;font-family:var(--mono);font-size:14px;line-height:1.7"></pre>
+<section class="content narrow"><h2>Generate cryptographically secure UUID v4 in bulk</h2>
+<p>UUID v4 is a 128-bit identifier with 122 random bits — collision probability is so low (about 1 in 2.71 × 10<sup>18</sup>) that you can treat them as globally unique without coordination. This generator uses <code>crypto.randomUUID()</code> when available and falls back to <code>crypto.getRandomValues</code> with the proper version/variant bits set, so the output is suitable for production use as primary keys, idempotency keys, request IDs, or session tokens.</p>
+<h3>v4 vs v7 vs ULID</h3>
+<p>v4 is fully random. v7 (the new draft RFC) embeds a millisecond timestamp prefix so IDs sort chronologically — better for database index locality. ULIDs are similar to v7 but use Crockford Base32. For most apps, v4 is fine; for high-write databases, look into v7 or ULID.</p>
+<h3>Output options</h3>
+<ul><li><strong>Uppercase</strong> — for systems that expect canonical uppercase form.</li>
+<li><strong>No dashes</strong> — 32 hex characters, useful for compact storage or URLs.</li></ul>
+<h3>Privacy</h3><p>UUIDs are generated with the Web Crypto API in your browser. Nothing is sent to a server.</p><h2 data-i18n="ui.related">Related tools</h2><div class="related"><a href="/tools/timestamp.html" data-i18n="tool.timestamp.title">Unix Timestamp</a><a href="/tools/base64.html" data-i18n="tool.base64.title">Base64</a><a href="/tools/jwt-decoder.html" data-i18n="tool.jwt.title">JWT Decoder</a></div><h2 data-i18n=ui.faq>FAQ</h2><div class=faq><details class="faq-item"><summary>Is UUID v4 truly unique?</summary><div class="a">Practically yes. With 122 random bits the probability of collision is astronomically low — a billion UUIDs per second for a hundred years has roughly a 50% chance of one collision.</div></details><details class="faq-item"><summary>Can I use this output in production?</summary><div class="a">Yes. We use crypto.randomUUID / getRandomValues which are cryptographically secure RNGs.</div></details><details class="faq-item"><summary>Why no UUID v1 or v3/v5?</summary><div class="a">v1 leaks MAC addresses and timestamps. v3/v5 are namespace-based and rarely needed in app code. We default to v4 because it covers 95% of real use cases.</div></details></div></section>
+</main>
+<div id="site-footer"></div>
+<script src="/assets/js/common.js"></script>
+<script src="/assets/js/i18n/translations.js"></script>
+<script src="/assets/js/i18n.js"></script>
+<script src="/assets/js/partials.js"></script>
+<script>const D=window.DTH,$=D.$;const O=$('#out');
+function uuid(){if(crypto.randomUUID)return crypto.randomUUID();const b=crypto.getRandomValues(new Uint8Array(16));b[6]=(b[6]&0x0f)|0x40;b[8]=(b[8]&0x3f)|0x80;
+const h=[...b].map(x=>x.toString(16).padStart(2,'0')).join('');return `${h.slice(0,8)}-${h.slice(8,12)}-${h.slice(12,16)}-${h.slice(16,20)}-${h.slice(20)}`;}
+function fmt(u){if($('#upper').checked)u=u.toUpperCase();if($('#nodash').checked)u=u.replace(/-/g,'');return u;}
+function gen(){const n=Math.min(1000,Math.max(1,+$('#count').value||10));const out=[];for(let i=0;i<n;i++)out.push(fmt(uuid()));O.textContent=out.join('\n');}
+$('#gen').onclick=gen;$('#copy').onclick=()=>D.copyText(O.textContent);
+$('#dl').onclick=()=>D.downloadText('uuids.txt',O.textContent);
+['#upper','#nodash'].forEach(s=>$(s).addEventListener('change',gen));gen();</script>
+</body>
 </html>

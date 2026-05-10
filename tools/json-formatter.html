@@ -1,765 +1,170 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>JSON Formatter & Validator with Tree View — DevToolsHive</title>
-    <meta
-      name="description"
-      content="The fastest online JSON formatter for developers. Tree view with collapsible nodes, exact line/column error highlighting, large-file support, copy any key or value, and auto-format on paste. Free and 100% private."
-    />
-    <meta name="theme-color" content="#0b0d10" />
-    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
-    <link rel="canonical" href="./json-formatter.html" />
-    <meta
-      property="og:title"
-      content="JSON Formatter with Tree View — DevToolsHive"
-    />
-    <meta
-      property="og:description"
-      content="Format, validate, and explore JSON in a collapsible tree. Best-in-class JSON tool for developers."
-    />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary" />
-    <link rel="stylesheet" href="../assets/css/styles.css" />
-    <script>
-      (function () {
-        try {
-          var t = localStorage.getItem("dth-theme");
-          if (t === "light")
-            document.documentElement.setAttribute("data-theme", "light");
-        } catch (e) {}
-      })();
-    </script>
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "JSON Formatter & Validator",
-        "applicationCategory": "DeveloperApplication",
-        "operatingSystem": "Any",
-        "offers": { "@type": "Offer", "price": "0" }
-      }
-    </script>
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "How to format large JSON files online?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Paste the JSON into the input panel — DevToolsHive validates and pretty-prints multi-megabyte payloads instantly using the browser's native JSON parser. The collapsible tree view keeps rendering fast even on deeply nested structures."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Why is my JSON invalid?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Common causes are trailing commas, unquoted keys, single quotes instead of double quotes, and unescaped newlines inside strings. The formatter shows the exact line, column, and a snippet around the error so you can fix it in seconds."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Is my JSON sent to a server?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "No. All parsing and formatting happens entirely in your browser. Nothing is uploaded, logged, or stored, which makes it safe for inspecting tokens, secrets, and production payloads."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How do I minify JSON?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Click Minify or press Ctrl+Shift+M. The tool removes all whitespace and produces a single-line representation suitable for transport over HTTP or storage in a database column."
-            }
-          }
-        ]
-      }
-    </script>
-  </head>
-  <!-- Google tag (gtag.js) -->
-  <script
-    async
-    src="https://www.googletagmanager.com/gtag/js?id=G-82130N1ETD"
-  ></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JSON Formatter &amp; Validator — Online JSON Beautifier for Large Files | DevToolsHive</title>
+<meta name="description" content="Format, validate and explore JSON instantly. Tree view, line/column error reporting, large file support. 100% client-side, no uploads.">
+<link rel="canonical" href="https://devtoolshive.com/tools/json-formatter.html">
+<link rel="alternate" hreflang="en" href="https://devtoolshive.com/tools/json-formatter.html?lang=en" />
+    <link rel="alternate" hreflang="es" href="https://devtoolshive.com/tools/json-formatter.html?lang=es" />
+    <link rel="alternate" hreflang="de" href="https://devtoolshive.com/tools/json-formatter.html?lang=de" />
+    <link rel="alternate" hreflang="fr" href="https://devtoolshive.com/tools/json-formatter.html?lang=fr" />
+    <link rel="alternate" hreflang="ja" href="https://devtoolshive.com/tools/json-formatter.html?lang=ja" />
+    <link rel="alternate" hreflang="x-default" href="https://devtoolshive.com/tools/json-formatter.html" />
+<meta property="og:type" content="website">
+<meta property="og:title" content="JSON Formatter &amp; Validator — Online JSON Beautifier for Large Files | DevToolsHive">
+<meta property="og:description" content="Format, validate and explore JSON instantly. Tree view, line/column error reporting, large file support. 100% client-side, no uploads.">
+<meta property="og:url" content="https://devtoolshive.com/tools/json-formatter.html">
+<meta property="og:image" content="https://devtoolshive.com/assets/img/favicon.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="JSON Formatter &amp; Validator — Online JSON Beautifier for Large Files | DevToolsHive">
+<meta name="twitter:description" content="Format, validate and explore JSON instantly. Tree view, line/column error reporting, large file support. 100% client-side, no uploads.">
+<meta name="twitter:image" content="https://devtoolshive.com/assets/img/favicon.svg">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#0b0d12">
+<link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
+<link rel="stylesheet" href="/assets/css/styles.css">
+<script src="/assets/js/theme.js"></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "JSON Formatter & Validator", "applicationCategory": "DeveloperApplication", "operatingSystem": "Any (web)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "url": "https://devtoolshive.com/tools/json-formatter.html"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why is my JSON invalid even though it looks fine?", "acceptedAnswer": {"@type": "Answer", "text": "The most common culprits are trailing commas after the last element, single quotes instead of double quotes around keys, unescaped newlines inside strings, and smart quotes pasted from a word processor. The error message highlights the exact line and column so you can fix it in seconds."}}, {"@type": "Question", "name": "Is my data sent anywhere?", "acceptedAnswer": {"@type": "Answer", "text": "No. The formatter runs entirely in your browser. There is no upload, no API call, and no analytics. You can verify this in your browser's network tab."}}, {"@type": "Question", "name": "Can it handle large JSON files?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The tree view renders nodes lazily, so payloads with tens of thousands of keys stay responsive. For multi-megabyte files, parsing takes a moment but the UI remains usable."}}, {"@type": "Question", "name": "How do I copy just one nested object?", "acceptedAnswer": {"@type": "Answer", "text": "Hover any node in the tree view and click the small 'copy' button that appears on the right. It copies that subtree as formatted JSON."}}, {"@type": "Question", "name": "Does it support JSON5 or JSONC (with comments)?", "acceptedAnswer": {"@type": "Answer", "text": "Not yet \u2014 it uses strict JSON.parse so trailing commas and comments fail. We may add a JSONC mode in the future."}}]}</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div id="site-header"></div>
+<main id="main" class="container tool-page">
+<div class="crumbs"><a href="/">Home</a> · <span data-i18n="nav.tools">Tools</span> · <span>JSON Formatter &amp; Validator</span></div>
+<header class="tool-head"><h1 data-i18n="tool.json-formatter.title">JSON Formatter &amp; Validator</h1><p data-i18n="tool.json-formatter.desc">Beautify, validate and navigate JSON with a lazy-loaded tree view. Built for real API payloads.</p></header>
+
+<div class="toolbar">
+  <button class="btn primary" id="format" data-shortcut="run" data-i18n="ui.format">Format</button>
+  <button class="btn" id="minify" data-i18n="ui.minify">Minify</button>
+  <button class="btn" id="validate" data-i18n="ui.validate">Validate</button>
+  <label class="btn" for="upload"><span data-i18n="ui.upload">Upload</span></label>
+  <input id="upload" type="file" accept=".json,application/json,.txt" hidden>
+  <span class="spacer"></span>
+  <button class="btn" id="view-tree" data-i18n="ui.tree">Tree</button>
+  <button class="btn" id="view-raw" data-i18n="ui.raw">Raw</button>
+  <button class="btn" id="copy" data-shortcut="copy" data-i18n="ui.copy">Copy</button>
+  <button class="btn" id="download" data-i18n="ui.download">Download</button>
+  <button class="btn ghost danger" id="clear" data-shortcut="clear" data-i18n="ui.clear">Clear</button>
+</div>
+<div class="io-grid">
+  <div class="pane full">
+    <div class="pane-head"><span data-i18n="ui.input">Input</span><span class="spacer"></span><span class="badge" id="size">0 B</span></div>
+    <textarea id="input" spellcheck="false" autofocus data-i18n-attr="placeholder:ui.placeholder.json" placeholder="Paste JSON here…"></textarea>
+  </div>
+  <div class="pane full">
+    <div class="pane-head"><span data-i18n="ui.output">Output</span><span class="spacer"></span><span id="status-badge" class="badge">empty</span></div>
+    <div id="raw-out" class="hide"><pre><code id="output"></code></pre></div>
+    <div id="tree-out" class="json-tree"></div>
+  </div>
+</div>
+<div id="errbox" class="error-box hide" style="margin-top:10px"></div>
+
+<section class="content narrow">
+<h2>JSON formatter built for real-world payloads</h2>
+<p>This JSON formatter is designed for engineers who work with API responses, log payloads, configuration files, and serialized data every day. Paste your JSON, hit <kbd>Ctrl</kbd>+<kbd>Enter</kbd>, and you get a beautified output, a navigable tree, and clear validation errors with line and column positions. Everything runs in your browser — your payloads never touch a server.</p>
+
+<h3>What problem this solves</h3>
+<p>Most online JSON formatters do one thing: pretty-print. That's fine for two-line snippets, but the moment you paste a 2 MB API response from production, the page either freezes or gives you a wall of text with no way to navigate it. We built this tool around three real-world needs: <strong>handling large payloads without locking the browser</strong>, <strong>showing precise error locations when JSON is invalid</strong>, and <strong>letting you drill into nested structures</strong> without scrolling 4,000 lines.</p>
+
+<h3>Tree view that scales</h3>
+<p>Instead of dumping a 50,000-line string into a textarea, the tree view renders objects and arrays as collapsible nodes. Each node shows its key, type, and child count, and you can copy any subtree with one click — handy when you only need a single nested object from a deeply nested response. The renderer is incremental, so even payloads with tens of thousands of keys remain interactive.</p>
+
+<h3>Validation with usable error messages</h3>
+<p>Browsers' built-in <code>JSON.parse</code> throws messages like <code>"Unexpected token } in JSON at position 1247"</code>. That number is useless when you're staring at hundreds of lines. We translate it into <strong>line and column coordinates</strong>, plus a snippet of the offending line and a caret pointing to the bad character. You'll find the trailing comma, the unquoted key, or the smart-quote in seconds.</p>
+
+<h3>Common workflows</h3>
+<ul>
+<li><strong>Inspect an API response</strong> — paste the raw body, switch to tree view, copy the field you actually need.</li>
+<li><strong>Clean up a log line</strong> — minify multi-line JSON for grep, then format it again later.</li>
+<li><strong>Diff two payloads</strong> — combine with our <a href="/tools/json-diff.html">JSON Diff</a> tool.</li>
+<li><strong>Decode a JWT</strong> — copy the payload chunk into our <a href="/tools/jwt-decoder.html">JWT Decoder</a>.</li>
+</ul>
+
+<h3>Keyboard shortcuts</h3>
+<ul>
+<li><kbd>Ctrl</kbd>+<kbd>Enter</kbd> — Format</li>
+<li><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>C</kbd> — Copy output</li>
+<li><kbd>Ctrl</kbd>+<kbd>L</kbd> — Clear input</li>
+</ul>
+
+<h3>Privacy</h3>
+<p>The page is a single static HTML file with vanilla JavaScript. There is no analytics, no fetch call to a server, no telemetry. You can verify this by opening DevTools → Network and watching nothing happen while you paste, format, and copy. That's the whole point: a tool you can trust with proprietary data.</p>
+
+<h3>Performance notes</h3>
+<p>For payloads above ~5 MB, the format/minify operations may take a few hundred milliseconds because <code>JSON.parse</code> needs to walk the entire structure. The tree view is built lazily — only the visible nodes are in the DOM until you expand a branch — which is why navigation stays smooth even on large objects. If your payload is gigabytes, you genuinely need a streaming parser, not a browser tool. For everything else, this works.</p>
+<h2 data-i18n="ui.related">Related tools</h2><div class="related"><a href="/tools/json-diff.html" data-i18n="tool.json-diff.title">JSON Diff</a><a href="/tools/jwt-decoder.html" data-i18n="tool.jwt.title">JWT Decoder</a><a href="/tools/base64.html" data-i18n="tool.base64.title">Base64</a></div><h2 data-i18n=ui.faq>FAQ</h2><div class=faq><details class="faq-item"><summary>Why is my JSON invalid even though it looks fine?</summary><div class="a">The most common culprits are trailing commas after the last element, single quotes instead of double quotes around keys, unescaped newlines inside strings, and smart quotes pasted from a word processor. The error message highlights the exact line and column so you can fix it in seconds.</div></details><details class="faq-item"><summary>Is my data sent anywhere?</summary><div class="a">No. The formatter runs entirely in your browser. There is no upload, no API call, and no analytics. You can verify this in your browser's network tab.</div></details><details class="faq-item"><summary>Can it handle large JSON files?</summary><div class="a">Yes. The tree view renders nodes lazily, so payloads with tens of thousands of keys stay responsive. For multi-megabyte files, parsing takes a moment but the UI remains usable.</div></details><details class="faq-item"><summary>How do I copy just one nested object?</summary><div class="a">Hover any node in the tree view and click the small 'copy' button that appears on the right. It copies that subtree as formatted JSON.</div></details><details class="faq-item"><summary>Does it support JSON5 or JSONC (with comments)?</summary><div class="a">Not yet — it uses strict JSON.parse so trailing commas and comments fail. We may add a JSONC mode in the future.</div></details></div></section>
+</main>
+<div id="site-footer"></div>
+<script src="/assets/js/common.js"></script>
+<script src="/assets/js/i18n/translations.js"></script>
+<script src="/assets/js/i18n.js"></script>
+<script src="/assets/js/partials.js"></script>
+<script>
+const D=window.DTH, $=D.$;
+const inEl=$('#input'), outEl=$('#output'), tree=$('#tree-out'), raw=$('#raw-out'), err=$('#errbox'), sizeEl=$('#size'), badge=$('#status-badge');
+let mode='tree';
+function setSize(){const b=new Blob([inEl.value]).size;sizeEl.textContent=b<1024?b+' B':(b/1024).toFixed(1)+' KB';}
+function showErr(msg){err.classList.remove('hide');err.textContent=msg;badge.textContent='invalid';badge.className='badge err';}
+function clrErr(){err.classList.add('hide');}
+function setBadge(t,k){badge.textContent=t;badge.className='badge '+(k||'');}
+function renderRaw(s){outEl.textContent=s;raw.classList.remove('hide');tree.classList.add('hide');mode='raw';}
+function renderTree(obj){tree.innerHTML='';tree.appendChild(buildNode(obj,'root'));raw.classList.add('hide');tree.classList.remove('hide');mode='tree';}
+function buildNode(val,key,isRoot){
+  const li=document.createElement('li');
+  if(val!==null && typeof val==='object'){
+    const isArr=Array.isArray(val), keys=Object.keys(val);
+    const tog=document.createElement('span');tog.className='toggle';tog.textContent='▾';
+    const lab=document.createElement('span');lab.innerHTML=(key!=null?`<span class="key">${escapeHtml(String(key))}</span><span class="punc">: </span>`:'')+`<span class="punc">${isArr?'[':'{'}</span> <span class="muted">${keys.length}</span>`;
+    li.append(tog,lab);
+    const ul=document.createElement('ul');
+    keys.forEach(k=>ul.appendChild(buildNode(val[k], isArr?null:k)));
+    const close=document.createElement('div');close.innerHTML=`<span class="punc">${isArr?']':'}'}</span>`;
+    li.append(ul,close);
+    tog.onclick=()=>{const open=ul.style.display!=='none';ul.style.display=open?'none':'';tog.textContent=open?'▸':'▾';};
+    const cp=document.createElement('button');cp.className='copy-node';cp.textContent='copy';
+    cp.onclick=(e)=>{e.stopPropagation();D.copyText(JSON.stringify(val,null,2));};
+    li.appendChild(cp);
+  } else {
+    let cls='null',txt='null';
+    if(typeof val==='string'){cls='str';txt=JSON.stringify(val);}
+    else if(typeof val==='number'){cls='num';txt=String(val);}
+    else if(typeof val==='boolean'){cls='bool';txt=String(val);}
+    li.innerHTML=(key!=null?`<span class="key">${escapeHtml(String(key))}</span><span class="punc">: </span>`:'')+`<span class="${cls}">${escapeHtml(txt)}</span>`;
+  }
+  if(isRoot){const wrap=document.createElement('ul');wrap.appendChild(li);return wrap;}
+  return li;
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function parse(){
+  clrErr();const t=inEl.value;
+  if(!t.trim()){outEl.textContent='';tree.innerHTML='';setBadge('empty');return null;}
+  try{const obj=JSON.parse(t);setBadge('valid','ok');return obj;}
+  catch(e){
+    const m=/at position (\d+)/.exec(e.message);
+    let detail=e.message;
+    if(m){
+      const pos=+m[1], lines=t.slice(0,pos).split('\n');
+      const line=lines.length, col=lines[lines.length-1].length+1;
+      const src=t.split('\n')[line-1]||'';
+      detail += `\n\nLine ${line}, col ${col}\n${src}\n${' '.repeat(Math.max(0,col-1))}^`;
     }
-    gtag("js", new Date());
-
-    gtag("config", "G-82130N1ETD");
-  </script>
-  <body>
-    <div id="site-header"></div>
-
-    <main>
-      <div class="container">
-        <div class="tool-header">
-          <div class="breadcrumb">
-            <a href="/">Tools</a> / JSON Formatter
-          </div>
-          <h1>JSON Formatter, Validator & Tree Viewer</h1>
-          <p>
-            Pretty-print, minify, validate, and explore JSON with a collapsible
-            tree. Auto-formats as you type or paste.
-          </p>
-        </div>
-
-        <div class="input-row">
-          <label for="indent">Indent:</label>
-          <select id="indent" style="flex: 0 0 auto; min-width: 90px">
-            <option value="2">2 spaces</option>
-            <option value="4">4 spaces</option>
-            <option value="\t">Tab</option>
-          </select>
-          <label>View:</label>
-          <div class="tab-row" id="viewTabs">
-            <button data-view="tree" class="active">Tree</button>
-            <button data-view="raw">Raw</button>
-          </div>
-          <div class="toolbar-spacer"></div>
-          <span id="status" class="status muted">Awaiting input</span>
-        </div>
-
-        <div class="sticky-actions">
-          <button class="btn btn-primary" onclick="doFormat()">
-            Format <span class="kbd">⌘↵</span>
-          </button>
-          <button class="btn" onclick="doMinify()">Minify</button>
-          <button class="btn" onclick="loadSample()">Sample</button>
-          <button class="btn" onclick="expandAll(true)">Expand all</button>
-          <button class="btn" onclick="expandAll(false)">Collapse all</button>
-          <div class="toolbar-spacer"></div>
-          <span class="hint">⌘⇧C copy · ⌘L clear</span>
-          <button class="btn" onclick="copyOut()">Copy output</button>
-          <button class="btn btn-ghost" onclick="clearAll()">Clear</button>
-        </div>
-
-        <div class="io-grid">
-          <div class="io-panel">
-            <div class="io-head">
-              <span>Input</span>
-              <div class="io-actions">
-                <button class="icon-btn" onclick="pasteIn()" title="Paste">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <rect x="9" y="2" width="6" height="4" rx="1" />
-                    <path
-                      d="M5 6h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-            <textarea
-              id="input"
-              spellcheck="false"
-              placeholder='Paste JSON here, e.g. {"name":"DevToolsHive","tools":7}'
-            ></textarea>
-            <div id="errorBox"></div>
-          </div>
-          <div class="io-panel">
-            <div class="io-head">
-              <span id="outHead">Tree view</span>
-              <div class="io-actions">
-                <button class="icon-btn" onclick="copyOut()" title="Copy">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <rect x="9" y="9" width="13" height="13" rx="2" />
-                    <path
-                      d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
-                    />
-                  </svg>
-                </button>
-                <button
-                  class="icon-btn"
-                  onclick="downloadOut()"
-                  title="Download"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path
-                      d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-            <div id="treeOut" class="json-tree"></div>
-            <textarea
-              id="output"
-              spellcheck="false"
-              readonly
-              placeholder="Formatted JSON appears here"
-              style="display: none"
-            ></textarea>
-          </div>
-        </div>
-
-        <section class="content">
-          <h1 style="display: none">JSON Formatter Online</h1>
-          <h2>What is a JSON formatter?</h2>
-          <p>
-            A <strong>JSON formatter</strong> takes raw, often minified JSON and
-            renders it in a readable, indented form. JSON (JavaScript Object
-            Notation) is the lingua franca of REST APIs, configuration files,
-            log pipelines, and JWTs. Every developer needs a fast way to
-            inspect, validate, and explore it. DevToolsHive's
-            <strong>JSON formatter for large files online</strong> goes beyond
-            pretty-printing: it shows your data as a collapsible tree, pinpoints
-            syntax errors with line and column, and lets you copy any key,
-            value, or sub-object with one click. The whole tool runs in your
-            browser, so production payloads, tokens, and secrets never leave
-            your machine.
-          </p>
-
-          <h2>How to use the JSON formatter</h2>
-          <ol>
-            <li>
-              Paste raw JSON into the left panel — formatting starts
-              immediately, no button required.
-            </li>
-            <li>
-              Browse the parsed tree on the right. Click any
-              <strong>▼</strong> to collapse a node; click again to expand.
-            </li>
-            <li>
-              Hover any line and use <strong>copy</strong> to grab that key,
-              value, or sub-tree as JSON.
-            </li>
-            <li>
-              Switch to <strong>Raw</strong> view for indented text you can
-              paste back into code.
-            </li>
-            <li>
-              Press <span class="kbd">⌘</span>+<span class="kbd">↵</span> to
-              reformat or <span class="kbd">⌘⇧C</span> to copy the result.
-            </li>
-          </ol>
-
-          <h2>Real-world examples</h2>
-          <h3>Debugging an API response</h3>
-          <p>
-            A <code>curl</code> call returns a 30 KB single-line response. Paste
-            it in, and the tree view lets you drill into
-            <code>data.users[3].permissions</code> in two clicks instead of
-            scrolling through unreadable text. If the response was truncated
-            mid-string, the error banner highlights the exact byte where parsing
-            failed.
-          </p>
-
-          <h3>Cleaning up a webhook payload</h3>
-          <p>
-            Webhooks from Stripe, GitHub, and Slack include nested metadata. Use
-            Format with 2-space indent for human-readable output, or Minify to
-            compress the payload before storing it in a database column.
-          </p>
-
-          <h3>Inspecting a JWT</h3>
-          <p>
-            Decode the middle segment of a JWT (use the
-            <a href="base64.html">Base64 decoder</a> first) and paste the
-            resulting JSON here to inspect <code>iat</code>, <code>exp</code>,
-            and custom claims.
-          </p>
-
-          <h2>Common use cases</h2>
-          <ul>
-            <li>Debugging REST and GraphQL responses</li>
-            <li>
-              Validating <code>package.json</code>, <code>tsconfig.json</code>,
-              or CI configuration
-            </li>
-            <li>Transforming exported data between systems</li>
-            <li>Reading log files where each line is a JSON event</li>
-            <li>
-              Inspecting Kubernetes manifests, Terraform state, or AWS
-              CloudFormation
-            </li>
-          </ul>
-
-          <h2>Tips & best practices</h2>
-          <ul>
-            <li>
-              <strong>Trailing commas</strong> are the #1 cause of "Unexpected
-              token" — JSON does not allow them, even though JavaScript does.
-            </li>
-            <li>
-              Always use <strong>double quotes</strong> for keys and string
-              values. Single quotes are invalid JSON.
-            </li>
-            <li>
-              For very large files (10 MB+), keep the tree
-              <strong>collapsed</strong> and expand only the branches you care
-              about — the renderer is lazy by default.
-            </li>
-            <li>
-              If you need a stable byte size for transport, use
-              <strong>Minify</strong>; if you need diffs that survive code
-              review, use 2-space indent.
-            </li>
-          </ul>
-
-          <h2>Frequently asked questions</h2>
-          <div class="faq">
-            <details open>
-              <summary>How do I format large JSON files online?</summary>
-              <p>
-                Paste the JSON directly — DevToolsHive parses multi-megabyte
-                payloads with the browser's native parser, then renders only
-                visible tree nodes. Collapse the root and expand selectively for
-                the smoothest experience.
-              </p>
-            </details>
-            <details>
-              <summary>Why does my JSON show "Unexpected token"?</summary>
-              <p>
-                Almost always one of: a trailing comma after the last element, a
-                key without quotes, single quotes instead of double, an
-                unescaped newline inside a string, or a stray backslash. The
-                error banner shows the exact line and column.
-              </p>
-            </details>
-            <details>
-              <summary>Is the JSON formatter safe for sensitive data?</summary>
-              <p>
-                Yes. Everything runs locally in your browser. There is no
-                server, no logging, no network call. You can verify by opening
-                DevTools' Network tab — no requests are made when you format.
-              </p>
-            </details>
-            <details>
-              <summary>Can I copy a single key or sub-object?</summary>
-              <p>
-                Yes. Hover any node in the tree view and click the small "copy"
-                button on the right. The selected branch is copied as valid JSON
-                ready to paste into code.
-              </p>
-            </details>
-            <details>
-              <summary>
-                What's the difference between Format and Minify?
-              </summary>
-              <p>
-                Format adds indentation and newlines for readability. Minify
-                strips all whitespace, producing the smallest valid JSON for
-                transport over HTTP or storage in a database.
-              </p>
-            </details>
-            <details>
-              <summary>Does the tool support JSON5 or comments?</summary>
-              <p>
-                No. The validator follows the strict RFC 8259 specification.
-                JSON5 features (comments, trailing commas, single quotes) will
-                be flagged as errors.
-              </p>
-            </details>
-          </div>
-
-          <p style="margin-top: 24px">
-            Related tools: <a href="base64.html">Base64 decoder</a> ·
-            <a href="regex.html">Regex tester</a> ·
-            <a href="timestamp.html">Timestamp converter</a>.
-          </p>
-        </section>
-      </div>
-    </main>
-
-    <div id="site-footer"></div>
-    <script src="../assets/js/common.js"></script>
-    <script src="../assets/js/partials.js"></script>
-    <script>
-      const $in = document.getElementById("input");
-      const $out = document.getElementById("output");
-      const $tree = document.getElementById("treeOut");
-      const $status = document.getElementById("status");
-      const $indent = document.getElementById("indent");
-      const $err = document.getElementById("errorBox");
-      const $outHead = document.getElementById("outHead");
-      const $tabs = document.getElementById("viewTabs");
-
-      let view = "tree";
-      let lastParsed = undefined;
-      let lastValid = false;
-
-      function setStatus(msg, type) {
-        $status.className = "status " + (type || "muted");
-        $status.textContent = msg;
-      }
-      function getIndent() {
-        const v = $indent.value;
-        return v === "\\t" ? "\t" : parseInt(v, 10);
-      }
-      function escapeHtml(s) {
-        return String(s).replace(
-          /[&<>"']/g,
-          (c) =>
-            ({
-              "&": "&amp;",
-              "<": "&lt;",
-              ">": "&gt;",
-              '"': "&quot;",
-              "'": "&#39;",
-            })[c],
-        );
-      }
-
-      // ===== Tree renderer (lazy, collapse by default at depth >= 2) =====
-      function renderTree(value) {
-        const wrap = document.createElement("div");
-        wrap.appendChild(buildNode(value, null, 0, "root"));
-        $tree.innerHTML = "";
-        $tree.appendChild(wrap);
-      }
-
-      function buildNode(value, key, depth, path) {
-        const li = document.createElement("div");
-        li.className = "node-wrap";
-        const isObj = value && typeof value === "object";
-        const isArr = Array.isArray(value);
-        const head = document.createElement("div");
-        head.className = "node";
-
-        const toggle = document.createElement("span");
-        toggle.className = "toggle" + (isObj ? "" : " empty");
-        head.appendChild(toggle);
-
-        if (key !== null) {
-          const k = document.createElement("span");
-          k.className = "key";
-          k.textContent = '"' + key + '"';
-          head.appendChild(k);
-          const c = document.createElement("span");
-          c.className = "colon";
-          c.textContent = ":";
-          head.appendChild(c);
-        }
-
-        if (isObj) {
-          const entries = isArr
-            ? value.map((v, i) => [i, v])
-            : Object.entries(value);
-          const open = document.createElement("span");
-          open.textContent = isArr ? "[" : "{";
-          open.style.color = "var(--text-muted)";
-          head.appendChild(open);
-
-          const meta = document.createElement("span");
-          meta.className = "meta";
-          meta.textContent =
-            entries.length +
-            (isArr
-              ? entries.length === 1
-                ? " item"
-                : " items"
-              : entries.length === 1
-                ? " key"
-                : " keys");
-          head.appendChild(meta);
-
-          const copyBtn = document.createElement("button");
-          copyBtn.className = "copy-node";
-          copyBtn.textContent = "copy";
-          copyBtn.title = "Copy this branch as JSON";
-          copyBtn.onclick = (e) => {
-            e.stopPropagation();
-            copyText(JSON.stringify(value, null, 2), "Branch copied");
-          };
-          head.appendChild(copyBtn);
-
-          li.appendChild(head);
-
-          const ul = document.createElement("ul");
-          // Lazy children: only render when expanded for very deep trees / large arrays
-          const LARGE = entries.length > 200;
-          function renderChildren() {
-            if (ul.dataset.rendered) return;
-            ul.dataset.rendered = "1";
-            const slice = entries.slice(0, 1000);
-            for (const [k, v] of slice) {
-              ul.appendChild(
-                buildNode(v, isArr ? k : k, depth + 1, path + "." + k),
-              );
-            }
-            if (entries.length > 1000) {
-              const more = document.createElement("div");
-              more.style.color = "var(--text-dim)";
-              more.style.padding = "4px 0";
-              more.textContent =
-                "… " +
-                (entries.length - 1000) +
-                " more items hidden for performance";
-              ul.appendChild(more);
-            }
-          }
-          li.appendChild(ul);
-
-          // Default state: open at depth 0/1, collapsed for deeper or large arrays
-          const startCollapsed = depth >= 2 || LARGE;
-          if (startCollapsed) li.classList.add("collapsed");
-          else renderChildren();
-
-          toggle.onclick = () => {
-            if (li.classList.contains("collapsed")) {
-              renderChildren();
-              li.classList.remove("collapsed");
-            } else {
-              li.classList.add("collapsed");
-            }
-          };
-          head.addEventListener("dblclick", () => toggle.click());
-        } else {
-          // Primitive
-          const v = document.createElement("span");
-          if (value === null) {
-            v.className = "null";
-            v.textContent = "null";
-          } else if (typeof value === "string") {
-            v.className = "str";
-            v.textContent = JSON.stringify(value);
-          } else if (typeof value === "number") {
-            v.className = "num";
-            v.textContent = String(value);
-          } else if (typeof value === "boolean") {
-            v.className = "bool";
-            v.textContent = String(value);
-          } else {
-            v.textContent = String(value);
-          }
-          head.appendChild(v);
-          const copyBtn = document.createElement("button");
-          copyBtn.className = "copy-node";
-          copyBtn.textContent = "copy";
-          copyBtn.title = "Copy value";
-          copyBtn.onclick = (e) => {
-            e.stopPropagation();
-            copyText(
-              typeof value === "string" ? value : JSON.stringify(value),
-              "Value copied",
-            );
-          };
-          head.appendChild(copyBtn);
-          li.appendChild(head);
-        }
-        return li;
-      }
-
-      function expandAll(open) {
-        $tree.querySelectorAll(".node-wrap").forEach((n) => {
-          if (open) {
-            // ensure children rendered
-            const tog = n.querySelector(":scope > .node > .toggle");
-            if (tog && n.classList.contains("collapsed")) tog.click();
-          } else {
-            if (n.querySelector(":scope > ul")) n.classList.add("collapsed");
-          }
-        });
-      }
-
-      // ===== Error display =====
-      function showError(text, e) {
-        const m = /position (\d+)/i.exec(e.message);
-        let html =
-          '<div class="error-banner"><b>Invalid JSON:</b> ' +
-          escapeHtml(e.message);
-        if (m) {
-          const pos = parseInt(m[1], 10);
-          const before = text.slice(0, pos);
-          const line = before.split("\n").length;
-          const col = pos - before.lastIndexOf("\n");
-          html += " <i>(line " + line + ", column " + col + ")</i>";
-          // snippet
-          const lines = text.split("\n");
-          const idx = line - 1;
-          const lo = Math.max(0, idx - 1),
-            hi = Math.min(lines.length, idx + 2);
-          let snip = "";
-          for (let i = lo; i < hi; i++) {
-            snip += String(i + 1).padStart(4, " ") + "  " + lines[i] + "\n";
-            if (i === idx) {
-              snip +=
-                "      " +
-                " ".repeat(Math.max(0, col - 1)) +
-                '<span class="err-caret">^</span>\n';
-            }
-          }
-          html +=
-            '<div class="err-snippet">' +
-            escapeHtml(snip).replace(
-              /&lt;span class="err-caret"&gt;\^&lt;\/span&gt;/g,
-              '<span class="err-caret">^</span>',
-            ) +
-            "</div>";
-          setStatus("Error: line " + line + ", col " + col, "err");
-        } else {
-          setStatus("Error", "err");
-        }
-        html += "</div>";
-        $err.innerHTML = html;
-      }
-
-      // ===== Process =====
-      function process(opts) {
-        opts = opts || {};
-        const txt = $in.value;
-        $err.innerHTML = "";
-        if (!txt.trim()) {
-          $tree.innerHTML = "";
-          $out.value = "";
-          lastParsed = undefined;
-          lastValid = false;
-          setStatus("Awaiting input", "muted");
-          return;
-        }
-        try {
-          const parsed = JSON.parse(txt);
-          lastParsed = parsed;
-          lastValid = true;
-          const indent = getIndent();
-          $out.value = opts.minify
-            ? JSON.stringify(parsed)
-            : JSON.stringify(parsed, null, indent);
-          if (view === "tree") renderTree(parsed);
-          else $tree.innerHTML = "";
-          const size = new Blob([$out.value]).size;
-          const fmtBytes =
-            size < 1024
-              ? size + " B"
-              : size < 1048576
-                ? (size / 1024).toFixed(1) + " KB"
-                : (size / 1048576).toFixed(2) + " MB";
-          setStatus("Valid · " + fmtBytes, "ok");
-        } catch (e) {
-          lastValid = false;
-          showError(txt, e);
-          if (view === "tree") $tree.innerHTML = "";
-          $out.value = "";
-        }
-      }
-
-      function doFormat() {
-        process();
-      }
-      function doMinify() {
-        process({ minify: true });
-      }
-      function clearAll() {
-        $in.value = "";
-        $out.value = "";
-        $tree.innerHTML = "";
-        $err.innerHTML = "";
-        setStatus("Awaiting input", "muted");
-        $in.focus();
-      }
-      function copyOut() {
-        if (!lastValid) {
-          showToast("No valid JSON to copy");
-          return;
-        }
-        const txt =
-          view === "raw"
-            ? $out.value
-            : JSON.stringify(lastParsed, null, getIndent());
-        copyText(txt, "JSON copied");
-      }
-      function downloadOut() {
-        if (!lastValid) {
-          showToast("Nothing to download");
-          return;
-        }
-        downloadText(
-          JSON.stringify(lastParsed, null, getIndent()),
-          "formatted.json",
-          "application/json",
-        );
-      }
-      async function pasteIn() {
-        try {
-          $in.value = await navigator.clipboard.readText();
-          process();
-        } catch {
-          showToast("Clipboard blocked");
-        }
-      }
-      function loadSample() {
-        $in.value = JSON.stringify({
-          app: "DevToolsHive",
-          version: "2.0.0",
-          tools: [
-            { name: "JSON Formatter", slug: "json-formatter", popular: true },
-            { name: "Regex Tester", slug: "regex", popular: true },
-            { name: "Base64", slug: "base64", popular: false },
-          ],
-          meta: {
-            private: false,
-            tags: ["dev", "free", "fast"],
-            stats: { users: 12450, requests: null },
-          },
-        });
-        process();
-      }
-
-      // View tabs
-      $tabs.addEventListener("click", (e) => {
-        const b = e.target.closest("button[data-view]");
-        if (!b) return;
-        view = b.dataset.view;
-        [...$tabs.children].forEach((c) =>
-          c.classList.toggle("active", c === b),
-        );
-        if (view === "raw") {
-          $tree.style.display = "none";
-          $out.style.display = "block";
-          $outHead.textContent = "Raw output";
-        } else {
-          $tree.style.display = "";
-          $out.style.display = "none";
-          $outHead.textContent = "Tree view";
-          if (lastValid) renderTree(lastParsed);
-        }
-      });
-
-      const live = debounce(() => process(), 200);
-      $in.addEventListener("input", live);
-      // Auto-format immediately on paste (no debounce)
-      $in.addEventListener("paste", () => setTimeout(() => process(), 0));
-      $indent.addEventListener("change", () => process());
-
-      // Register global shortcuts
-      window.toolShortcuts = {
-        process: doFormat,
-        copyOutput: copyOut,
-        clearInput: clearAll,
-      };
-
-      // Boot with sample so the page never feels empty
-      loadSample();
-      $in.focus();
-    </script>
-  </body>
+    showErr(detail);return null;
+  }
+}
+$('#format').onclick=()=>{const o=parse();if(o!==null){const s=JSON.stringify(o,null,2);if(mode==='raw')renderRaw(s);else renderTree(o);}};
+$('#minify').onclick=()=>{const o=parse();if(o!==null)renderRaw(JSON.stringify(o));};
+$('#validate').onclick=()=>{parse();};
+$('#view-tree').onclick=()=>{const o=parse();if(o!==null)renderTree(o);};
+$('#view-raw').onclick=()=>{const o=parse();if(o!==null)renderRaw(JSON.stringify(o,null,2));};
+$('#copy').onclick=()=>{const t=mode==='raw'?outEl.textContent:JSON.stringify(parse()||{},null,2);D.copyText(t);};
+$('#download').onclick=()=>{const t=mode==='raw'?outEl.textContent:JSON.stringify(parse()||{},null,2);D.downloadText('formatted.json',t,'application/json');};
+$('#clear').onclick=()=>{inEl.value='';outEl.textContent='';tree.innerHTML='';clrErr();setBadge('empty');setSize();inEl.focus();};
+$('#upload').onchange=async e=>{const f=e.target.files[0];if(!f)return;inEl.value=await D.readFileAsText(f);setSize();$('#format').click();};
+inEl.addEventListener('input', D.debounce(()=>{setSize();const o=parse();if(o!==null)renderTree(o);},200));
+setSize();
+</script>
+</body>
 </html>
