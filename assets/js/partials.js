@@ -1,60 +1,69 @@
-/* Shared header + footer renderer (kept as JS-injected partials) */
-(function () {
-  const ICON_MOON = '<svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
-  const ICON_SUN  = '<svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>';
+/* Shared header & footer injection. Uses root-relative paths only. */
+(function(){
+  const TOOLS = [
+    {slug:'json-formatter',  k:'tool.json-formatter'},
+    {slug:'json-diff',       k:'tool.json-diff', isNew:true},
+    {slug:'jwt-decoder',     k:'tool.jwt', isNew:true},
+    {slug:'cron-generator',  k:'tool.cron', isNew:true},
+    {slug:'env-parser',      k:'tool.env', isNew:true},
+    {slug:'api-builder',     k:'tool.api', isNew:true},
+    {slug:'base64',          k:'tool.base64'},
+    {slug:'url-encoder',     k:'tool.url'},
+    {slug:'timestamp',       k:'tool.timestamp'},
+    {slug:'uuid',            k:'tool.uuid'},
+    {slug:'regex',           k:'tool.regex'},
+    {slug:'case-converter',  k:'tool.case'},
+    {slug:'user-agent',      k:'tool.user-agent'},
+  ];
+  window.DTH_TOOLS = TOOLS;
 
-  function basePath() {
-    // Detect if we're inside /tools/ subdirectory
-    return location.pathname.includes('/tools/') ? '../' : '';
+  function header(){
+    const langOpts = [['en','English'],['es','Español'],['de','Deutsch'],['fr','Français'],['ja','日本語']]
+      .map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
+    return `<header class="site-header"><div class="container row">
+      <a class="brand" href="/"><span class="brand-mark">DT</span><span>DevToolsHive</span></a>
+      <nav class="nav-primary" aria-label="Primary">
+        <a href="/" data-i18n="nav.home">Home</a>
+        <a href="/#tools" data-i18n="nav.tools">Tools</a>
+        <!--
+        <select id="lang-switch" class="lang-select" aria-label="Language">${langOpts}</select>
+        <button id="theme-toggle" class="icon-btn" aria-label="Toggle theme">☀</button>
+        -->
+        <a class="icon-btn" href="https://github.com/" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub" style="text-decoration:none">★</a>
+      </nav>
+    </div></header>`;
   }
 
-  window.renderHeader = function () {
-    const b = basePath();
-    return `
-    <header class="header">
-      <div class="header-inner">
-        <a href="${b}index.html" class="logo">
-          <span class="logo-mark">D</span>
-          <span>DevToolsHive</span>
-        </a>
-        <nav class="nav" aria-label="Primary">
-          <a href="${b}index.html">Tools</a>
-          <a href="${b}index.html#about">About</a>
-          <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
-        </nav>
-        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme (dark/light)">
-          ${ICON_MOON}${ICON_SUN}
-        </button>
-      </div>
-    </header>`;
-  };
-
-  window.renderFooter = function () {
-    const b = basePath();
-    const year = new Date().getFullYear();
-    return `
-    <footer class="footer">
-      <div class="footer-inner">
-        <div>© ${year} DevToolsHive · Free developer tools, in your browser.</div>
-        <div class="footer-links">
-          <a href="${b}index.html">Home</a>
-          <a href="${b}tools/json-formatter.html">JSON</a>
-          <a href="${b}tools/base64.html">Base64</a>
-          <a href="${b}tools/url-encoder.html">URL</a>
-          <a href="${b}tools/timestamp.html">Timestamp</a>
-          <a href="${b}tools/uuid.html">UUID</a>
-          <a href="${b}tools/regex.html">Regex</a>
-          <a href="${b}tools/case-converter.html">Case</a>
+  function footer(){
+    const cols = TOOLS.slice(0,6).map(t=>`<li><a href="/tools/${t.slug}.html" data-i18n="${t.k}.title">${t.slug}</a></li>`).join('');
+    const cols2= TOOLS.slice(6).map(t=>`<li><a href="/tools/${t.slug}.html" data-i18n="${t.k}.title">${t.slug}</a></li>`).join('');
+    return `<footer class="site-footer"><div class="container">
+      <div class="cols">
+        <div>
+          <a class="brand" href="/" style="margin-bottom:10px"><span class="brand-mark">DT</span><span>DevToolsHive</span></a>
+          <p class="muted" data-i18n="footer.tagline" style="margin-top:8px;max-width:320px"></p>
         </div>
+        <div><h4 data-i18n="footer.tools">Tools</h4><ul>${cols}</ul></div>
+        <div><h4 data-i18n="footer.popular">Popular</h4><ul>${cols2}</ul></div>
+        <div><h4 data-i18n="footer.legal">Legal</h4><ul>
+          <li><a href="/" data-i18n="nav.home">Home</a></li>
+          <li><a href="https://github.com/" target="_blank" rel="noopener" data-i18n="footer.github">GitHub</a></li>
+        </ul></div>
       </div>
-    </footer>`;
-  };
+      <div class="meta">
+        <span data-i18n="footer.copy">© 2026 DevToolsHive.</span>
+        <span class="muted">v2.0</span>
+      </div>
+    </div></footer>`;
+  }
 
-  // Auto-mount
-  document.addEventListener('DOMContentLoaded', () => {
-    const h = document.getElementById('site-header');
-    const f = document.getElementById('site-footer');
-    if (h) h.outerHTML = renderHeader();
-    if (f) f.outerHTML = renderFooter();
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const h=document.getElementById('site-header'); if(h) h.outerHTML = header();
+    const f=document.getElementById('site-footer'); if(f) f.outerHTML = footer();
+    if(window.DTH_LANG){ /* re-apply after injection */
+      document.dispatchEvent(new CustomEvent('dth:apply'));
+      // trigger by re-running by calling set with current
+      const cur = window.DTH_LANG.current(); window.DTH_LANG.set(cur);
+    }
   });
 })();

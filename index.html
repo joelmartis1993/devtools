@@ -1,271 +1,126 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>
-      DevToolsHive — Free Online Developer Tools (JSON, Base64, Regex, UUID)
-    </title>
-    <meta
-      name="description"
-      content="Fast, minimal, browser-based developer tools: JSON formatter, Base64 & URL encoder, regex tester, UUID generator, timestamp converter, and text case converter. 100% free, no signup, works offline."
-    />
-    <meta name="theme-color" content="#0b0d10" />
-    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-    <link rel="canonical" href="./index.html" />
-    <meta
-      property="og:title"
-      content="DevToolsHive — Free Online Developer Tools"
-    />
-    <meta
-      property="og:description"
-      content="A clean, fast set of developer utilities you'll actually bookmark."
-    />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary" />
-    <link rel="stylesheet" href="assets/css/styles.css" />
-    <script>
-      // Inline theme bootstrap to avoid flash
-      (function () {
-        try {
-          var t = localStorage.getItem("dth-theme");
-          if (t === "light")
-            document.documentElement.setAttribute("data-theme", "light");
-        } catch (e) {}
-      })();
-    </script>
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "DevToolsHive",
-        "url": "./",
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": "./?q={query}",
-          "query-input": "required name=query"
-        }
-      }
-    </script>
-    <meta name="google-site-verification" content="LFPYLMQj29CRSknHJK-8a8EF-UNyiiH1kNuaz1gZcfg" />
-  </head>
-  <!-- Google tag (gtag.js) -->
-  <script
-    async
-    src="https://www.googletagmanager.com/gtag/js?id=G-82130N1ETD"
-  ></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag("js", new Date());
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DevToolsHive — Fast, private developer tools that run in your browser</title>
+<meta name="description" content="Free developer toolkit: JSON formatter, JSON diff, JWT decoder, cron generator, regex tester, UUID, Base64, timestamps and more. Everything runs locally in your browser.">
+<link rel="canonical" href="https://devtoolshive.com/">
+<link rel="alternate" hreflang="en" href="https://devtoolshive.com/?lang=en" />
+    <link rel="alternate" hreflang="es" href="https://devtoolshive.com/?lang=es" />
+    <link rel="alternate" hreflang="de" href="https://devtoolshive.com/?lang=de" />
+    <link rel="alternate" hreflang="fr" href="https://devtoolshive.com/?lang=fr" />
+    <link rel="alternate" hreflang="ja" href="https://devtoolshive.com/?lang=ja" />
+    <link rel="alternate" hreflang="x-default" href="https://devtoolshive.com/" />
+<meta property="og:type" content="website">
+<meta property="og:title" content="DevToolsHive — Fast, private developer tools that run in your browser">
+<meta property="og:description" content="Free developer toolkit: JSON formatter, JSON diff, JWT decoder, cron generator, regex tester, UUID, Base64, timestamps and more. Everything runs locally in your browser.">
+<meta property="og:url" content="https://devtoolshive.com/">
+<meta property="og:image" content="https://devtoolshive.com/assets/img/favicon.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="DevToolsHive — Fast, private developer tools that run in your browser">
+<meta name="twitter:description" content="Free developer toolkit: JSON formatter, JSON diff, JWT decoder, cron generator, regex tester, UUID, Base64, timestamps and more. Everything runs locally in your browser.">
+<meta name="twitter:image" content="https://devtoolshive.com/assets/img/favicon.svg">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#0b0d12">
+<link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
+<link rel="stylesheet" href="/assets/css/styles.css">
+<script src="/assets/js/theme.js"></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "DevToolsHive", "applicationCategory": "DeveloperApplication", "operatingSystem": "Any (web)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "url": "https://devtoolshive.com/"}</script>
 
-    gtag("config", "G-82130N1ETD");
-  </script>
-  <body>
-    <div id="site-header"></div>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div id="site-header"></div>
+<main id="main" class="container ">
 
-    <main>
-      <div class="container">
-        <section class="hero">
-          <h1>Developer tools, sharp and fast.</h1>
-          <p>
-            A focused collection of utilities for everyday coding work —
-            formatting, encoding, testing, and converting. No ads, no logins, no
-            telemetry.
-          </p>
-        </section>
 
-        <section aria-labelledby="tools-heading">
-          <h2
-            id="tools-heading"
-            style="
-              font-size: 14px;
-              font-weight: 600;
-              text-transform: uppercase;
-              letter-spacing: 0.08em;
-              color: var(--text-muted);
-              margin-bottom: 14px;
-            "
-          >
-            All tools
-          </h2>
-          <div class="tool-grid">
-            <a class="tool-card" href="tools/json-formatter.html">
-              <div class="icon">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path
-                    d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M3 16v3a2 2 0 0 0 2 2h3"
-                  />
-                </svg>
-              </div>
-              <h3>JSON Formatter</h3>
-              <p>
-                Beautify, validate, and minify JSON with precise error messages.
-              </p>
-            </a>
-            <a class="tool-card" href="tools/base64.html">
-              <div class="icon">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <polyline points="16 18 22 12 16 6" />
-                  <polyline points="8 6 2 12 8 18" />
-                </svg>
-              </div>
-              <h3>Base64 Encode / Decode</h3>
-              <p>
-                Encode binary-safe text for transport in URLs, headers, and
-                tokens.
-              </p>
-            </a>
-            <a class="tool-card" href="tools/url-encoder.html">
-              <div class="icon">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path
-                    d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
-                  />
-                  <path
-                    d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
-                  />
-                </svg>
-              </div>
-              <h3>URL Encode / Decode</h3>
-              <p>
-                Percent-encode query strings, paths, and form values safely.
-              </p>
-            </a>
-            <a class="tool-card" href="tools/timestamp.html">
-              <div class="icon">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <polyline points="12 6 12 12 16 14" />
-                </svg>
-              </div>
-              <h3>Timestamp Converter</h3>
-              <p>
-                Convert between Unix epochs and human-readable dates in any
-                timezone.
-              </p>
-            </a>
-            <a class="tool-card" href="tools/uuid.html">
-              <div class="icon">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path
-                    d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"
-                  />
-                </svg>
-              </div>
-              <h3>UUID Generator</h3>
-              <p>
-                Generate cryptographically random RFC&nbsp;4122 v4 UUIDs in
-                bulk.
-              </p>
-            </a>
-            <a class="tool-card" href="tools/regex.html">
-              <div class="icon">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <circle cx="11" cy="11" r="8" />
-                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                </svg>
-              </div>
-              <h3>Regex Tester</h3>
-              <p>
-                Test patterns live with match highlighting, groups, and flags.
-              </p>
-            </a>
-            <a class="tool-card" href="tools/case-converter.html">
-              <div class="icon">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M4 7V4h16v3M9 20h6M12 4v16" />
-                </svg>
-              </div>
-              <h3>Text Case Converter</h3>
-              <p>
-                camelCase, snake_case, PascalCase, kebab-case, CONSTANT_CASE &
-                more.
-              </p>
-            </a>
-          </div>
-        </section>
 
-        <section id="about" class="content">
-          <h2>About DevToolsHive</h2>
-          <p>
-            DevToolsHive is a small, opinionated set of
-            <strong>online developer tools</strong> built for speed and clarity.
-            Every utility runs entirely in your browser — your data never leaves
-            your machine. There is no signup, no tracking, and no upsell.
-          </p>
-          <h3>Why another tools site?</h3>
-          <p>
-            Most free developer tools online are bloated with ads or hidden
-            behind paywalls. DevToolsHive is the opposite: a single page per
-            tool, instant feedback as you type, sensible keyboard shortcuts, and
-            a dark theme that doesn't burn your eyes at 2 AM. If you've ever
-            wished the JSON formatter you found on Google would just work
-            without a thirty-second video ad first, this site is for you.
-          </p>
-          <h3>How it works</h3>
-          <p>
-            The whole site is static HTML, CSS, and JavaScript — no frameworks,
-            no build step, no backend. You can fork it, host it on GitHub Pages,
-            and own your tools forever.
-          </p>
-        </section>
-      </div>
-    </main>
+<section class="hero">
+  <h1 data-i18n="hero.title">Free Online Developer Tools for JSON, Regex, JWT, UUID & More</h1>
+  <p data-i18n="hero.sub">Fast, privacy-friendly developer utilities that run entirely in your browser. No uploads, no tracking, no signups.</p>
+  <div class="row" style="justify-content:center;gap:8px;margin-top:18px;flex-wrap:wrap">
+    <span class="badge ok" data-i18n="hero.badge.fast">Instant</span>
+    <span class="badge ok" data-i18n="hero.badge.private">100% client-side</span>
+    <span class="badge ok" data-i18n="hero.badge.free">Free forever</span>
+  </div>
+</section>
+<section id="tools">
+  <h2 style="margin:24px 0 6px" data-i18n="section.all">All tools</h2>
+  <div class="tools-grid"><a class="tool-card" href="/tools/json-formatter.html">
+    <span class="tag">JSON</span>
+    <h3 data-i18n="tool.json-formatter.title">JSON Formatter</h3>
+    <p data-i18n="tool.json-formatter.desc"></p>
+  </a>
+<a class="tool-card" href="/tools/json-diff.html">
+    <span class="tag">JSON</span>
+    <h3 data-i18n="tool.json-diff.title">JSON Diff</h3>
+    <p data-i18n="tool.json-diff.desc"></p>
+  </a>
+<a class="tool-card" href="/tools/jwt-decoder.html">
+    <span class="tag">JWT</span>
+    <h3 data-i18n="tool.jwt.title">JWT Decoder</h3>
+    <p data-i18n="tool.jwt.desc"></p>
+  </a>
+<a class="tool-card" href="/tools/cron-generator.html">
+    <span class="tag">CRON</span>
+    <h3 data-i18n="tool.cron.title">Cron Generator</h3>
+    <p data-i18n="tool.cron.desc"></p>
+  </a>
+<a class="tool-card" href="/tools/env-parser.html">
+    <span class="tag">ENV</span>
+    <h3 data-i18n="tool.env.title">ENV Parser</h3>
+    <p data-i18n="tool.env.desc"></p>
+  </a>
+<a class="tool-card" href="/tools/api-builder.html">
+    <span class="tag">API</span>
+    <h3 data-i18n="tool.api.title">API Request Builder</h3>
+    <p data-i18n="tool.api.desc"></p>
+  </a>
+<a class="tool-card" href="/tools/base64.html">
+    <span class="tag">BASE64</span>
+    <h3 data-i18n="tool.base64.title">Base64</h3>
+    <p data-i18n="tool.base64.desc"></p>
+  </a>
+<a class="tool-card" href="/tools/url-encoder.html">
+    <span class="tag">URL</span>
+    <h3 data-i18n="tool.url.title">URL Encoder</h3>
+    <p data-i18n="tool.url.desc"></p>
+  </a>
+<a class="tool-card" href="/tools/timestamp.html">
+    <span class="tag">UNIX</span>
+    <h3 data-i18n="tool.timestamp.title">Unix Timestamp</h3>
+    <p data-i18n="tool.timestamp.desc"></p>
+  </a>
+<a class="tool-card" href="/tools/uuid.html">
+    <span class="tag">UUID</span>
+    <h3 data-i18n="tool.uuid.title">UUID Generator</h3>
+    <p data-i18n="tool.uuid.desc"></p>
+  </a>
+<a class="tool-card" href="/tools/regex.html">
+    <span class="tag">REGEX</span>
+    <h3 data-i18n="tool.regex.title">Regex Tester</h3>
+    <p data-i18n="tool.regex.desc"></p>
+  </a>
+<a class="tool-card" href="/tools/case-converter.html">
+    <span class="tag">TEXT</span>
+    <h3 data-i18n="tool.case.title">Text Case</h3>
+    <p data-i18n="tool.case.desc"></p>
+  </a>
+<a class="tool-card" href="/tools/user-agent.html">
+    <span class="tag">USER</span>
+    <h3 data-i18n="tool.user-agent.title">User Agent Parser</h3>
+    <p data-i18n="tool.user-agent.desc"></p>
+  </a></div>
+</section>
 
-    <div id="site-footer"></div>
-    <script src="assets/js/common.js"></script>
-    <script src="assets/js/partials.js"></script>
-  </body>
+
+</main>
+<div id="site-footer"></div>
+<script src="/assets/js/common.js"></script>
+<script src="/assets/js/i18n/translations.js"></script>
+<script src="/assets/js/i18n.js"></script>
+<script src="/assets/js/partials.js"></script>
+<script></script>
+</body>
 </html>

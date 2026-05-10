@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JWT Decoder Online — Inspect JWT Header, Payload &amp; Expiry | DevToolsHive</title>
+<meta name="description" content="Decode JWT tokens instantly in your browser. View header, payload, signature with live expiry countdown. Tokens never leave your machine.">
+<link rel="canonical" href="https://devtoolshive.com/tools/jwt-decoder.html">
+<link rel="alternate" hreflang="en" href="https://devtoolshive.com/tools/jwt-decoder.html?lang=en" />
+    <link rel="alternate" hreflang="es" href="https://devtoolshive.com/tools/jwt-decoder.html?lang=es" />
+    <link rel="alternate" hreflang="de" href="https://devtoolshive.com/tools/jwt-decoder.html?lang=de" />
+    <link rel="alternate" hreflang="fr" href="https://devtoolshive.com/tools/jwt-decoder.html?lang=fr" />
+    <link rel="alternate" hreflang="ja" href="https://devtoolshive.com/tools/jwt-decoder.html?lang=ja" />
+    <link rel="alternate" hreflang="x-default" href="https://devtoolshive.com/tools/jwt-decoder.html" />
+<meta property="og:type" content="website">
+<meta property="og:title" content="JWT Decoder Online — Inspect JWT Header, Payload &amp; Expiry | DevToolsHive">
+<meta property="og:description" content="Decode JWT tokens instantly in your browser. View header, payload, signature with live expiry countdown. Tokens never leave your machine.">
+<meta property="og:url" content="https://devtoolshive.com/tools/jwt-decoder.html">
+<meta property="og:image" content="https://devtoolshive.com/assets/img/favicon.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="JWT Decoder Online — Inspect JWT Header, Payload &amp; Expiry | DevToolsHive">
+<meta name="twitter:description" content="Decode JWT tokens instantly in your browser. View header, payload, signature with live expiry countdown. Tokens never leave your machine.">
+<meta name="twitter:image" content="https://devtoolshive.com/assets/img/favicon.svg">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#0b0d12">
+<link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
+<link rel="stylesheet" href="/assets/css/styles.css">
+<script src="/assets/js/theme.js"></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "JWT Decoder Online", "applicationCategory": "DeveloperApplication", "operatingSystem": "Any (web)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "url": "https://devtoolshive.com/tools/jwt-decoder.html"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does this verify the JWT signature?", "acceptedAnswer": {"@type": "Answer", "text": "No. Verifying a signature requires the signing secret (HS256) or public key (RS256/ES256). Pasting those into a third-party website would be unsafe, so this tool intentionally only decodes."}}, {"@type": "Question", "name": "Are my tokens sent to a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. The decoder runs entirely in your browser using built-in atob() and JSON.parse(). You can verify zero network activity in DevTools."}}, {"@type": "Question", "name": "What does 'Malformed' mean?", "acceptedAnswer": {"@type": "Answer", "text": "The token doesn't have three dot-separated Base64URL parts, or the header/payload aren't valid JSON. Most often this happens when only the payload was copied."}}, {"@type": "Question", "name": "Can I decode a token signed with RS256?", "acceptedAnswer": {"@type": "Answer", "text": "Yes \u2014 the algorithm doesn't matter for decoding. The header will show alg: RS256 and the payload decodes the same way. Verification still requires the public key."}}, {"@type": "Question", "name": "Why is the signature shown as raw text?", "acceptedAnswer": {"@type": "Answer", "text": "Signatures are binary bytes encoded as Base64URL. Without the signing key there's nothing meaningful to decode \u2014 we display the raw segment so you can copy it for further analysis."}}]}</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div id="site-header"></div>
+<main id="main" class="container tool-page">
+<div class="crumbs"><a href="/">Home</a> · <span data-i18n="nav.tools">Tools</span> · <span>JWT Decoder &amp; Inspector</span></div>
+<header class="tool-head"><h1 data-i18n="tool.jwt.title">JWT Decoder &amp; Inspector</h1><p data-i18n="tool.jwt.desc">Decode and inspect any JWT — header, payload, signature and expiry. Fully client-side.</p></header>
+
+<div class="toolbar">
+  <button class="btn" id="paste" data-i18n="ui.paste">Paste</button>
+  <button class="btn" id="example">Sample token</button>
+  <span class="spacer"></span>
+  <button class="btn ghost danger" id="clear" data-shortcut="clear" data-i18n="ui.clear">Clear</button>
+</div>
+<div class="pane">
+  <div class="pane-head">JWT <span class="spacer"></span><span id="validity" class="badge">empty</span></div>
+  <textarea id="jwt" spellcheck="false" autofocus rows="4" style="word-break:break-all" placeholder="eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMifQ.signature"></textarea>
+</div>
+<div id="meta-row" class="row" style="margin:10px 0;flex-wrap:wrap;gap:10px"></div>
+<div class="io-grid" style="grid-template-columns:1fr 1fr 1fr">
+  <div class="pane"><div class="pane-head">Header <span class="spacer"></span><button class="btn" id="cp-h" style="padding:3px 8px">copy</button></div><pre id="hd" style="padding:12px"></pre></div>
+  <div class="pane"><div class="pane-head">Payload <span class="spacer"></span><button class="btn" id="cp-p" style="padding:3px 8px">copy</button></div><pre id="pl" style="padding:12px"></pre></div>
+  <div class="pane"><div class="pane-head">Signature <span class="spacer"></span><button class="btn" id="cp-s" style="padding:3px 8px">copy</button></div><pre id="sg" style="padding:12px;word-break:break-all;white-space:pre-wrap"></pre></div>
+</div>
+
+<section class="content narrow">
+<h2>JWT decoder online — inspect tokens without leaking them</h2>
+<p>This JWT decoder splits a JSON Web Token into its three parts, decodes the Base64URL header and payload, and shows you the signature, the claims, the algorithm, and an expiry countdown — live, in your browser, with no network requests. If you've ever pasted a token into a "online JWT decoder" and immediately regretted it, this tool exists for you.</p>
+
+<h3>What gets decoded</h3>
+<p>Every JWT has three Base64URL-encoded parts separated by dots: <code>header.payload.signature</code>. The decoder shows each one in its own pane. The header reveals the signing algorithm (e.g. <code>HS256</code>, <code>RS256</code>) and token type. The payload contains the claims — <code>sub</code>, <code>iss</code>, <code>aud</code>, <code>exp</code>, <code>iat</code>, plus any custom claims your service issues. The signature is opaque without the secret/key, so we display it raw for inspection.</p>
+
+<h3>Live expiry countdown</h3>
+<p>The decoder reads the <code>exp</code> claim and starts a 1-second-tick countdown. When the token is valid, you see <code>Expires in 23m 14s</code>. When it expires, the badge flips to <code>Expired</code>. This is the fastest way to verify whether your access token is actually fresh during local debugging — no need to convert epoch timestamps in your head.</p>
+
+<h3>Validity badges</h3>
+<ul>
+<li><strong>Decoded</strong> — token has the correct three-part shape and Base64URL decodes cleanly.</li>
+<li><strong>Valid</strong> — current time is between <code>nbf</code> and <code>exp</code>.</li>
+<li><strong>Expired</strong> — <code>exp</code> is in the past.</li>
+<li><strong>Not yet valid</strong> — <code>nbf</code> is in the future (rare but legitimate for scheduled tokens).</li>
+<li><strong>Malformed</strong> — wrong number of segments, invalid Base64URL, or non-JSON header/payload.</li>
+</ul>
+
+<h3>Important: this does not verify the signature</h3>
+<p>Verifying a JWT signature requires the signing key (HMAC secret or RSA/EC public key). Pasting your production secret into a website you don't control would be a serious security mistake — so this tool deliberately does not offer signature verification. Use your backend, your CLI (<code>jwt-cli</code>), or a library like <code>jose</code> for verification. Use this tool to <em>inspect</em> claims while debugging.</p>
+
+<h3>Privacy</h3>
+<p>Decoding happens with <code>atob</code> in your browser. The token is never sent over the network. You can paste tokens with sensitive subject IDs, audiences, or custom claims and they stay in your tab. If you want to be paranoid, open the page, disable Wi-Fi, and decode away — it still works.</p>
+
+<h3>Common claims explained</h3>
+<ul>
+<li><code>iss</code> (issuer) — who issued the token (usually your auth server's URL).</li>
+<li><code>sub</code> (subject) — who the token is about, usually a user ID.</li>
+<li><code>aud</code> (audience) — who is allowed to consume the token.</li>
+<li><code>exp</code> / <code>nbf</code> / <code>iat</code> — expiry, not-before, issued-at (Unix seconds).</li>
+<li><code>jti</code> — unique token ID, useful for revocation lists.</li>
+</ul>
+<h2 data-i18n="ui.related">Related tools</h2><div class="related"><a href="/tools/json-formatter.html" data-i18n="tool.json-formatter.title">JSON Formatter</a><a href="/tools/base64.html" data-i18n="tool.base64.title">Base64</a><a href="/tools/timestamp.html" data-i18n="tool.timestamp.title">Unix Timestamp</a></div><h2 data-i18n=ui.faq>FAQ</h2><div class=faq><details class="faq-item"><summary>Does this verify the JWT signature?</summary><div class="a">No. Verifying a signature requires the signing secret (HS256) or public key (RS256/ES256). Pasting those into a third-party website would be unsafe, so this tool intentionally only decodes.</div></details><details class="faq-item"><summary>Are my tokens sent to a server?</summary><div class="a">No. The decoder runs entirely in your browser using built-in atob() and JSON.parse(). You can verify zero network activity in DevTools.</div></details><details class="faq-item"><summary>What does &#x27;Malformed&#x27; mean?</summary><div class="a">The token doesn't have three dot-separated Base64URL parts, or the header/payload aren't valid JSON. Most often this happens when only the payload was copied.</div></details><details class="faq-item"><summary>Can I decode a token signed with RS256?</summary><div class="a">Yes — the algorithm doesn't matter for decoding. The header will show alg: RS256 and the payload decodes the same way. Verification still requires the public key.</div></details><details class="faq-item"><summary>Why is the signature shown as raw text?</summary><div class="a">Signatures are binary bytes encoded as Base64URL. Without the signing key there's nothing meaningful to decode — we display the raw segment so you can copy it for further analysis.</div></details></div></section>
+</main>
+<div id="site-footer"></div>
+<script src="/assets/js/common.js"></script>
+<script src="/assets/js/i18n/translations.js"></script>
+<script src="/assets/js/i18n.js"></script>
+<script src="/assets/js/partials.js"></script>
+<script>
+const D=window.DTH,$=D.$;
+const T=$('#jwt'),HD=$('#hd'),PL=$('#pl'),SG=$('#sg'),META=$('#meta-row'),V=$('#validity');
+function b64urlDecode(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';try{return decodeURIComponent(atob(s).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join(''));}catch(e){return atob(s);}}
+let countdownTimer;
+function fmt(s){try{return JSON.stringify(JSON.parse(s),null,2);}catch(e){return s;}}
+function parse(){
+  clearInterval(countdownTimer);
+  META.innerHTML='';
+  const t=T.value.trim();
+  if(!t){HD.textContent='';PL.textContent='';SG.textContent='';V.textContent='empty';V.className='badge';return;}
+  const parts=t.split('.');
+  if(parts.length!==3){V.textContent='Malformed';V.className='badge err';HD.textContent='';PL.textContent='';SG.textContent='';return;}
+  const h=fmt(b64urlDecode(parts[0])), p=fmt(b64urlDecode(parts[1]));
+  HD.textContent=h;PL.textContent=p;SG.textContent=parts[2];
+  V.textContent='Decoded';V.className='badge ok';
+  let payload={};try{payload=JSON.parse(p);}catch(e){}
+  let header={};try{header=JSON.parse(h);}catch(e){}
+  const chips=[];
+  if(header.alg) chips.push(['alg',header.alg]);
+  if(header.typ) chips.push(['typ',header.typ]);
+  if(payload.iss) chips.push(['iss',payload.iss]);
+  if(payload.sub) chips.push(['sub',payload.sub]);
+  if(payload.aud) chips.push(['aud',Array.isArray(payload.aud)?payload.aud.join(','):payload.aud]);
+  chips.forEach(([k,v])=>{const b=document.createElement('span');b.className='badge';b.textContent=k+': '+v;META.appendChild(b);});
+  if(payload.exp){
+    const expMs=payload.exp*1000;
+    const tick=()=>{
+      const d=expMs-Date.now();
+      const old=META.querySelector('[data-exp]');
+      const b=old||document.createElement('span');b.dataset.exp='1';
+      if(d<=0){b.className='badge err';b.textContent='Expired '+human(-d)+' ago';V.textContent='Expired';V.className='badge err';}
+      else{b.className='badge ok';b.textContent='Expires in '+human(d);V.textContent='Valid';V.className='badge ok';}
+      if(!old)META.appendChild(b);
+    };
+    tick();countdownTimer=setInterval(tick,1000);
+  }
+  if(payload.nbf && payload.nbf*1000>Date.now()){V.textContent='Not yet valid';V.className='badge warn';}
+}
+function human(ms){const s=Math.floor(ms/1000),m=Math.floor(s/60),h=Math.floor(m/60),d=Math.floor(h/24);if(d)return d+'d '+(h%24)+'h';if(h)return h+'h '+(m%60)+'m';if(m)return m+'m '+(s%60)+'s';return s+'s';}
+T.addEventListener('input', D.debounce(parse,150));
+$('#paste').onclick=async()=>{try{T.value=await navigator.clipboard.readText();parse();}catch(e){D.toast('Clipboard blocked','err');}};
+$('#example').onclick=()=>{T.value='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NSIsIm5hbWUiOiJBbGljZSIsImlhdCI6MTcxNjIzOTAyMiwiZXhwIjoxOTk5OTk5OTk5fQ.abc123signature';parse();};
+$('#clear').onclick=()=>{T.value='';parse();T.focus();};
+$('#cp-h').onclick=()=>D.copyText(HD.textContent);
+$('#cp-p').onclick=()=>D.copyText(PL.textContent);
+$('#cp-s').onclick=()=>D.copyText(SG.textContent);
+</script>
+</body>
+</html>
