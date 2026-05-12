@@ -25,10 +25,8 @@
       <nav class="nav-primary" aria-label="Primary">
         <a href="/" data-i18n="nav.home">Home</a>
         <a href="/#tools" data-i18n="nav.tools">Tools</a>
-        <!--
         <select id="lang-switch" class="lang-select" aria-label="Language">${langOpts}</select>
         <button id="theme-toggle" class="icon-btn" aria-label="Toggle theme">☀</button>
-        -->
         <a class="icon-btn" href="https://github.com/" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub" style="text-decoration:none">★</a>
       </nav>
     </div></header>`;

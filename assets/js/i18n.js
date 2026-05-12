@@ -17,6 +17,14 @@
     const dict = (window.DTH_I18N && window.DTH_I18N[current]) || {};
     return dict[key] || (window.DTH_I18N && window.DTH_I18N.en && window.DTH_I18N.en[key]) || key;
   }
+  function bindLangSwitch(){
+    const sel=document.getElementById('lang-switch');
+    if(!sel) return;
+    sel.value=current;
+    if(sel._dthI18nBound) return;
+    sel.addEventListener('change', e=>set(e.target.value));
+    sel._dthI18nBound = true;
+  }
   function apply(){
     document.documentElement.lang = current;
     document.querySelectorAll('[data-i18n]').forEach(el=>{
@@ -28,7 +36,7 @@
         const [a,k]=pair.split(':'); if(a&&k) el.setAttribute(a.trim(), get(k.trim()));
       });
     });
-    const sel=document.getElementById('lang-switch'); if(sel) sel.value=current;
+    bindLangSwitch();
   }
   function set(lang){
     if(!SUPPORTED.includes(lang)) return;
@@ -41,7 +49,8 @@
   window.DTH_LANG = { get, set, current:()=>current, supported:SUPPORTED };
   document.addEventListener('DOMContentLoaded', ()=>{
     apply();
-    const sel=document.getElementById('lang-switch');
-    if(sel){ sel.value=current; sel.addEventListener('change', e=>set(e.target.value)); }
+  });
+  document.addEventListener('dth:apply', ()=>{
+    apply();
   });
 })();
