@@ -5,14 +5,16 @@
   function apply(t){ document.documentElement.dataset.theme=t; }
   apply(get());
   document.addEventListener('DOMContentLoaded', ()=>{
-    const btn=document.getElementById('theme-toggle');
-    if(!btn) return;
-    const set=()=>{ btn.textContent = (get()==='dark')?'☀':'☾'; btn.title = (get()==='dark')?'Light mode':'Dark mode'; };
-    set();
-    btn.addEventListener('click', ()=>{
-      const next = get()==='dark' ? 'light' : 'dark';
-      try{localStorage.setItem(KEY,next);}catch(e){}
-      apply(next); set();
-    });
+    setTimeout(()=>{
+      const btn=document.getElementById('theme-toggle');
+      if(!btn) return;
+      const set=()=>{ btn.textContent = (get()==='dark')?'☀':'☾'; btn.title = (get()==='dark')?'Light mode':'Dark mode'; };
+      set();
+      btn.addEventListener('click', ()=>{
+        const next = get()==='dark' ? 'light' : 'dark';
+        try{localStorage.setItem(KEY,next);}catch(e){}
+        apply(next); set();
+      });
+    }, 0);
   });
 })();
