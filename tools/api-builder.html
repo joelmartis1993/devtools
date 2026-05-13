@@ -100,7 +100,7 @@
             "name": "Why does my request fail with 'Failed to fetch'?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Almost always a CORS problem: the target API isn't sending Access-Control-Allow-Origin for your browser origin. Browsers enforce this \u2014 it can't be disabled by the page. Try an API that supports CORS or call from your backend."
+              "text": "Almost always a CORS problem: the target API isn't sending Access-Control-Allow-Origin for your browser origin. Browsers enforce this \u2014 it can't be disabled by the page. Try an API that supports CORS, enable the built-in CORS proxy for GET/HEAD requests, or call from your backend."
             }
           },
           {
@@ -194,6 +194,13 @@
         >
           Send
         </button>
+        <label style="display:inline-flex; align-items:center; gap:8px; margin-left:8px; font-size:0.95rem">
+          <input type="checkbox" id="use-proxy" />
+          Use CORS proxy
+        </label>
+      </div>
+      <div style="margin-bottom: 10px; color: var(--muted); font-size:0.93rem">
+        If the target API blocks CORS, enable the proxy for GET/HEAD requests.
       </div>
       <div class="row" style="gap: 6px; margin-bottom: 6px">
         <button class="btn" id="tab-h" style="font-weight: 600">Headers</button>
@@ -368,7 +375,8 @@ No request sent yet. Press Send to make a request.</pre
               Almost always a CORS problem: the target API isn't sending
               Access-Control-Allow-Origin for your browser origin. Browsers
               enforce this — it can't be disabled by the page. Try an API that
-              supports CORS or call from your backend.
+              supports CORS, enable the built-in CORS proxy for GET/HEAD requests,
+              or call from your backend.
             </div>
           </details>
           <details class="faq-item">
@@ -417,12 +425,14 @@ No request sent yet. Press Send to make a request.</pre
         URL = $("#url"),
         M = $("#method"),
         BODY = $("#body"),
+        PROXY = $("#use-proxy"),
         RESP = $("#resp"),
         ST = $("#status"),
         TM = $("#time"),
         SZ = $("#size"),
         SAVED = $("#saved");
       const KEY = "dth-api-saved";
+      const PROXY_ENDPOINT = "https://api.allorigins.win/raw?url=";
       function tab(id) {
         ["h", "b", "s"].forEach((t) =>
           $("#pane-" + t).classList.toggle("hide", t !== id),
@@ -453,6 +463,25 @@ No request sent yet. Press Send to make a request.</pre
         });
         return h;
       }
+      async function performFetch(requestUrl, method, headers, body) {
+        const t0 = performance.now();
+        const r = await fetch(requestUrl, { method, headers, body, mode: "cors" });
+        const txt = await r.text();
+        const dt = Math.round(performance.now() - t0);
+        ST.textContent = r.status + " " + r.statusText;
+        ST.className = "badge " + (r.ok ? "ok" : "err");
+        TM.textContent = dt + " ms";
+        SZ.textContent = new Blob([txt]).size + " B";
+        let out = txt;
+        try {
+          out = JSON.stringify(JSON.parse(txt), null, 2);
+        } catch (e) {}
+        const headerDump = Array.from(r.headers.entries())
+          .map(([k, v]) => k + ": " + v)
+          .join("\n");
+        RESP.textContent = `${headerDump}\n\n${out}`;
+      }
+
       async function send() {
         const url = URL.value.trim();
         if (!url) {
@@ -461,6 +490,11 @@ No request sent yet. Press Send to make a request.</pre
         }
         const method = M.value;
         const headers = getHeaders();
+        const useProxy = PROXY.checked;
+        if (useProxy && !["GET", "HEAD"].includes(method)) {
+          D.toast("Proxy mode only supports GET or HEAD requests", "err");
+          return;
+        }
         let body;
         if (["POST", "PUT", "PATCH"].includes(method) && BODY.value.trim()) {
           body = BODY.value;
@@ -472,27 +506,24 @@ No request sent yet. Press Send to make a request.</pre
         TM.textContent = "";
         SZ.textContent = "";
         RESP.textContent = "Loading…";
-        const t0 = performance.now();
+        const requestUrl = useProxy
+          ? PROXY_ENDPOINT + encodeURIComponent(url)
+          : url;
         try {
-          const r = await fetch(url, { method, headers, body, mode: "cors" });
-          const txt = await r.text();
-          const dt = Math.round(performance.now() - t0);
-          ST.textContent = r.status + " " + r.statusText;
-          ST.className = "badge " + (r.ok ? "ok" : "err");
-          TM.textContent = dt + " ms";
-          SZ.textContent = new Blob([txt]).size + " B";
-          let out = txt;
-          try {
-            out = JSON.stringify(JSON.parse(txt), null, 2);
-          } catch (e) {}
-          const headerDump = Array.from(r.headers.entries())
-            .map(([k, v]) => k + ": " + v)
-            .join("\n");
-          RESP.textContent = `${headerDump}\n\n${out}`;
+          await performFetch(requestUrl, method, headers, body);
         } catch (e) {
+          if (!useProxy && ["GET", "HEAD"].includes(method)) {
+            D.toast("Direct request failed, retrying through CORS proxy", "warn");
+            try {
+              await performFetch(PROXY_ENDPOINT + encodeURIComponent(url), method, headers, body);
+              return;
+            } catch (proxyError) {
+              e = proxyError;
+            }
+          }
           ST.textContent = "Error";
           ST.className = "badge err";
-          RESP.textContent = `Request failed: ${e.message}\n\nThis is usually a CORS issue when the target API doesn't send the Access-Control-Allow-Origin header. Try:\n  • An API that supports CORS (most public APIs do)\n  • A browser extension that disables CORS for testing\n  • Calling the API from your backend instead`;
+          RESP.textContent = `Request failed: ${e.message}\n\nThis is usually a CORS issue when the target API doesn't send the Access-Control-Allow-Origin header. Try:\n  • An API that supports CORS (most public APIs do)\n  • Enabling the built-in CORS proxy for GET/HEAD requests\n  • Calling the API from your backend instead`;
         }
       }
       $("#send").onclick = send;
