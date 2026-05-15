@@ -771,35 +771,58 @@ public class ScheduledTasks {
         return result.length > 0 ? result.join(", ") : "never";
       }
 
-      function matches(n, field, min, max) {
+      function parseCronValue(value, fieldName) {
+        if (/^\d+$/.test(value)) return +value;
+        if (fieldName === "dow") {
+          const upper = String(value).toUpperCase();
+          if (DOW_SHORT[upper] !== undefined) return DOW_SHORT[upper];
+        }
+        return NaN;
+      }
+
+      function matches(n, field, min, max, fieldName = "") {
         if (field === "*" || field === "?") return true;
-        
+
         for (const part of field.split(",")) {
-          const step = /^(\*|\d+|\d+-\d+)\/(\d+)$/.exec(part);
+          const step = /^(.*)\/(\d+)$/.exec(part);
           if (step) {
+            const stepValue = +step[2];
+            const base = step[1];
             let lo = min, hi = max;
-            if (step[1] !== "*") {
-              const r = /^(\d+)-(\d+)$/.exec(step[1]);
-              if (r) {
-                lo = +r[1];
-                hi = +r[2];
+            if (base !== "*") {
+              const range = /^(.*)-(.*)$/.exec(base);
+              if (range) {
+                lo = parseCronValue(range[1], fieldName);
+                hi = parseCronValue(range[2], fieldName);
               } else {
-                lo = +step[1];
+                lo = parseCronValue(base, fieldName);
+                hi = lo;
               }
             }
-            if (n >= lo && n <= hi && (n - lo) % +step[2] === 0) return true;
+            if (!isNaN(lo) && !isNaN(hi) && n >= lo && n <= hi && (n - lo) % stepValue === 0) return true;
             continue;
           }
 
-          const range = /^(\d+)-(\d+)$/.exec(part);
+          const range = /^(.*)-(.*)$/.exec(part);
           if (range) {
-            if (n >= +range[1] && n <= +range[2]) return true;
+            const lo = parseCronValue(range[1], fieldName);
+            const hi = parseCronValue(range[2], fieldName);
+            if (!isNaN(lo) && !isNaN(hi) && n >= lo && n <= hi) return true;
             continue;
           }
 
-          if (+part === n) return true;
+          const value = parseCronValue(part, fieldName);
+          if (!isNaN(value) && value === n) return true;
         }
         return false;
+      }
+
+      function nextAllowed(field, current, min, max, fieldName = "") {
+        if (field === "*" || field === "?") return current;
+        for (let value = current; value <= max; value++) {
+          if (matches(value, field, min, max, fieldName)) return value;
+        }
+        return null;
       }
 
       function convertDayName(day) {
@@ -818,12 +841,13 @@ public class ScheduledTasks {
         } else {
           sec = "0";
           [m, h, dom, mon, dow] = parts;
+          year = "*";
         }
 
         const out = [];
         let d = new Date();
         d.setMilliseconds(0);
-        
+
         if (config.seconds) {
           d.setSeconds(d.getSeconds() + 1);
         } else {
@@ -832,30 +856,115 @@ public class ScheduledTasks {
         }
 
         let safety = 0;
-        const maxIterations = 525600 * 60; // Safety limit
+        const maxIterations = config.seconds ? 365 * 24 * 60 * 60 : 365 * 24 * 60;
 
         while (out.length < n && safety < maxIterations) {
           safety++;
 
-          let dowMatch = false;
-          if (dow === "*" || dow === "?") {
-            dowMatch = true;
-          } else {
-            // Handle day names in Quartz
-            const dowParts = dow.split(",").map(p => convertDayName(p));
-            dowMatch = dowParts.includes(d.getDay());
+          const yearMatch = year === "*" || year === "?" || matches(d.getFullYear(), year, 1970, 2099, "year");
+          if (!yearMatch) {
+            const nextYear = nextAllowed(year, d.getFullYear() + 1, 1970, 2099, "year");
+            if (nextYear === null) break;
+            d.setFullYear(nextYear, 0, 1);
+            if (config.seconds) {
+              d.setHours(0, 0, 0, 0);
+            } else {
+              d.setHours(0, 0, 0);
+            }
+            continue;
           }
 
-          const ok =
-            matches(d.getSeconds(), sec, 0, 59) &&
-            matches(d.getMinutes(), m, 0, 59) &&
-            matches(d.getHours(), h, 0, 23) &&
-            matches(d.getDate(), dom, 1, 31) &&
-            matches(d.getMonth() + 1, mon, 1, 12) &&
-            (dow === "*" || dowMatch) &&
-            (!year || year === "*" || year === "?" || matches(d.getFullYear(), year, 1970, 2099));
+          const month = d.getMonth() + 1;
+          const monMatch = matches(month, mon, 1, 12, "mon");
+          if (!monMatch) {
+            const nextMonth = nextAllowed(mon, month + 1, 1, 12, "mon");
+            if (nextMonth === null) {
+              d.setFullYear(d.getFullYear() + 1, 0, 1);
+              if (config.seconds) {
+                d.setHours(0, 0, 0, 0);
+              } else {
+                d.setHours(0, 0, 0);
+              }
+              continue;
+            }
+            d.setMonth(nextMonth - 1, 1);
+            if (config.seconds) {
+              d.setHours(0, 0, 0, 0);
+            } else {
+              d.setHours(0, 0, 0);
+            }
+            continue;
+          }
 
-          if (ok) out.push(new Date(d));
+          const domMatch = matches(d.getDate(), dom, 1, 31, "dom");
+          const dowMatch = dow === "*" || dow === "?" || matches(d.getDay(), dow, 0, 6, "dow");
+          if (dom !== "*" && dom !== "?" && dow !== "*" && dow !== "?" && !domMatch && !dowMatch) {
+            d.setDate(d.getDate() + 1);
+            if (config.seconds) {
+              d.setHours(0, 0, 0, 0);
+            } else {
+              d.setHours(0, 0, 0);
+            }
+            continue;
+          }
+
+          const hMatch = matches(d.getHours(), h, 0, 23, "h");
+          if (!hMatch) {
+            const nextHour = nextAllowed(h, d.getHours() + 1, 0, 23, "h");
+            if (nextHour === null) {
+              d.setDate(d.getDate() + 1);
+              if (config.seconds) {
+                d.setHours(0, 0, 0, 0);
+              } else {
+                d.setHours(0, 0, 0);
+              }
+              continue;
+            }
+            d.setHours(nextHour);
+            if (config.seconds) {
+              d.setMinutes(0, 0, 0);
+            } else {
+              d.setMinutes(0, 0);
+            }
+            continue;
+          }
+
+          const mMatch = matches(d.getMinutes(), m, 0, 59, "m");
+          if (!mMatch) {
+            const nextMinute = nextAllowed(m, d.getMinutes() + 1, 0, 59, "m");
+            if (nextMinute === null) {
+              d.setHours(d.getHours() + 1);
+              if (config.seconds) {
+                d.setMinutes(0, 0, 0);
+              } else {
+                d.setMinutes(0, 0);
+              }
+              continue;
+            }
+            d.setMinutes(nextMinute);
+            if (config.seconds) {
+              d.setSeconds(0, 0);
+            }
+            continue;
+          }
+
+          if (config.seconds) {
+            const sMatch = matches(d.getSeconds(), sec, 0, 59, "sec");
+            if (!sMatch) {
+              const nextSecond = nextAllowed(sec, d.getSeconds() + 1, 0, 59, "sec");
+              if (nextSecond === null) {
+                d.setMinutes(d.getMinutes() + 1);
+                d.setSeconds(0, 0);
+                continue;
+              }
+              d.setSeconds(nextSecond);
+              continue;
+            }
+          }
+
+          if (hMatch && mMatch && (config.seconds ? matches(d.getSeconds(), sec, 0, 59, "sec") : true) && dowMatch && (dom === "*" || dom === "?" || domMatch) && monMatch && yearMatch) {
+            out.push(new Date(d));
+          }
 
           if (config.seconds) {
             d.setSeconds(d.getSeconds() + 1);
@@ -912,9 +1021,16 @@ public class ScheduledTasks {
       
       $("#copy-human").onclick = () => D.copyText(HU.textContent);
 
-      // Initialize
-      renderPresets();
-      update();
+      // Initialize - wait for DTH library to load
+      if (typeof window.DTH !== 'undefined') {
+        renderPresets();
+        update();
+      } else {
+        document.addEventListener('DOMContentLoaded', () => {
+          renderPresets();
+          update();
+        });
+      }
     </script>
   </body>
 </html>
