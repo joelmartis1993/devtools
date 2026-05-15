@@ -4,12 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>
-      Cron Expression Generator — Build &amp; Explain Cron Schedules |
+      Multi-Format Cron Expression Generator — Linux, Spring &amp; Quartz |
       DevToolsHive
     </title>
     <meta
       name="description"
-      content="Build cron expressions visually with presets and a plain-English explanation. Preview next 5 runs. Free, fast, in your browser."
+      content="Generate Linux, Spring, and Quartz cron expressions with visual builder, plain-English explanation, and next 5 run times. Free, fast, in your browser."
     />
     <link
       rel="canonical"
@@ -48,11 +48,11 @@
     <meta property="og:type" content="website" />
     <meta
       property="og:title"
-      content="Cron Expression Generator — Build &amp; Explain Cron Schedules | DevToolsHive"
+      content="Multi-Format Cron Expression Generator — Linux, Spring &amp; Quartz | DevToolsHive"
     />
     <meta
       property="og:description"
-      content="Build cron expressions visually with presets and a plain-English explanation. Preview next 5 runs. Free, fast, in your browser."
+      content="Generate Linux, Spring, and Quartz cron expressions with visual builder, plain-English explanation, and next 5 run times. Free, fast, in your browser."
     />
     <meta
       property="og:url"
@@ -65,11 +65,11 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta
       name="twitter:title"
-      content="Cron Expression Generator — Build &amp; Explain Cron Schedules | DevToolsHive"
+      content="Multi-Format Cron Expression Generator — Linux, Spring &amp; Quartz | DevToolsHive"
     />
     <meta
       name="twitter:description"
-      content="Build cron expressions visually with presets and a plain-English explanation. Preview next 5 runs. Free, fast, in your browser."
+      content="Generate Linux, Spring, and Quartz cron expressions with visual builder, plain-English explanation, and next 5 run times. Free, fast, in your browser."
     />
     <meta
       name="twitter:image"
@@ -84,11 +84,12 @@
       {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        "name": "Cron Expression Generator",
+        "name": "Multi-Format Cron Expression Generator",
         "applicationCategory": "DeveloperApplication",
         "operatingSystem": "Any (web)",
         "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-        "url": "https://devtoolshive.com/tools/cron-generator.html"
+        "url": "https://devtoolshive.com/tools/cron-generator.html",
+        "description": "Generate Linux, Spring, and Quartz cron expressions with visual builder"
       }
     </script>
     <script type="application/ld+json">
@@ -163,14 +164,50 @@
         <span>Cron Expression Generator</span>
       </div>
       <header class="tool-head">
-        <h1 data-i18n="tool.cron.title">Cron Expression Generator</h1>
+        <h1 data-i18n="tool.cron.title">Multi-Format Cron Expression Generator</h1>
         <p data-i18n="tool.cron.desc">
-          Build, explain, and preview cron expressions for Linux crontab, GitHub
-          Actions, Vercel and more.
+          Build cron expressions for Linux, Spring Boot, and Quartz schedulers. Visual builder, 
+          plain-English explanation, and real-time next 5 run times preview.
         </p>
       </header>
 
-      <div class="row-inline" style="margin-bottom: 14px">
+      <!-- Format Selector -->
+      <div style="margin-bottom: 20px; border-bottom: 1px solid var(--border);">
+        <div style="display: flex; gap: 0; flex-wrap: wrap;">
+          <button 
+            class="format-tab active" 
+            data-format="linux" 
+            style="padding: 12px 20px; border: none; background: transparent; cursor: pointer; border-bottom: 3px solid var(--accent); color: var(--text); font-size: 14px; font-weight: 500;"
+          >
+            Linux Cron (5 fields)
+          </button>
+          <button 
+            class="format-tab" 
+            data-format="spring" 
+            style="padding: 12px 20px; border: none; background: transparent; cursor: pointer; border-bottom: 3px solid transparent; color: var(--text-dim); font-size: 14px; font-weight: 500; transition: all 0.2s;"
+          >
+            Spring Cron (6 fields)
+          </button>
+          <button 
+            class="format-tab" 
+            data-format="quartz" 
+            style="padding: 12px 20px; border: none; background: transparent; cursor: pointer; border-bottom: 3px solid transparent; color: var(--text-dim); font-size: 14px; font-weight: 500; transition: all 0.2s;"
+          >
+            Quartz Cron (6-7 fields)
+          </button>
+        </div>
+      </div>
+
+      <!-- Format Helper Text -->
+      <div style="background-color: var(--bg-alt); padding: 12px 14px; border-radius: 4px; margin-bottom: 14px; font-size: 13px; color: var(--text-dim);">
+        <span id="format-help"></span>
+      </div>
+
+      <!-- Input Fields -->
+      <div class="row-inline" style="margin-bottom: 14px" id="cron-fields">
+        <div class="field" id="sec-field" style="display: none;">
+          <label>Second</label><input type="text" id="sec" value="0" />
+        </div>
         <div class="field">
           <label>Minute</label><input type="text" id="m" value="*" />
         </div>
@@ -186,21 +223,21 @@
         <div class="field">
           <label>Day (week)</label><input type="text" id="dow" value="*" />
         </div>
+        <div class="field" id="year-field" style="display: none;">
+          <label>Year</label><input type="text" id="year" value="*" />
+        </div>
       </div>
-      <div class="row" style="flex-wrap: wrap; gap: 6px; margin-bottom: 14px">
-        <button class="btn" data-cron="* * * * *">Every minute</button>
-        <button class="btn" data-cron="*/5 * * * *">Every 5 min</button>
-        <button class="btn" data-cron="0 * * * *">Hourly</button>
-        <button class="btn" data-cron="0 0 * * *">Daily 00:00</button>
-        <button class="btn" data-cron="0 9 * * 1-5">Weekdays 9am</button>
-        <button class="btn" data-cron="0 0 * * 0">Sundays</button>
-        <button class="btn" data-cron="0 0 1 * *">Monthly 1st</button>
-        <button class="btn" data-cron="0 0 1 1 *">Yearly Jan 1</button>
+
+      <!-- Preset Buttons -->
+      <div id="preset-buttons" class="row" style="flex-wrap: wrap; gap: 6px; margin-bottom: 14px">
+        <!-- Buttons will be populated by JavaScript -->
       </div>
+
+      <!-- Expression Output -->
       <div class="pane">
         <div class="pane-head">
-          Expression <span class="spacer"></span
-          ><button
+          Expression <span class="spacer"></span>
+          <button
             class="btn"
             id="copy"
             data-shortcut="copy"
@@ -209,12 +246,26 @@
             Copy
           </button>
         </div>
-        <pre id="expr" style="padding: 14px; font-size: 18px"></pre>
+        <pre id="expr" style="padding: 14px; font-size: 18px; word-break: break-all;"></pre>
       </div>
+
+      <!-- Human Readable Output -->
       <div class="pane" style="margin-top: 10px">
-        <div class="pane-head">Human readable</div>
-        <p id="human" style="padding: 14px; margin: 0"></p>
+        <div class="pane-head">
+          Human readable
+          <span class="spacer"></span>
+          <button
+            class="btn"
+            id="copy-human"
+            style="font-size: 12px;"
+          >
+            Copy
+          </button>
+        </div>
+        <p id="human" style="padding: 14px; margin: 0;"></p>
       </div>
+
+      <!-- Next Runs Preview -->
       <div class="pane" style="margin-top: 10px">
         <div class="pane-head">Next 5 runs (your local time)</div>
         <ol
@@ -227,89 +278,123 @@
         ></ol>
       </div>
 
+      <!-- Validation Errors -->
+      <div id="validation-message" style="margin-top: 10px; padding: 12px 14px; border-radius: 4px; display: none;"></div>
+
       <section class="content narrow">
-        <h2>Cron expression generator with human-readable explanation</h2>
+        <h2>Multi-format cron expression generator for developers</h2>
         <p>
-          A cron expression is five fields — minute, hour, day-of-month, month,
-          day-of-week — that tell a scheduler when to run a job. The syntax is
-          famously hostile: <code>0 0 * * 0</code> means "every Sunday at
-          midnight" and <code>*/15 9-17 * * 1-5</code> means "every 15 minutes,
-          business hours, weekdays". This tool lets you build expressions
-          visually, see a plain-English description, and preview the next 5
-          actual run times in your local timezone.
+          A cron expression is a scheduled timing format used to automate tasks in various systems. This tool helps developers build and understand cron expressions for <strong>Linux/Unix cron</strong>, <strong>Spring Boot</strong>, and <strong>Quartz Scheduler</strong> — three of the most common scheduling systems. Whether you're setting up a background job in Spring Boot, configuring Quartz scheduling in a Java application, or deploying a cron task on a Linux server, this generator handles all three formats with a visual builder and plain-English explanation.
         </p>
 
-        <h3>How to read a cron expression</h3>
-        <pre><code>┌──────────── minute (0-59)
-│ ┌────────── hour (0-23)
-│ │ ┌──────── day of month (1-31)
-│ │ │ ┌────── month (1-12)
-│ │ │ │ ┌──── day of week (0-6, Sunday=0)
-│ │ │ │ │
-* * * * *</code></pre>
+        <h3>Understanding cron expression formats</h3>
         <p>
-          Each field accepts: a number (<code>5</code>), a range
-          (<code>1-5</code>), a list (<code>1,3,5</code>), a wildcard
-          (<code>*</code>), or a step (<code>*/15</code>, <code>0-30/5</code>).
-          Steps are the trickiest part: <code>*/15</code> in the minute field
-          means "every 15 minutes starting at 0" — so 0, 15, 30, 45.
+          While all three systems use cron-like syntax, they differ in field count and special characters:
         </p>
 
-        <h3>Common patterns</h3>
+        <h4>Linux/Unix Cron (5 fields)</h4>
+        <p>
+          The original cron format, used by Linux <code>crontab</code>, GitHub Actions, GitLab CI, Vercel, and Kubernetes. Fields are: <strong>minute, hour, day-of-month, month, day-of-week</strong>. Example: <code>0 9 * * 1-5</code> runs every weekday at 9 AM.
+        </p>
+
+        <h4>Spring Cron (6 fields)</h4>
+        <p>
+          Used by Spring Boot's <code>@Scheduled</code> annotation and Spring Task Scheduling. Adds a seconds field at the start. Fields are: <strong>second, minute, hour, day-of-month, month, day-of-week</strong>. Example: <code>0 0 9 * * 1-5</code> also runs every weekday at 9 AM. Spring cron supports <code>?</code> (no specific value) for day-of-month or day-of-week when you need to specify one but not the other.
+        </p>
+
+        <h4>Quartz Cron (6-7 fields)</h4>
+        <p>
+          Used by Quartz Scheduler and many enterprise Java frameworks. Like Spring, it includes seconds, and optionally adds a 7th field for year. Fields are: <strong>second, minute, hour, day-of-month, month, day-of-week, [year]</strong>. Quartz also uses <code>?</code> like Spring. Example: <code>0 0 9 ? * MON 2025</code> runs every Monday in 2025 at 9 AM.
+        </p>
+
+        <h3>Common cron expression patterns</h3>
         <ul>
-          <li><code>* * * * *</code> — every minute</li>
-          <li><code>*/5 * * * *</code> — every 5 minutes</li>
-          <li><code>0 * * * *</code> — every hour on the hour</li>
-          <li><code>0 9 * * 1-5</code> — 9 AM on weekdays</li>
-          <li><code>0 0 1 * *</code> — midnight on the 1st of every month</li>
-          <li><code>0 2 * * 0</code> — 2 AM every Sunday</li>
-          <li><code>15,45 * * * *</code> — at :15 and :45 of every hour</li>
+          <li><code>*/5 * * * *</code> (Linux) — every 5 minutes</li>
+          <li><code>0 */5 * * * *</code> (Spring) — every 5 minutes (with seconds)</li>
+          <li><code>0 9 * * 1-5</code> (Linux) — 9 AM on weekdays</li>
+          <li><code>0 0 9 ? * 1-5</code> (Spring/Quartz) — 9 AM on weekdays using ?</li>
+          <li><code>0 0 1 * *</code> (Linux) — midnight on the 1st of every month</li>
+          <li><code>0 2 * * 0</code> (Linux) — 2 AM every Sunday</li>
+          <li><code>0 30 2 * * ?</code> (Spring/Quartz) — 2:30 AM every day</li>
         </ul>
 
-        <h3>Pitfalls people hit</h3>
+        <h3>Spring Boot cron scheduling example</h3>
+        <pre><code>@Component
+public class ScheduledTasks {
+  @Scheduled(cron = "0 0 9 ? * MON-FRI")
+  public void runWeekdayTask() {
+    // Runs every weekday at 9 AM
+  }
+}</code></pre>
+
+        <h3>Quartz scheduler cron example</h3>
+        <pre><code>CronScheduleBuilder.cronSchedule("0 0 9 ? * MON-FRI")
+  .inTimeZone(TimeZone.getTimeZone("America/New_York"))</code></pre>
+
+        <h3>Key differences and syntax rules</h3>
         <ul>
           <li>
-            <strong>Day-of-month + day-of-week:</strong> in standard Unix cron,
-            when both are specified, the job runs when <em>either</em> matches —
-            not both. <code>0 0 1 * 1</code> runs on the 1st of every month
-            <em>and</em> every Monday.
+            <strong>Question mark (?):</strong> Used in Spring and Quartz for day-of-month or day-of-week to mean "no specific value". Linux cron doesn't support this. Use <code>?</code> when you specify one time field but want the other to be unrestricted.
           </li>
           <li>
-            <strong>Step starts at 0:</strong> <code>*/15</code> in the hour
-            field is <code>0,15</code> — but the hour field is 0-23, so this
-            only fires at midnight and quarter-past midnight, not what most
-            people expect.
+            <strong>Seconds field:</strong> Spring and Quartz include seconds at position 0; Linux does not. Spring Boot defaults to 0 seconds if not specified.
           </li>
           <li>
-            <strong>Timezone:</strong> the cron daemon runs in the server's
-            timezone, not yours. The "next run" preview here uses your browser's
-            local timezone — translate carefully when deploying.
+            <strong>Year field:</strong> Only Quartz (and AWS EventBridge) support an optional 7th year field. Linux and Spring do not.
           </li>
           <li>
-            <strong>Jenkins / Quartz are different:</strong> Quartz cron has 6
-            or 7 fields (with seconds and year). Spring's cron has 6. AWS
-            EventBridge uses 6 with year. This tool generates standard 5-field
-            Unix cron.
+            <strong>Day-of-week/month logic:</strong> In Linux cron, if both day-of-month and day-of-week are specified (not using ?), the job runs when <em>either</em> matches (OR logic).
+          </li>
+          <li>
+            <strong>Ranges and steps:</strong> All three support ranges (<code>1-5</code>), lists (<code>1,3,5</code>), wildcards (<code>*</code>), and steps (<code>*/15</code>). Behavior is consistent across formats.
           </li>
         </ul>
 
-        <h3>Where this format applies</h3>
+        <h3>Pitfalls to avoid</h3>
+        <ul>
+          <li>
+            <strong>Copy-pasting between formats:</strong> A Linux 5-field expression won't work in Spring Boot (which expects 6 fields). Use this tool to convert between formats.
+          </li>
+          <li>
+            <strong>Timezone handling:</strong> All three formats rely on the server's local timezone. If your Spring Boot app runs in UTC but your cron is written for EST, the job will run at the wrong time.
+          </li>
+          <li>
+            <strong>Invalid day-of-week values:</strong> Day-of-week is 0-6 (Sunday=0) in Linux/Spring. Quartz also supports 3-letter names (MON, TUE, etc.).
+          </li>
+          <li>
+            <strong>Forgetting the question mark:</strong> In Spring/Quartz, if you specify a specific day-of-month (e.g., <code>15</code>) but want any day-of-week, use <code>?</code> for day-of-week. Failing to do so may cause unexpected schedule mismatches.
+          </li>
+        </ul>
+
+        <h3>Where each format is used</h3>
         <p>
-          Standard 5-field cron is used by Linux <code>crontab</code>, GitHub
-          Actions schedules, GitLab CI scheduled pipelines, Vercel Cron Jobs,
-          Cloudflare Workers cron triggers, Supabase pg_cron (with seconds),
-          Kubernetes CronJob, and most other modern schedulers. If your
-          scheduler uses a different dialect (Quartz, Spring, AWS), validate the
-          generated expression in their docs before deploying.
+          <strong>Linux cron (5-field):</strong> Linux <code>crontab</code>, GitHub Actions workflows, GitLab CI schedules, Vercel Cron Jobs, Cloudflare Workers cron triggers, Supabase <code>pg_cron</code>, Kubernetes CronJob, most cloud platforms, and Unix-based systems.
+        </p>
+        <p>
+          <strong>Spring cron (6-field):</strong> Spring Framework scheduling, Spring Boot applications with <code>@Scheduled</code>, Spring Cloud Task, and any Java application using <code>org.springframework.scheduling.annotation</code>.
+        </p>
+        <p>
+          <strong>Quartz cron (6-7 field):</strong> Quartz Scheduler library, Apache OozieFlow, Atlassian products, many enterprise Java frameworks, and systems requiring advanced scheduling features like year-based scheduling.
         </p>
 
-        <h3>Testing your expression</h3>
+        <h3>Validation and next-run calculation</h3>
         <p>
-          Always check the "Next 5 runs" preview before saving. The most common
-          bugs are typos that produce a valid-looking expression that fires at
-          the wrong time — for example <code>0 0 * * 7</code> (invalid:
-          day-of-week is 0-6) silently becomes "never" on some implementations.
+          This tool validates your cron expression in real-time and calculates the next 5 run times based on your browser's local timezone. The validation checks field ranges, syntax errors, and format compatibility. The next-run preview walks forward from the current time, matching each time unit against your expression. Always verify the preview before deploying your schedule — even a small typo can cause a job to never run or run at an unexpected time.
         </p>
+
+        <h3>Usefulness</h3>
+          <p>
+            Whether you need a <strong>spring cron expression generator</strong>, 
+            <strong>spring cron expression generator online</strong>, 
+            <strong>java spring cron expression generator</strong>, or a 
+            <strong>quartz cron expression generator</strong>, this tool helps developers generate and understand cron schedules across Linux, Spring Boot, and Quartz formats with accurate syntax and human-readable explanations. It supports advanced scheduling patterns including 
+            <strong>cron expression generator 6 fields</strong>, 
+            <strong>cron expression generator for every 1 hour</strong>, and 
+            <strong>cron expression generator every 5 minutes</strong>, making it useful for backend jobs, scheduled APIs, automation tasks, and enterprise Java applications. Developers working with Spring <code>@Scheduled</code> annotations, Quartz Scheduler triggers, or standard Linux crontab jobs can quickly create, validate, and preview expressions using this 
+            <strong>quartz cron expression generator online</strong> and 
+            <strong>cron expression generator java</strong> utility without manually memorizing cron syntax differences.
+          </p>
+      </section>
         <h2 data-i18n="ui.related">Related tools</h2>
         <div class="related">
           <a href="/tools/timestamp.html" data-i18n="tool.timestamp.title"
@@ -325,47 +410,57 @@
         <h2 data-i18n="ui.faq">FAQ</h2>
         <div class="faq">
           <details class="faq-item">
+            <summary>What's the difference between Linux, Spring, and Quartz cron?</summary>
+            <div class="a">
+              Linux cron uses 5 fields (minute, hour, day-of-month, month, day-of-week). Spring and Quartz use 6 fields, adding seconds at the start. Quartz optionally adds a 7th field for year. Quartz also uses ? for day-of-month or day-of-week to indicate "no specific value". Use this tool to convert between formats and ensure compatibility with your target platform.
+            </div>
+          </details>
+          <details class="faq-item">
             <summary>What does the asterisk (*) mean?</summary>
             <div class="a">
-              An asterisk means 'every value' for that field. So * in the minute
-              field means every minute, * in the hour field means every hour,
-              etc.
+              An asterisk means "every value" for that field. So * in the minute field means every minute, * in the hour field means every hour, etc. When all fields are *, the job runs every minute.
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>What does the question mark (?) mean?</summary>
+            <div class="a">
+              The question mark is used in Spring and Quartz cron in the day-of-month or day-of-week field to mean "no specific value". This is useful when you want to specify one field but leave the other undefined. For example: 0 0 9 ? * MON (every Monday at 9 AM, regardless of the date).
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>Can I use day names like MON, TUE in all formats?</summary>
+            <div class="a">
+              Day names are primarily supported in Quartz cron (MON, TUE, WED, THU, FRI, SAT, SUN). Linux cron uses numeric day-of-week (0-6, where 0=Sunday). Spring cron also uses numeric values. If you need day names, use Quartz format.
             </div>
           </details>
           <details class="faq-item">
             <summary>How is the next-run preview calculated?</summary>
             <div class="a">
-              Entirely in your browser. The tool starts at the next minute and
-              walks forward minute by minute, checking each field against the
-              expression until it finds 5 matches.
+              Entirely in your browser. The tool starts at the next time unit (next second for Spring/Quartz, next minute for Linux) and walks forward, checking each field against the expression until it finds 5 matches. The preview uses your browser's local timezone.
             </div>
           </details>
           <details class="faq-item">
-            <summary>
-              Why is my schedule firing twice when both day-of-month and
-              day-of-week are set?
-            </summary>
+            <summary>Why is my schedule firing twice when both day-of-month and day-of-week are set?</summary>
             <div class="a">
-              Standard Unix cron treats those two fields as an OR — the job
-              fires when either matches. To restrict to a specific day-of-week
-              on a specific day-of-month, use only one field.
+              In Linux and Spring cron, when both day-of-month and day-of-week are specified (not using ?), the job runs when either matches. To restrict to a specific day, use ? in the other field for Spring/Quartz, or leave one as * in Linux.
             </div>
           </details>
           <details class="faq-item">
-            <summary>Does this support Quartz-style 6 or 7 field cron?</summary>
+            <summary>Which systems use which cron format?</summary>
             <div class="a">
-              Not currently. Quartz, Spring, and AWS EventBridge use extended
-              cron formats with seconds and/or year. This tool generates
-              standard 5-field Unix cron.
+              Linux cron: crontab, GitHub Actions, GitLab CI, Vercel, Kubernetes CronJob, Supabase. Spring cron: Spring Boot @Scheduled, Spring Cloud Task. Quartz cron: Quartz Scheduler, Apache OozieFlow, many enterprise Java frameworks.
             </div>
           </details>
           <details class="faq-item">
             <summary>How are timezones handled?</summary>
             <div class="a">
-              Your cron server (Linux box, GitHub Actions, Vercel, etc.)
-              interprets the expression in its own timezone. The next-run
-              preview uses your browser's local time. Always confirm what
-              timezone your scheduler is configured for.
+              Your cron server interprets the expression in its own timezone. The next-run preview uses your browser's local time. For Spring and Quartz, you can configure the timezone in your application settings. Always confirm your server's timezone before deploying.
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>What if my expression produces no matches?</summary>
+            <div class="a">
+              This typically means your field combinations never align. For example, "15th of February on a Monday" may not occur in a given year. The preview will show "(no matches found)" if the expression is technically valid but produces no upcoming runs.
             </div>
           </details>
         </div>
@@ -379,81 +474,310 @@
     <script>
       const D = window.DTH,
         $ = D.$;
-      const fields = ["m", "h", "dom", "mon", "dow"].map((id) => $("#" + id));
+
+      // Current format state
+      let currentFormat = "linux";
+      const formats = {
+        linux: { fields: ["m", "h", "dom", "mon", "dow"], seconds: false, year: false },
+        spring: { fields: ["sec", "m", "h", "dom", "mon", "dow"], seconds: true, year: false },
+        quartz: { fields: ["sec", "m", "h", "dom", "mon", "dow", "year"], seconds: true, year: true }
+      };
+
+      const allFields = ["sec", "m", "h", "dom", "mon", "dow", "year"];
+      const fieldElements = Object.fromEntries(allFields.map(id => [id, $("#" + id)]));
       const E = $("#expr"),
         HU = $("#human"),
-        NX = $("#next");
-      const MON = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ];
-      const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-      function expr() {
-        return fields.map((f) => f.value.trim() || "*").join(" ");
+        NX = $("#next"),
+        VM = $("#validation-message");
+
+      const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const DOW_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      const DOW_SHORT = { SUN: 0, MON: 1, TUE: 2, WED: 3, THU: 4, FRI: 5, SAT: 6 };
+
+      // Preset configurations for each format
+      const presets = {
+        linux: [
+          { label: "Every minute", value: "* * * * *" },
+          { label: "Every 5 min", value: "*/5 * * * *" },
+          { label: "Every hour", value: "0 * * * *" },
+          { label: "Daily 00:00", value: "0 0 * * *" },
+          { label: "Weekdays 9am", value: "0 9 * * 1-5" },
+          { label: "Sundays", value: "0 0 * * 0" },
+          { label: "1st monthly", value: "0 0 1 * *" },
+          { label: "Jan 1st yearly", value: "0 0 1 1 *" }
+        ],
+        spring: [
+          { label: "Every 30 sec", value: "*/30 * * * * *" },
+          { label: "Every 5 min", value: "0 */5 * * * *" },
+          { label: "Every hour", value: "0 0 * * * *" },
+          { label: "Daily 00:00", value: "0 0 0 * * *" },
+          { label: "Weekdays 9am", value: "0 0 9 ? * 1-5" },
+          { label: "Every Sunday", value: "0 0 0 ? * 0" },
+          { label: "1st monthly", value: "0 0 0 1 * *" },
+          { label: "Jan 1st yearly", value: "0 0 0 1 1 *" }
+        ],
+        quartz: [
+          { label: "Every 30 sec", value: "*/30 * * * * *" },
+          { label: "Every 5 min", value: "0 */5 * * * *" },
+          { label: "Every hour", value: "0 0 * * * *" },
+          { label: "Daily 00:00", value: "0 0 0 * * *" },
+          { label: "Weekdays 9am", value: "0 0 9 ? * MON-FRI" },
+          { label: "Every Monday", value: "0 0 0 ? * MON" },
+          { label: "1st monthly", value: "0 0 0 1 * *" },
+          { label: "2024 only", value: "0 0 0 1 1 * 2024" }
+        ]
+      };
+
+      const helpTexts = {
+        linux: "Linux cron: 5 fields (minute, hour, day-of-month, month, day-of-week). Used by crontab, GitHub Actions, Vercel, Kubernetes.",
+        spring: "Spring cron: 6 fields (second, minute, hour, day-of-month, month, day-of-week). Used by Spring Boot @Scheduled. Supports ? for day fields.",
+        quartz: "Quartz cron: 6-7 fields (second, minute, hour, day-of-month, month, day-of-week, [year]). Supports ? and day names (MON, TUE, etc)."
+      };
+
+      function setFormat(fmt) {
+        currentFormat = fmt;
+        
+        // Update tabs
+        document.querySelectorAll(".format-tab").forEach(b => {
+          if (b.dataset.format === fmt) {
+            b.style.borderBottomColor = "var(--accent)";
+            b.style.color = "var(--text)";
+          } else {
+            b.style.borderBottomColor = "transparent";
+            b.style.color = "var(--text-dim)";
+          }
+        });
+
+        // Show/hide fields
+        allFields.forEach(f => {
+          const field = $(`#${f}-field`);
+          if (field) {
+            field.style.display = formats[fmt].fields.includes(f) ? "flex" : "none";
+          }
+        });
+
+        // Update help text
+        $("#format-help").textContent = helpTexts[fmt];
+
+        // Update preset buttons
+        renderPresets();
+
+        // Reset and update
+        resetToDefaults();
+        update();
       }
-      function describePart(v, kind) {
+
+      function resetToDefaults() {
+        const fmt = currentFormat;
+        const config = formats[fmt];
+        
+        if (config.seconds) {
+          fieldElements.sec.value = "0";
+        }
+        fieldElements.m.value = "*";
+        fieldElements.h.value = "*";
+        fieldElements.dom.value = "*";
+        fieldElements.mon.value = "*";
+        fieldElements.dow.value = "*";
+        if (config.year) {
+          fieldElements.year.value = "*";
+        }
+      }
+
+      function renderPresets() {
+        const container = $("#preset-buttons");
+        container.innerHTML = "";
+        const currentPresets = presets[currentFormat];
+        currentPresets.forEach(p => {
+          const btn = document.createElement("button");
+          btn.className = "btn";
+          btn.textContent = p.label;
+          btn.onclick = () => applyPreset(p.value);
+          container.appendChild(btn);
+        });
+      }
+
+      function applyPreset(value) {
+        const parts = value.split(" ");
+        const config = formats[currentFormat];
+        config.fields.forEach((f, i) => {
+          if (fieldElements[f]) {
+            fieldElements[f].value = parts[i] || "*";
+          }
+        });
+        update();
+      }
+
+      function expr() {
+        const config = formats[currentFormat];
+        return config.fields.map(f => fieldElements[f].value.trim() || "*").join(" ");
+      }
+
+      // Validation function
+      function validate() {
+        const parts = expr().split(" ");
+        const config = formats[currentFormat];
+        
+        // Check field count
+        if (currentFormat === "quartz") {
+          if (parts.length < 6 || parts.length > 7) {
+            return { valid: false, message: "Quartz cron requires 6 or 7 fields" };
+          }
+        } else if (parts.length !== config.fields.length) {
+          return { valid: false, message: `${currentFormat === "linux" ? "Linux" : "Spring"} cron requires ${config.fields.length} fields` };
+        }
+
+        // Check for invalid characters
+        const validChars = /^[\d,\-/*?A-Za-z]+$/;
+        for (let i = 0; i < parts.length; i++) {
+          if (!validChars.test(parts[i])) {
+            return { valid: false, message: `Field ${i + 1}: invalid characters` };
+          }
+        }
+
+        // Check day-of-month and day-of-week for ? usage in Spring/Quartz
+        if (currentFormat !== "linux") {
+          const dom = parts[3];
+          const dow = parts[5];
+          if (currentFormat === "spring" || currentFormat === "quartz") {
+            if (dom !== "*" && dom !== "?" && dow !== "*" && dow !== "?") {
+              // Both specified - warning but allowed
+            }
+          }
+        }
+
+        return { valid: true, message: "" };
+      }
+
+      function showValidationMessage(message, isError = false) {
+        if (!message) {
+          VM.style.display = "none";
+          return;
+        }
+        VM.style.display = "block";
+        VM.textContent = message;
+        VM.style.backgroundColor = isError ? "rgba(255,100,100,0.1)" : "rgba(100,200,100,0.1)";
+        VM.style.color = isError ? "var(--text)" : "var(--text)";
+        VM.style.borderLeft = "3px solid " + (isError ? "#ff6464" : "#64c864");
+      }
+
+      function describePart(v, kind, isSeconds = false) {
         if (v === "*") return "every " + kind;
+        if (v === "?") return "any " + kind;
+        
         const stepM = /^\*\/(\d+)$/.exec(v);
         if (stepM) return "every " + stepM[1] + " " + kind + "s";
+        
         const rangeStep = /^(\d+)-(\d+)\/(\d+)$/.exec(v);
-        if (rangeStep)
-          return `every ${rangeStep[3]} ${kind}s from ${rangeStep[1]} to ${rangeStep[2]}`;
+        if (rangeStep) return `every ${rangeStep[3]} ${kind}s from ${rangeStep[1]} to ${rangeStep[2]}`;
+        
         const range = /^(\d+)-(\d+)$/.exec(v);
         if (range) return `${kind}s ${range[1]} to ${range[2]}`;
-        if (v.includes(",")) return kind + "s " + v;
+        
+        if (v.includes(",")) {
+          // Handle day names in Quartz
+          if (kind === "day" && currentFormat === "quartz") {
+            const parts = v.split(",").map(p => {
+              return DOW_SHORT[p.toUpperCase()] !== undefined ? DOW_NAMES[DOW_SHORT[p.toUpperCase()]] : p;
+            }).join(", ");
+            return "on " + parts;
+          }
+          return kind + "s " + v;
+        }
+        
+        // Handle day names in Quartz
+        if (kind === "day" && currentFormat === "quartz" && /^[A-Za-z]+$/.test(v)) {
+          const dayNum = DOW_SHORT[v.toUpperCase()];
+          return dayNum !== undefined ? "on " + DOW_NAMES[dayNum] : kind + " " + v;
+        }
+        
         return kind + " " + v;
       }
+
       function describe() {
-        const [m, h, dom, mon, dow] = expr().split(" ");
-        const parts = [];
-        if (m === "*" && h === "*") parts.push("every minute");
-        else if (m === "0" && h === "*") parts.push("at the top of every hour");
-        else if (h === "*") {
-          parts.push("at minute " + m + " of every hour");
-        } else if (m.match(/^\d+$/) && h.match(/^\d+$/)) {
-          parts.push(`at ${h.padStart(2, "0")}:${m.padStart(2, "0")}`);
-        } else
-          parts.push(
-            describePart(m, "minute") + ", " + describePart(h, "hour"),
-          );
-        if (dow !== "*") {
-          const names = dow
-            .split(",")
-            .map((d) => {
-              const r = /^(\d)-(\d)$/.exec(d);
-              if (r) return DOW[+r[1]] + "–" + DOW[+r[2]];
-              return DOW[+d] || d;
-            })
-            .join(", ");
-          parts.push("on " + names);
+        const parts = expr().split(" ");
+        const config = formats[currentFormat];
+        let sec, m, h, dom, mon, dow, year;
+
+        if (config.seconds) {
+          [sec, m, h, dom, mon, dow, year] = parts;
+        } else {
+          [m, h, dom, mon, dow] = parts;
         }
-        if (dom !== "*") parts.push("on day " + dom + " of the month");
-        if (mon !== "*") {
-          const names = mon
-            .split(",")
-            .map((x) => MON[+x - 1] || x)
-            .join(", ");
-          parts.push("in " + names);
+
+        const result = [];
+
+        // Time description
+        if (config.seconds) {
+          if (sec === "*" && m === "*" && h === "*") {
+            result.push("every second");
+          } else if (sec === "0" && m === "*" && h === "*") {
+            result.push("every minute");
+          } else if (sec === "0" && m === "0" && h === "*") {
+            result.push("at the top of every hour");
+          } else {
+            if (sec !== "*" && sec !== "0") result.push(describePart(sec, "second", true));
+            if (m !== "*" || h !== "*") {
+              if (m.match(/^\d+$/) && h.match(/^\d+$/)) {
+                result.push(`at ${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(sec || "0").padStart(2, "0")}`);
+              } else {
+                if (m !== "*") result.push(describePart(m, "minute"));
+                if (h !== "*") result.push(describePart(h, "hour"));
+              }
+            }
+          }
+        } else {
+          if (m === "*" && h === "*") {
+            result.push("every minute");
+          } else if (m === "0" && h === "*") {
+            result.push("at the top of every hour");
+          } else if (m.match(/^\d+$/) && h.match(/^\d+$/)) {
+            result.push(`at ${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
+          } else {
+            if (m !== "*") result.push(describePart(m, "minute"));
+            if (h !== "*") result.push(describePart(h, "hour"));
+          }
         }
-        return parts.join(", ");
+
+        // Day of week
+        if (dow !== "*" && dow !== "?") {
+          const names = dow.split(",").map(d => {
+            if (currentFormat === "quartz" && /^[A-Za-z]+$/.test(d)) {
+              return d;
+            }
+            const r = /^(\d)-(\d)$/.exec(d);
+            if (r) return DOW_NAMES[+r[1]] + "–" + DOW_NAMES[+r[2]];
+            return DOW_NAMES[+d] || d;
+          }).join(", ");
+          result.push("on " + names);
+        }
+
+        // Day of month
+        if (dom !== "*" && dom !== "?") {
+          result.push("on day " + dom + " of the month");
+        }
+
+        // Month
+        if (mon !== "*" && mon !== "?") {
+          const names = mon.split(",").map(x => MON[+x - 1] || x).join(", ");
+          result.push("in " + names);
+        }
+
+        // Year (Quartz only)
+        if (year && year !== "*" && year !== "?") {
+          result.push("in year " + year);
+        }
+
+        return result.length > 0 ? result.join(", ") : "never";
       }
+
       function matches(n, field, min, max) {
-        if (field === "*") return true;
+        if (field === "*" || field === "?") return true;
+        
         for (const part of field.split(",")) {
           const step = /^(\*|\d+|\d+-\d+)\/(\d+)$/.exec(part);
           if (step) {
-            let lo = min,
-              hi = max;
+            let lo = min, hi = max;
             if (step[1] !== "*") {
               const r = /^(\d+)-(\d+)$/.exec(step[1]);
               if (r) {
@@ -466,58 +790,130 @@
             if (n >= lo && n <= hi && (n - lo) % +step[2] === 0) return true;
             continue;
           }
+
           const range = /^(\d+)-(\d+)$/.exec(part);
           if (range) {
             if (n >= +range[1] && n <= +range[2]) return true;
             continue;
           }
+
           if (+part === n) return true;
         }
         return false;
       }
+
+      function convertDayName(day) {
+        if (typeof day === "number") return day;
+        const upper = String(day).toUpperCase();
+        return DOW_SHORT[upper] !== undefined ? DOW_SHORT[upper] : +day;
+      }
+
       function nextRuns(n) {
-        const [m, h, dom, mon, dow] = expr().split(" ");
+        const parts = expr().split(" ");
+        const config = formats[currentFormat];
+        let sec, m, h, dom, mon, dow, year;
+
+        if (config.seconds) {
+          [sec, m, h, dom, mon, dow, year] = parts;
+        } else {
+          sec = "0";
+          [m, h, dom, mon, dow] = parts;
+        }
+
         const out = [];
         let d = new Date();
-        d.setSeconds(0, 0);
-        d.setMinutes(d.getMinutes() + 1);
+        d.setMilliseconds(0);
+        
+        if (config.seconds) {
+          d.setSeconds(d.getSeconds() + 1);
+        } else {
+          d.setSeconds(0);
+          d.setMinutes(d.getMinutes() + 1);
+        }
+
         let safety = 0;
-        while (out.length < n && safety < 525600) {
+        const maxIterations = 525600 * 60; // Safety limit
+
+        while (out.length < n && safety < maxIterations) {
           safety++;
+
+          let dowMatch = false;
+          if (dow === "*" || dow === "?") {
+            dowMatch = true;
+          } else {
+            // Handle day names in Quartz
+            const dowParts = dow.split(",").map(p => convertDayName(p));
+            dowMatch = dowParts.includes(d.getDay());
+          }
+
           const ok =
+            matches(d.getSeconds(), sec, 0, 59) &&
             matches(d.getMinutes(), m, 0, 59) &&
             matches(d.getHours(), h, 0, 23) &&
             matches(d.getDate(), dom, 1, 31) &&
             matches(d.getMonth() + 1, mon, 1, 12) &&
-            (dow === "*" || matches(d.getDay(), dow, 0, 6));
+            (dow === "*" || dowMatch) &&
+            (!year || year === "*" || year === "?" || matches(d.getFullYear(), year, 1970, 2099));
+
           if (ok) out.push(new Date(d));
-          d.setMinutes(d.getMinutes() + 1);
+
+          if (config.seconds) {
+            d.setSeconds(d.getSeconds() + 1);
+          } else {
+            d.setMinutes(d.getMinutes() + 1);
+          }
         }
         return out;
       }
+
       function update() {
+        const validation = validate();
+        if (!validation.valid) {
+          showValidationMessage(validation.message, true);
+          E.textContent = "Invalid expression";
+          HU.textContent = "Fix the errors above";
+          NX.innerHTML = "";
+          return;
+        } else {
+          showValidationMessage("", false);
+        }
+
         const e = expr();
         E.textContent = e;
         HU.textContent = describe();
         NX.innerHTML = "";
-        nextRuns(5).forEach((d) => {
+        
+        const runs = nextRuns(5);
+        if (runs.length === 0) {
           const li = document.createElement("li");
-          li.textContent = d.toLocaleString();
+          li.textContent = "(no matches found)";
           NX.appendChild(li);
-        });
+        } else {
+          runs.forEach(d => {
+            const li = document.createElement("li");
+            li.textContent = d.toLocaleString();
+            NX.appendChild(li);
+          });
+        }
       }
-      fields.forEach((f) =>
-        f.addEventListener("input", D.debounce(update, 150)),
-      );
-      document.querySelectorAll("[data-cron]").forEach(
-        (b) =>
-          (b.onclick = () => {
-            const v = b.dataset.cron.split(" ");
-            fields.forEach((f, i) => (f.value = v[i]));
-            update();
-          }),
-      );
+
+      // Event listeners
+      allFields.forEach(f => {
+        if (fieldElements[f]) {
+          fieldElements[f].addEventListener("input", D.debounce(update, 150));
+        }
+      });
+
+      document.querySelectorAll(".format-tab").forEach(b => {
+        b.addEventListener("click", () => setFormat(b.dataset.format));
+      });
+
       $("#copy").onclick = () => D.copyText(expr());
+      
+      $("#copy-human").onclick = () => D.copyText(HU.textContent);
+
+      // Initialize
+      renderPresets();
       update();
     </script>
   </body>
