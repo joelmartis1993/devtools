@@ -77,9 +77,104 @@
     />
     <meta name="robots" content="index,follow" />
     <meta name="theme-color" content="#0b0d12" />
-    <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg" />
-    <link rel="stylesheet" href="/assets/css/styles.css" />
-    <script src="/assets/js/theme.js"></script>
+    <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg" />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <style>
+      .toolbar { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 16px; align-items: center; justify-content: space-between; transition: transform 0.25s ease, background 0.25s ease; }
+      .toolbar-group { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+      .toolbar .btn { min-height: 38px; }
+      .dropdown { position: relative; }
+      .dropdown-menu { position: absolute; right: 0; top: calc(100% + 6px); min-width: 220px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 24px 60px rgba(0,0,0,0.22); padding: 8px 0; z-index: 30; }
+      .dropdown-menu.hide { display: none; }
+      .dropdown-item { width: 100%; text-align: left; border: 0; background: transparent; color: var(--text); padding: 10px 14px; font-size: 13.4px; cursor: pointer; transition: background 0.15s ease; }
+      .dropdown-item:hover, .dropdown-item:focus { background: rgba(124,92,255,0.08); outline: none; }
+      #exit-fullscreen { display: none; }
+      body.fullscreen #exit-fullscreen { display: inline-flex; }
+      .pane-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+      .pane-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: flex-end; }
+      .pane-actions .toolbar-group { display: flex; flex-wrap: wrap; gap: 8px; }
+      .fetch-bar { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 14px; border-bottom: 1px solid var(--border); background: var(--bg-alt); }
+      .fetch-bar input[type="url"] { flex: 1 1 260px; min-width: 180px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+      #input { display: block; box-sizing: border-box; width: 100%; overflow: visible !important; white-space: pre-wrap; word-break: break-word; min-height: 300px; max-height: none !important; flex: none !important; resize: none !important; height: auto !important; }
+      .code-frame { display: grid; grid-template-columns: auto 1fr; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--bg-alt); min-height: 260px; }
+      .toolbar .spacer { flex: 1; }
+      body.fullscreen { overflow: hidden; }
+      body.fullscreen .container.row { display: none; }
+      body.fullscreen main#main { padding: 16px 14px; max-width: none; width: 100vw; height: 100vh; overflow: hidden; }
+      body.fullscreen main { min-height: 100vh; overflow: hidden; }
+      body.fullscreen .toolbar { position: sticky; top: 0; z-index: 50; }
+      body.fullscreen .io-grid { height: calc(100vh - 260px); overflow: hidden; }
+      body.fullscreen .pane { min-height: 0; }
+      body.fullscreen .pane.full { height: calc(100vh - 260px); overflow: hidden; }
+      body.fullscreen #input-wrapper,
+      body.fullscreen #tree-out,
+      body.fullscreen #raw-out { max-height: calc(100vh - 340px); min-height: 0; overflow: auto; }
+      body.fullscreen .code-frame { min-height: calc(100vh - 340px); }
+      .search-panel { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 12px 12px 10px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-alt); margin-bottom: 10px; }
+      .search-panel input { flex: 1 1 240px; min-width: 180px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+      .search-panel .badge { margin-left: auto; }
+      .example-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+      .stats-grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); margin: 14px 0; }
+      .stats-card { padding: 14px 16px; border-radius: 16px; background: var(--bg-alt); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+      .stats-card h3 { margin: 0 0 8px; font-size: 0.95rem; color: var(--text-dim); }
+      .stats-card p { margin: 0; font-size: 1.3rem; font-weight: 700; color: var(--text); }
+      .drop-zone { position: relative; display: flex; flex-direction: column; gap: 10px; border: 2px dashed transparent; transition: border-color 0.2s ease, background 0.2s ease; overflow: visible; }
+      .drop-zone.drag-over { border-color: var(--accent); background: rgba(66, 135, 255, 0.08); }
+      .drop-zone .drop-message { position: static; margin: 0; font-size: 0.85rem; color: var(--text-dim); }
+      .io-grid > .pane.full:first-child { overflow: visible; }
+      .code-frame { display: grid; grid-template-columns: auto 1fr; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--bg-alt); }
+      .code-frame .line-numbers { text-align: right; padding: 12px 8px; user-select: none; color: var(--text-dim); border-right: 1px solid var(--border); line-height: 1.5; min-width: 40px; }
+      .code-frame pre { margin: 0; padding: 12px; overflow: auto; white-space: pre; font-family: var(--font-mono); font-size: 0.95rem; }
+      .json-key { color: #ff9d00; }
+      .json-string { color: #adffb8; }
+      .json-number { color: #7dd3fc; }
+      .json-boolean { color: #f9a8d4; }
+      .json-null { color: #a3a3ff; }
+      .json-punc { color: var(--text-dim); }
+      .json-tree .json-node { position: relative; padding-left: 0; }
+      .json-tree .node-line { display: flex; gap: 8px; align-items: center; padding: 4px 8px; border-radius: 6px; transition: background 0.2s; }
+      .json-tree .node-line:hover { background: rgba(255,255,255,0.03); }
+      .json-tree .node-key { color: #ff9d00; }
+      .json-tree .node-value.str { color: #adffb8; }
+      .json-tree .node-value.num { color: #7dd3fc; }
+      .json-tree .node-value.bool { color: #f9a8d4; }
+      .json-tree .node-value.null { color: #a3a3ff; }
+      .json-tree .children { padding-left: 20px; margin-top: 4px; }
+      .copy-node, .copy-path { margin-left: auto; border: none; padding: 6px 10px; border-radius: 8px; background: rgba(255,255,255,0.05); color: var(--text); cursor: pointer; }
+      .copy-node:hover, .copy-path:hover { background: rgba(255,255,255,0.1); }
+      .node-match { background: rgba(255,180,0,0.1); }
+      .node-current { outline: 1px solid var(--accent); }
+      .split-view #raw-out, .split-view #tree-out { display: block !important; }
+      body.fullscreen { overflow: hidden; }
+      body.fullscreen .container.row { display: none; }
+      body.fullscreen main#main { padding: 16px; max-width: none; width: 100vw; height: 100vh; overflow: hidden; }
+      body.fullscreen main { max-height: 100vh; overflow: hidden; }
+      body.fullscreen .toolbar { position: sticky; top: 0; z-index: 50; }
+      body.fullscreen .io-grid { height: calc(100vh - 220px); overflow: hidden; }
+      body.fullscreen .pane.full { height: 100%; overflow: hidden; }
+      body.fullscreen #input-wrapper,
+      body.fullscreen #tree-out,
+      body.fullscreen #raw-out { max-height: 100%; min-height: 0; overflow: auto; }
+      body.fullscreen .code-frame { min-height: auto; }
+      .shortcuts-overlay { position: fixed; inset: 0; z-index: 999; background: rgba(11,13,18,0.95); color: #fff; display: none; align-items: center; justify-content: center; padding: 32px; }
+      .shortcuts-overlay.active { display: flex; }
+      .shortcuts-card { max-width: 700px; width: 100%; background: #11151f; border-radius: 20px; padding: 24px; box-shadow: 0 18px 80px rgba(0,0,0,0.45); }
+      .shortcuts-card h2 { margin-top: 0; }
+      .shortcuts-card ul { list-style: none; padding: 0; margin: 0; }
+      .shortcuts-card li { margin: 10px 0; display: flex; justify-content: space-between; gap: 15px; }
+      .shortcuts-card li span { color: var(--text-dim); }
+      @media (max-width: 900px) {
+        .toolbar { justify-content: flex-start; }
+        .toolbar-group { width: 100%; }
+        .toolbar .btn { flex: 1 1 auto; min-width: 120px; }
+        .fetch-bar { flex-direction: column; align-items: stretch; }
+        .pane-head { align-items: stretch; }
+        .pane-actions { justify-content: flex-start; width: 100%; }
+        .search-panel { flex-direction: column; align-items: stretch; }
+        .code-frame { grid-template-columns: 36px 1fr; }
+      }
+    </style>
+    <script src="../assets/js/theme.js"></script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -109,7 +204,7 @@
             "name": "Is my data sent anywhere?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "No. The formatter runs entirely in your browser. There is no upload, no API call, and no analytics. You can verify this in your browser's network tab."
+              "text": "No. The formatter runs entirely in your browser. There is no upload and no API call for JSON processing. You can verify this in your browser's network tab."
             }
           },
           {
@@ -173,70 +268,96 @@
       </header>
 
       <div class="toolbar">
-        <button
-          class="btn primary"
-          id="format"
-          data-shortcut="run"
-          data-i18n="ui.format"
-        >
-          Format
-        </button>
-        <button class="btn" id="minify" data-i18n="ui.minify">Minify</button>
-        <button class="btn" id="validate" data-i18n="ui.validate">
-          Validate
-        </button>
-        <label class="btn" for="upload"
-          ><span data-i18n="ui.upload">Upload</span></label
-        >
-        <input
-          id="upload"
-          type="file"
-          accept=".json,application/json,.txt"
-          hidden
-        />
-        <span class="spacer"></span>
-        <button class="btn" id="view-tree" data-i18n="ui.tree">Tree</button>
-        <button class="btn" id="view-raw" data-i18n="ui.raw">Raw</button>
-        <button class="btn" id="copy" data-shortcut="copy" data-i18n="ui.copy">
-          Copy
-        </button>
-        <button class="btn" id="download" data-i18n="ui.download">
-          Download
-        </button>
-        <button
-          class="btn ghost danger"
-          id="clear"
-          data-shortcut="clear"
-          data-i18n="ui.clear"
-        >
-          Clear
-        </button>
+        <div class="toolbar-group">
+          <button class="btn primary" id="format" data-shortcut="run" data-i18n="ui.format">Format</button>
+          <button class="btn" id="validate" data-i18n="ui.validate">Validate</button>
+          <button class="btn" id="minify" data-i18n="ui.minify">Minify</button>
+          <button class="btn" id="search-btn" title="Search JSON">Search</button>
+          <button class="btn" id="fullscreen" aria-pressed="false">Fullscreen</button>
+          <button class="btn ghost hide" id="exit-fullscreen">Exit fullscreen</button>
+        </div>
+        <div class="toolbar-group">
+          <div class="dropdown" id="more-actions">
+            <button class="btn ghost" id="more-actions-button" aria-haspopup="true" aria-expanded="false">
+              More <span aria-hidden="true">▾</span>
+            </button>
+            <div class="dropdown-menu hide" role="menu" aria-label="More actions">
+              <button type="button" class="dropdown-item" data-action="fetch-json">Fetch JSON from URL</button>
+              <button type="button" class="dropdown-item" data-action="unescape">Unescape JSON</button>
+              <button type="button" class="dropdown-item" data-action="sort-keys">Recursive Sort</button>
+              <button type="button" class="dropdown-item" data-action="download">Export JSON</button>
+              <button type="button" class="dropdown-item" data-action="split-view">Split View</button>
+              <button type="button" class="dropdown-item" data-action="shortcuts">Keyboard shortcuts</button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="io-grid">
+      <div id="search-panel" class="search-panel hide">
+        <input id="search-input" placeholder="Search keys and values…" />
+        <span id="search-count" class="badge">0</span>
+        <button class="btn ghost" id="search-prev">Prev</button>
+        <button class="btn ghost" id="search-next">Next</button>
+        <button class="btn ghost" id="search-close">Close</button>
+      </div>
+      <div id="example-buttons" class="example-buttons hide"></div>
+      <div class="io-grid" id="io-grid">
         <div class="pane full">
           <div class="pane-head">
-            <span data-i18n="ui.input">Input</span><span class="spacer"></span
-            ><span class="badge" id="size">0 B</span>
+            <span data-i18n="ui.input">Input</span>
+            <span class="spacer"></span>
+            <div class="pane-actions">
+              <label class="btn ghost" for="upload"><span data-i18n="ui.upload">Upload</span></label>
+              <button class="btn ghost" id="clear" data-i18n="ui.clear">Clear</button>
+              <button class="btn ghost" id="examples-toggle" type="button">Examples</button>
+            </div>
+            <span class="badge" id="size">0 B</span>
           </div>
-          <textarea
-            id="input"
-            spellcheck="false"
-            autofocus
-            data-i18n-attr="placeholder:ui.placeholder.json"
-            placeholder="Paste JSON here…"
-          ></textarea>
+          <div class="fetch-bar">
+            <input id="fetch-url" type="url" placeholder="Fetch JSON from URL" />
+            <button class="btn ghost" id="fetch-json">Fetch</button>
+          </div>
+          <div id="input-wrapper" class="drop-zone">
+            <textarea
+              id="input"
+              spellcheck="false"
+              autofocus
+              data-i18n-attr="placeholder:ui.placeholder.json"
+              placeholder="Paste JSON here…"
+            ></textarea>
+            <div class="drop-message">Drag & drop JSON files here</div>
+          </div>
         </div>
         <div class="pane full">
           <div class="pane-head">
-            <span data-i18n="ui.output">Output</span><span class="spacer"></span
-            ><span id="status-badge" class="badge">empty</span>
+            <span data-i18n="ui.output">Output</span>
+            <span class="spacer"></span>
+            <div class="pane-actions">
+              <div class="toolbar-group">
+                <button class="btn ghost" id="view-tree" data-i18n="ui.tree">Tree</button>
+                <button class="btn ghost" id="view-raw" data-i18n="ui.raw">Raw</button>
+              </div>
+              <div class="toolbar-group">
+                <button class="btn ghost" id="copy" data-i18n="ui.copy">Copy</button>
+                <button class="btn ghost" id="download" data-i18n="ui.download">Download</button>
+              </div>
+              <div class="toolbar-group">
+                <button class="btn ghost" id="expand-all">Expand All</button>
+                <button class="btn ghost" id="collapse-all">Collapse All</button>
+                <button class="btn ghost" id="sort-keys">Sort Keys</button>
+              </div>
+            </div>
+            <span id="status-badge" class="badge">empty</span>
           </div>
           <div id="raw-out" class="hide">
-            <pre><code id="output"></code></pre>
+            <div class="code-frame">
+              <pre id="line-numbers" class="line-numbers"></pre>
+              <pre><code id="output" class="json-code"></code></pre>
+            </div>
           </div>
           <div id="tree-out" class="json-tree"></div>
         </div>
       </div>
+      <div id="stats-panel" class="stats-grid"></div>
       <div id="errbox" class="error-box hide" style="margin-top: 10px"></div>
 
       <section class="content narrow">
@@ -313,11 +434,11 @@
 
         <h3>Privacy</h3>
         <p>
-          The page is a single static HTML file with vanilla JavaScript. There
-          is no analytics, no fetch call to a server, no telemetry. You can
-          verify this by opening DevTools → Network and watching nothing happen
-          while you paste, format, and copy. That's the whole point: a tool you
-          can trust with proprietary data.
+          The page is a single static HTML file with vanilla JavaScript.
+          JSON formatting happens entirely in your browser, and your payload
+          is not sent to a server for processing. You can verify this by
+          opening DevTools → Network while you paste, format, and copy.
+          That's the whole point: a tool you can trust with proprietary data.
         </p>
 
         <h3>Performance notes</h3>
@@ -354,8 +475,8 @@
             <summary>Is my data sent anywhere?</summary>
             <div class="a">
               No. The formatter runs entirely in your browser. There is no
-              upload, no API call, and no analytics. You can verify this in your
-              browser's network tab.
+              upload and no API call for JSON processing. You can verify this in
+              your browser's network tab.
             </div>
           </details>
           <details class="faq-item">
@@ -385,10 +506,23 @@
       </section>
     </main>
     <div id="site-footer"></div>
-    <script src="/assets/js/common.js"></script>
-    <script src="/assets/js/i18n/translations.js"></script>
-    <script src="/assets/js/i18n.js"></script>
-    <script src="/assets/js/partials.js"></script>
+    <script src="../assets/js/common.js"></script>
+    <script src="../assets/js/i18n/translations.js"></script>
+    <script src="../assets/js/i18n.js"></script>
+    <script src="../assets/js/partials.js"></script>
+    <div id="shortcuts-overlay" class="shortcuts-overlay" role="dialog" aria-modal="true">
+      <div class="shortcuts-card">
+        <h2>Keyboard shortcuts</h2>
+        <ul>
+          <li><strong>Ctrl+Enter</strong><span>Format</span></li>
+          <li><strong>Ctrl+Shift+C</strong><span>Copy output</span></li>
+          <li><strong>Ctrl+L</strong><span>Clear input</span></li>
+          <li><strong>Ctrl+F</strong><span>Open search</span></li>
+          <li><strong>Esc</strong><span>Close panels / exit fullscreen</span></li>
+        </ul>
+        <button class="btn primary" id="shortcuts-close">Close</button>
+      </div>
+    </div>
     <script>
       const D = window.DTH,
         $ = D.$;
@@ -398,112 +532,277 @@
         raw = $("#raw-out"),
         err = $("#errbox"),
         sizeEl = $("#size"),
-        badge = $("#status-badge");
+        badge = $("#status-badge"),
+        ioGrid = $("#io-grid"),
+        searchPanel = $("#search-panel"),
+        searchInput = $("#search-input"),
+        searchCount = $("#search-count"),
+        fetchUrl = $("#fetch-url"),
+        exampleButtons = $("#example-buttons"),
+        inputWrapper = $("#input-wrapper"),
+        shortcutsOverlay = $("#shortcuts-overlay"),
+        statsPanel = $("#stats-panel"),
+        lineNumbers = $("#line-numbers"),
+        examplesToggle = $("#examples-toggle"),
+        exitFullscreenButton = $("#exit-fullscreen"),
+        moreActionsButton = $("#more-actions-button"),
+        moreActionsMenu = $("#more-actions .dropdown-menu");
+
+      const buttons = {
+        format: $("#format"),
+        minify: $("#minify"),
+        validate: $("#validate"),
+        viewTree: $("#view-tree"),
+        viewRaw: $("#view-raw"),
+        searchBtn: $("#search-btn"),
+        searchPrev: $("#search-prev"),
+        searchNext: $("#search-next"),
+        searchClose: $("#search-close"),
+        expandAll: $("#expand-all"),
+        collapseAll: $("#collapse-all"),
+        sortKeys: $("#sort-keys"),
+        unescape: $("#unescape"),
+        fullscreen: $("#fullscreen"),
+        fetchJson: $("#fetch-json"),
+        shortcutsClose: $("#shortcuts-close"),
+        copy: $("#copy"),
+        download: $("#download"),
+        clear: $("#clear"),
+      };
+
       let mode = "tree";
+      let lastParsed = null;
+      let searchMatches = [];
+      let currentMatchIndex = -1;
+      let fullscreenScroll = { input: 0, tree: 0, raw: 0 };
+
       function setSize() {
         const b = new Blob([inEl.value]).size;
         sizeEl.textContent =
           b < 1024 ? b + " B" : (b / 1024).toFixed(1) + " KB";
       }
+
       function showErr(msg) {
         err.classList.remove("hide");
         err.textContent = msg;
         badge.textContent = "invalid";
         badge.className = "badge err";
       }
+
       function clrErr() {
         err.classList.add("hide");
       }
+
       function setBadge(t, k) {
         badge.textContent = t;
         badge.className = "badge " + (k || "");
       }
+
+      function updateLineNumbers(text) {
+        const lines = text.split("\n");
+        lineNumbers.textContent = lines.map((_, i) => i + 1).join("\n");
+      }
+
+      function updateStats(obj) {
+        if (!obj) {
+          statsPanel.innerHTML = "";
+          return;
+        }
+        const { keys, depth, values } = computeStats(obj);
+        const size = new Blob([inEl.value]).size;
+        statsPanel.innerHTML = `
+          <div class="stats-card">
+            <h3>JSON size</h3>
+            <p>${size < 1024 ? size + " B" : (size / 1024).toFixed(1) + " KB"}</p>
+          </div>
+          <div class="stats-card">
+            <h3>Object keys</h3>
+            <p>${keys}</p>
+          </div>
+          <div class="stats-card">
+            <h3>Leaf values</h3>
+            <p>${values}</p>
+          </div>
+          <div class="stats-card">
+            <h3>Max depth</h3>
+            <p>${depth}</p>
+          </div>
+        `;
+      }
+
+      function computeStats(value, level = 1) {
+        let keys = 0;
+        let values = 0;
+        let depth = level;
+
+        if (value !== null && typeof value === "object") {
+          const entries = Array.isArray(value)
+            ? value
+            : Object.entries(value).map(([, v]) => v);
+          if (!Array.isArray(value)) {
+            keys += Object.keys(value).length;
+          }
+          entries.forEach((item) => {
+            const child = computeStats(item, level + 1);
+            keys += child.keys;
+            values += child.values;
+            depth = Math.max(depth, child.depth);
+          });
+        } else {
+          values += 1;
+        }
+
+        return { keys, values, depth };
+      }
+
+      function updateSearchCount(count) {
+        searchCount.textContent = count;
+      }
+
+      function updateViewDisplay() {
+        const split = ioGrid.classList.contains("split-view");
+        raw.classList.toggle("hide", !split && mode !== "raw");
+        tree.classList.toggle("hide", !split && mode !== "tree");
+      }
+
       function renderRaw(s) {
         outEl.textContent = s;
-        raw.classList.remove("hide");
-        tree.classList.add("hide");
+        updateLineNumbers(s);
         mode = "raw";
+        if (ioGrid.classList.contains("split-view")) {
+          tree.classList.remove("hide");
+        } else {
+          tree.classList.add("hide");
+        }
+        raw.classList.remove("hide");
       }
+
       function renderTree(obj) {
+        lastParsed = obj;
         tree.innerHTML = "";
-        tree.appendChild(buildNode(obj, "root"));
-        raw.classList.add("hide");
+        tree.appendChild(buildNode(obj, null, "$", true));
+
+        if (ioGrid.classList.contains("split-view")) {
+          const rawJson = JSON.stringify(obj, null, 2);
+          outEl.textContent = rawJson;
+          updateLineNumbers(rawJson);
+          raw.classList.remove("hide");
+        } else {
+          raw.classList.add("hide");
+        }
+
         tree.classList.remove("hide");
         mode = "tree";
       }
-      function buildNode(val, key, isRoot) {
+
+      function buildNode(val, key, path = "$", isRoot = false) {
         const li = document.createElement("li");
+        li.dataset.path = path;
+        li.dataset.value =
+          val === null
+            ? "null"
+            : typeof val === "string"
+            ? JSON.stringify(val)
+            : String(val);
+
         if (val !== null && typeof val === "object") {
-          const isArr = Array.isArray(val),
-            keys = Object.keys(val);
-          const tog = document.createElement("span");
-          tog.className = "toggle";
-          tog.textContent = "▾";
-          const lab = document.createElement("span");
-          lab.innerHTML =
+          const isArr = Array.isArray(val);
+          const keys = Object.keys(val);
+          const toggle = document.createElement("span");
+          toggle.className = "toggle";
+          toggle.textContent = "▾";
+
+          const line = document.createElement("div");
+          line.className = "node-line";
+          const label = document.createElement("span");
+          label.innerHTML =
             (key != null
-              ? `<span class="key">${escapeHtml(String(key))}</span><span class="punc">: </span>`
+              ? `<span class="node-key">${escapeHtml(String(key))}</span><span class="json-punc">: </span>`
               : "") +
-            `<span class="punc">${isArr ? "[" : "{"}</span> <span class="muted">${keys.length}</span>`;
-          li.append(tog, lab);
-          const ul = document.createElement("ul");
-          keys.forEach((k) =>
-            ul.appendChild(buildNode(val[k], isArr ? null : k)),
-          );
-          const close = document.createElement("div");
-          close.innerHTML = `<span class="punc">${isArr ? "]" : "}"}</span>`;
-          li.append(ul, close);
-          tog.onclick = () => {
-            const open = ul.style.display !== "none";
-            ul.style.display = open ? "none" : "";
-            tog.textContent = open ? "▸" : "▾";
+            `<span class="json-punc">${isArr ? "[" : "{"}</span> <span class="muted">${keys.length}</span>`;
+
+          line.append(toggle, label);
+
+          const copyPath = document.createElement("button");
+          copyPath.className = "copy-path";
+          copyPath.textContent = "path";
+          copyPath.title = path;
+          copyPath.onclick = (e) => {
+            e.stopPropagation();
+            D.copyText(path);
           };
-          const cp = document.createElement("button");
-          cp.className = "copy-node";
-          cp.textContent = "copy";
-          cp.onclick = (e) => {
+
+          const copyNode = document.createElement("button");
+          copyNode.className = "copy-node";
+          copyNode.textContent = "copy";
+          copyNode.onclick = (e) => {
             e.stopPropagation();
             D.copyText(JSON.stringify(val, null, 2));
           };
-          li.appendChild(cp);
+
+          line.append(copyPath, copyNode);
+          li.appendChild(line);
+
+          const ul = document.createElement("ul");
+          keys.forEach((k) => {
+            const childPath = isArr ? `${path}[${k}]` : `${path}.${k}`;
+            ul.appendChild(buildNode(val[k], isArr ? null : k, childPath));
+          });
+
+          const close = document.createElement("div");
+          close.innerHTML = `<span class="json-punc">${isArr ? "]" : "}"}</span>`;
+          li.append(ul, close);
+
+          toggle.onclick = () => {
+            const open = ul.style.display !== "none";
+            ul.style.display = open ? "none" : "";
+            toggle.textContent = open ? "▸" : "▾";
+          };
         } else {
-          let cls = "null",
-            txt = "null";
-          if (typeof val === "string") {
-            cls = "str";
-            txt = JSON.stringify(val);
-          } else if (typeof val === "number") {
-            cls = "num";
-            txt = String(val);
-          } else if (typeof val === "boolean") {
-            cls = "bool";
-            txt = String(val);
-          }
-          li.innerHTML =
+          const line = document.createElement("div");
+          line.className = "node-line";
+          line.innerHTML =
             (key != null
-              ? `<span class="key">${escapeHtml(String(key))}</span><span class="punc">: </span>`
-              : "") + `<span class="${cls}">${escapeHtml(txt)}</span>`;
+              ? `<span class="node-key">${escapeHtml(String(key))}</span><span class="json-punc">: </span>`
+              : "") +
+            `<span class="node-value ${
+              val === null ? "json-null" : typeof val === "string" ? "json-string" : typeof val === "number" ? "json-number" : "json-boolean"
+            }">${escapeHtml(li.dataset.value)}</span>`;
+
+          const copyPath = document.createElement("button");
+          copyPath.className = "copy-path";
+          copyPath.textContent = "path";
+          copyPath.title = path;
+          copyPath.onclick = (e) => {
+            e.stopPropagation();
+            D.copyText(path);
+          };
+
+          line.appendChild(copyPath);
+          li.appendChild(line);
         }
+
         if (isRoot) {
           const wrap = document.createElement("ul");
           wrap.appendChild(li);
           return wrap;
         }
+
         return li;
       }
+
       function escapeHtml(s) {
-        return s.replace(
-          /[&<>"']/g,
-          (c) =>
-            ({
-              "&": "&amp;",
-              "<": "&lt;",
-              ">": "&gt;",
-              '"': "&quot;",
-              "'": "&#39;",
-            })[c],
+        return s.replace(/[&<>"']/g, (c) =>
+          ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;",
+          })[c],
         );
       }
+
       function parse() {
         clrErr();
         const t = inEl.value;
@@ -511,6 +810,7 @@
           outEl.textContent = "";
           tree.innerHTML = "";
           setBadge("empty");
+          statsPanel.innerHTML = "";
           return null;
         }
         try {
@@ -526,74 +826,520 @@
             const line = lines.length,
               col = lines[lines.length - 1].length + 1;
             const src = t.split("\n")[line - 1] || "";
-            detail += `\n\nLine ${line}, col ${col}\n${src}\n${" ".repeat(Math.max(0, col - 1))}^`;
+            detail += `\n\nLine ${line}, col ${col}\n${src}\n${" ".repeat(
+              Math.max(0, col - 1),
+            )}^`;
           }
           showErr(detail);
           return null;
         }
       }
-      $("#format").onclick = () => {
-        const o = parse();
-        if (o !== null) {
-          const s = JSON.stringify(o, null, 2);
-          if (mode === "raw") renderRaw(s);
-          else renderTree(o);
+
+      function renderFromInput() {
+        const obj = parse();
+        if (obj !== null) {
+          updateStats(obj);
+          renderTree(obj);
+        }
+      }
+
+      function openSearchPanel() {
+        searchPanel.classList.remove("hide");
+        searchInput.focus();
+        if (searchInput.value.trim()) {
+          highlightSearch(searchInput.value.trim());
+        }
+      }
+
+      function closeSearchPanel() {
+        searchPanel.classList.add("hide");
+        clearSearchHighlights();
+      }
+
+      function clearSearchHighlights() {
+        searchMatches = [];
+        currentMatchIndex = -1;
+        tree.querySelectorAll(".node-match, .node-current").forEach((el) => {
+          el.classList.remove("node-match", "node-current");
+        });
+        updateSearchCount(0);
+      }
+
+      function highlightSearch(query) {
+        clearSearchHighlights();
+        if (!query) return;
+        const needle = query.toLowerCase();
+        tree.querySelectorAll("li").forEach((li) => {
+          const haystack = `${li.dataset.path} ${li.dataset.value}`.toLowerCase();
+          if (haystack.includes(needle)) {
+            searchMatches.push(li);
+            li.classList.add("node-match");
+          }
+        });
+        updateSearchCount(searchMatches.length);
+        if (searchMatches.length) {
+          currentMatchIndex = 0;
+          focusSearchResult();
+        }
+      }
+
+      function focusSearchResult() {
+        if (!searchMatches.length) return;
+        if (currentMatchIndex < 0) currentMatchIndex = 0;
+        if (currentMatchIndex >= searchMatches.length) {
+          currentMatchIndex = 0;
+        }
+        tree.querySelectorAll(".node-current").forEach((el) => {
+          el.classList.remove("node-current");
+        });
+        const node = searchMatches[currentMatchIndex];
+        node.classList.add("node-current");
+        openAncestorBranches(node);
+        node.scrollIntoView({ block: "center", behavior: "smooth" });
+        searchCount.textContent = `${currentMatchIndex + 1}/${searchMatches.length}`;
+      }
+
+      function openAncestorBranches(node) {
+        let parent = node.parentElement;
+        while (parent && parent !== tree) {
+          if (parent.tagName === "UL") {
+            parent.style.display = "";
+            const line = parent.previousElementSibling;
+            if (line) {
+              const toggle = line.querySelector(".toggle");
+              if (toggle) toggle.textContent = "▾";
+            }
+          }
+          parent = parent.parentElement;
+        }
+      }
+
+      function moveSearch(offset) {
+        if (!searchMatches.length) return;
+        currentMatchIndex = (currentMatchIndex + offset + searchMatches.length) % searchMatches.length;
+        focusSearchResult();
+      }
+
+      function sortObjectKeys(value) {
+        if (Array.isArray(value)) {
+          return value.map(sortObjectKeys);
+        }
+        if (value !== null && typeof value === "object") {
+          return Object.keys(value)
+            .sort()
+            .reduce((acc, key) => {
+              acc[key] = sortObjectKeys(value[key]);
+              return acc;
+            }, {});
+        }
+        return value;
+      }
+
+      function toggleSplitView() {
+        ioGrid.classList.toggle("split-view");
+        if (lastParsed) {
+          renderTree(lastParsed);
+        } else {
+          updateViewDisplay();
+        }
+      }
+
+      function closeMoreActions() {
+        moreActionsMenu.classList.add("hide");
+        moreActionsButton.setAttribute("aria-expanded", "false");
+      }
+
+      function handleMoreAction(action) {
+        closeMoreActions();
+        switch (action) {
+          case "fetch-json":
+            fetchJsonFromUrl();
+            break;
+          case "unescape":
+            if (mode === "raw") {
+              const decoded = decodeEscapes(outEl.textContent);
+              renderRaw(decoded);
+            }
+            break;
+          case "sort-keys":
+            buttons.sortKeys.click();
+            break;
+          case "download":
+            buttons.download.click();
+            break;
+          case "split-view":
+            toggleSplitView();
+            break;
+          case "shortcuts":
+            shortcutsOverlay.classList.add("active");
+            break;
+        }
+      }
+
+      function toggleFullscreen() {
+        const isActive = document.body.classList.contains("fullscreen");
+        fullscreenScroll = {
+          input: inEl.scrollTop,
+          tree: tree.scrollTop,
+          raw: raw.scrollTop,
+        };
+
+        if (isActive) {
+          document.body.classList.remove("fullscreen");
+          buttons.fullscreen.textContent = "Fullscreen";
+          buttons.fullscreen.setAttribute("aria-pressed", "false");
+          exitFullscreenButton.classList.add("hide");
+        } else {
+          document.body.classList.add("fullscreen");
+          buttons.fullscreen.textContent = "Exit fullscreen";
+          buttons.fullscreen.setAttribute("aria-pressed", "true");
+          exitFullscreenButton.classList.remove("hide");
+        }
+
+        updateViewDisplay();
+        requestAnimationFrame(() => {
+          inEl.scrollTop = fullscreenScroll.input;
+          tree.scrollTop = fullscreenScroll.tree;
+          raw.scrollTop = fullscreenScroll.raw;
+        });
+      }
+
+      function decodeEscapes(text) {
+        return text
+          .replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) =>
+            String.fromCharCode(parseInt(hex, 16)),
+          )
+          .replace(/\\n/g, "\n")
+          .replace(/\\r/g, "\r")
+          .replace(/\\t/g, "\t")
+          .replace(/\\b/g, "\b")
+          .replace(/\\f/g, "\f")
+          .replace(/\"/g, '"')
+          .replace(/\\\\/g, "\\");
+      }
+
+      async function fetchJsonFromUrl() {
+        const url = fetchUrl.value.trim();
+        if (!url) {
+          showErr("Enter a valid URL to fetch JSON.");
+          return;
+        }
+        clrErr();
+        setBadge("loading", "warn");
+        try {
+          const res = await fetch(url, {
+            headers: { Accept: "application/json" },
+          });
+          if (!res.ok) {
+            throw new Error(`${res.status} ${res.statusText}`);
+          }
+          const text = await res.text();
+          let obj;
+          try {
+            obj = JSON.parse(text);
+          } catch (parseError) {
+            throw new Error("Fetched content is not valid JSON.");
+          }
+          inEl.value = text;
+          setSize();
+          updateStats(obj);
+          renderTree(obj);
+          setBadge("loaded", "ok");
+        } catch (error) {
+          showErr(`Could not fetch JSON: ${error.message}`);
+        }
+      }
+
+      function setInputFromSample(text) {
+        inEl.value = text;
+        resizeInput();
+        setSize();
+        renderFromInput();
+      }
+
+      function createExampleButtons() {
+        const samples = [
+          {
+            label: "API response",
+            json: `{
+  "status": "success",
+  "data": [
+    { "id": 101, "name": "Widget", "active": true },
+    { "id": 102, "name": "Service", "active": false }
+  ],
+  "meta": { "page": 1, "count": 2 }
+}`,
+          },
+          {
+            label: "Nested object",
+            json: `{
+  "user": {
+    "id": 42,
+    "name": "Jane Doe",
+    "roles": ["admin", "editor"],
+    "settings": { "theme": "dark", "alerts": true }
+  }
+}`,
+          },
+          {
+            label: "Array payload",
+            json: `[
+  { "name": "Alice", "score": 94 },
+  { "name": "Bob", "score": 78 },
+  { "name": "Eve", "score": 88 }
+]`,
+          },
+        ];
+
+        samples.forEach((sample) => {
+          const btn = document.createElement("button");
+          btn.className = "btn ghost";
+          btn.textContent = sample.label;
+          btn.onclick = () => setInputFromSample(sample.json);
+          exampleButtons.appendChild(btn);
+        });
+      }
+
+      function setTreeExpansion(expand) {
+        tree.querySelectorAll(".toggle").forEach((toggle) => {
+          const li = toggle.closest("li");
+          const branch = li && li.querySelector("ul");
+          if (branch) {
+            branch.style.display = expand ? "" : "none";
+            toggle.textContent = expand ? "▾" : "▸";
+          }
+        });
+      }
+
+      function handleDropFiles(files) {
+        if (!files.length) return;
+        const file = files[0];
+        return D.readFileAsText(file).then((text) => {
+          inEl.value = text;
+          resizeInput();
+          setSize();
+          renderFromInput();
+        });
+      }
+
+      function registerShortcuts() {
+        document.addEventListener("keydown", (event) => {
+          if (event.ctrlKey && event.key === "Enter") {
+            event.preventDefault();
+            buttons.format.click();
+          }
+          if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "c") {
+            event.preventDefault();
+            buttons.copy.click();
+          }
+          if (event.ctrlKey && event.key.toLowerCase() === "l") {
+            event.preventDefault();
+            buttons.clear.click();
+          }
+          if (event.ctrlKey && event.key.toLowerCase() === "f") {
+            event.preventDefault();
+            openSearchPanel();
+          }
+          if (event.key === "Escape") {
+            if (document.body.classList.contains("fullscreen")) {
+              toggleFullscreen();
+            } else {
+              closeSearchPanel();
+            }
+          }
+        });
+      }
+
+      buttons.format.onclick = () => {
+        const obj = parse();
+        if (obj !== null) {
+          const formatted = JSON.stringify(obj, null, 2);
+          if (mode === "raw" && !ioGrid.classList.contains("split-view")) {
+            renderRaw(formatted);
+          } else {
+            renderTree(obj);
+          }
+          updateStats(obj);
         }
       };
-      $("#minify").onclick = () => {
-        const o = parse();
-        if (o !== null) renderRaw(JSON.stringify(o));
+
+      buttons.minify.onclick = () => {
+        const obj = parse();
+        if (obj !== null) {
+          renderRaw(JSON.stringify(obj));
+          updateStats(obj);
+        }
       };
-      $("#validate").onclick = () => {
+
+      buttons.validate.onclick = () => {
         parse();
       };
-      $("#view-tree").onclick = () => {
-        const o = parse();
-        if (o !== null) renderTree(o);
+
+      buttons.viewTree.onclick = () => {
+        const obj = parse();
+        if (obj !== null) {
+          renderTree(obj);
+          updateStats(obj);
+        }
       };
-      $("#view-raw").onclick = () => {
-        const o = parse();
-        if (o !== null) renderRaw(JSON.stringify(o, null, 2));
+
+      buttons.viewRaw.onclick = () => {
+        const obj = parse();
+        if (obj !== null) {
+          renderRaw(JSON.stringify(obj, null, 2));
+          updateStats(obj);
+        }
       };
-      $("#copy").onclick = () => {
-        const t =
+
+      buttons.copy.onclick = () => {
+        const text =
           mode === "raw"
             ? outEl.textContent
             : JSON.stringify(parse() || {}, null, 2);
-        D.copyText(t);
+        D.copyText(text);
       };
-      $("#download").onclick = () => {
-        const t =
+
+      buttons.download.onclick = () => {
+        const text =
           mode === "raw"
             ? outEl.textContent
             : JSON.stringify(parse() || {}, null, 2);
-        D.downloadText("formatted.json", t, "application/json");
+        D.downloadText("formatted.json", text, "application/json");
       };
-      $("#clear").onclick = () => {
+
+      buttons.clear.onclick = () => {
         inEl.value = "";
+        resizeInput();
         outEl.textContent = "";
         tree.innerHTML = "";
+        statsPanel.innerHTML = "";
+        clearSearchHighlights();
         clrErr();
         setBadge("empty");
         setSize();
         inEl.focus();
       };
-      $("#upload").onchange = async (e) => {
-        const f = e.target.files[0];
-        if (!f) return;
-        inEl.value = await D.readFileAsText(f);
-        setSize();
-        $("#format").click();
+
+      buttons.searchBtn.onclick = openSearchPanel;
+      buttons.searchClose.onclick = closeSearchPanel;
+      buttons.searchPrev.onclick = () => moveSearch(-1);
+      buttons.searchNext.onclick = () => moveSearch(1);
+      buttons.expandAll.onclick = () => setTreeExpansion(true);
+      buttons.collapseAll.onclick = () => setTreeExpansion(false);
+      buttons.sortKeys.onclick = () => {
+        const obj = parse();
+        if (obj !== null) {
+          const sorted = sortObjectKeys(obj);
+          updateStats(sorted);
+          renderTree(sorted);
+        }
       };
-      inEl.addEventListener(
-        "input",
-        D.debounce(() => {
-          setSize();
-          const o = parse();
-          if (o !== null) renderTree(o);
-        }, 200),
-      );
-      setSize();
+      if (buttons.unescape) {
+        buttons.unescape.onclick = () => {
+          if (mode === "raw") {
+            const decoded = decodeEscapes(outEl.textContent);
+            renderRaw(decoded);
+          }
+        };
+      }
+      buttons.fullscreen.onclick = toggleFullscreen;
+      buttons.fetchJson.onclick = fetchJsonFromUrl;
+      buttons.shortcutsClose.onclick = () => shortcutsOverlay.classList.remove("active");
+      exitFullscreenButton.onclick = () => toggleFullscreen();
+      moreActionsButton.onclick = (event) => {
+        event.stopPropagation();
+        const visible = moreActionsMenu.classList.toggle("hide");
+        moreActionsButton.setAttribute("aria-expanded", String(!visible));
+      };
+      moreActionsMenu.addEventListener("click", (event) => {
+        const action = event.target.dataset.action;
+        if (action) {
+          handleMoreAction(action);
+        }
+      });
+      document.addEventListener("click", (event) => {
+        if (!event.target.closest("#more-actions")) {
+          closeMoreActions();
+        }
+      });
+      examplesToggle.onclick = () => exampleButtons.classList.toggle("hide");
+
+      searchInput.addEventListener("input", () => {
+        const value = searchInput.value.trim();
+        if (value) {
+          highlightSearch(value);
+        } else {
+          clearSearchHighlights();
+        }
+      });
+
+      inputWrapper.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        inputWrapper.classList.add("drag-over");
+      });
+
+      inputWrapper.addEventListener("dragleave", () => {
+        inputWrapper.classList.remove("drag-over");
+      });
+
+      inputWrapper.addEventListener("drop", async (e) => {
+        e.preventDefault();
+        inputWrapper.classList.remove("drag-over");
+        if (e.dataTransfer.files.length) {
+          await handleDropFiles(e.dataTransfer.files);
+        }
+      });
+
+      function resizeInput() {
+        inEl.style.height = "auto";
+        inEl.style.height = `${Math.max(inEl.scrollHeight, 300)}px`;
+      }
+
+      const scheduleInputUpdate = D.debounce(() => {
+        setSize();
+        renderFromInput();
+      }, 200);
+
+      const dropMessage = document.querySelector("#input-wrapper .drop-message");
+      function updateDropMessage() {
+        if (!dropMessage) return;
+        dropMessage.classList.toggle("hide", Boolean(inEl.value.trim()));
+      }
+
+      inEl.addEventListener("input", () => {
+        requestAnimationFrame(() => {
+          resizeInput();
+          updateDropMessage();
+          scheduleInputUpdate();
+        });
+      });
+
+      inEl.addEventListener("paste", () => {
+        requestAnimationFrame(() => {
+          resizeInput();
+          updateDropMessage();
+        });
+      });
+
+      function renderFromInput() {
+        const obj = parse();
+        if (obj !== null) {
+          updateStats(obj);
+          renderTree(obj);
+        }
+        resizeInput();
+        updateDropMessage();
+      }
+
+      function init() {
+        createExampleButtons();
+        registerShortcuts();
+        setSize();
+        resizeInput();
+        updateDropMessage();
+      }
+
+      init();
     </script>
   </body>
 </html>
