@@ -79,6 +79,31 @@
     <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg" />
     <link rel="stylesheet" href="../assets/css/styles.css" />
     <script src="../assets/js/theme.js"></script>
+    <style>
+      .toolbar-group{display:flex;gap:8px;align-items:center}
+      .stats-card{padding:10px 12px;border-radius:10px;background:var(--surface-2);border:1px solid var(--border);min-width:84px;text-align:center}
+      .stats-card h3{margin:0;font-size:12px;color:var(--text-dim)}
+      .stats-card p{margin:6px 0 0;font-size:18px;font-weight:700}
+      .diff-line.add{background:rgba(34,197,94,0.04)}
+      .diff-line.del{background:rgba(239,68,68,0.04)}
+      .diff-line.mod{background:rgba(249,115,22,0.04)}
+      .diff-line.eq{color:var(--text-dim)}
+      .node-match{outline:2px solid rgba(124,92,255,0.12)}
+      .node-current{outline:2px solid rgba(124,92,255,0.28);box-shadow:0 6px 24px rgba(124,92,255,0.06)}
+      .code-frame{display:grid;grid-template-columns:auto 1fr;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--bg-alt);}
+      .code-frame .line-numbers{display:flex;flex-direction:column;align-items:flex-end;padding:12px 10px 12px 14px;user-select:none;color:var(--text-dim);border-right:1px solid var(--border);text-align:right;line-height:1.55;min-width:44px;overflow:hidden;}
+      .code-frame .line-number{min-height:1.55em;line-height:1.55;width:100%;padding-right:4px;}
+      .code-frame .line-number.highlight{background:rgba(239,68,68,0.16);color:var(--text);border-radius:6px;}
+      .code-frame textarea{border:none;background:transparent;outline:none;resize:none;min-height:300px;padding:12px 14px;line-height:1.55;}
+      .shortcuts-overlay{position:fixed;inset:0;z-index:999;background:rgba(11,13,18,0.92);color:var(--text);display:none;align-items:center;justify-content:center;padding:24px}
+      .shortcuts-overlay.active{display:flex}
+      .shortcuts-card{max-width:1000px;width:100%;background:var(--surface);border-radius:20px;padding:24px;box-shadow:0 18px 80px rgba(0,0,0,0.35)}
+      .shortcuts-card h2{margin:0}
+      @media(max-width:820px){
+        #diff-grid{display:none !important}
+        #diff{display:block !important}
+      }
+    </style>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -90,6 +115,19 @@
         "url": "https://devtoolshive.com/tools/json-diff.html"
       }
     </script>
+    <div id="tree-overlay" class="shortcuts-overlay hide" role="dialog" aria-modal="true">
+      <div class="shortcuts-card" style="max-width:1000px;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <h2 style="margin:0">Left JSON (A)</h2>
+          <button class="btn ghost" id="tree-close">Close</button>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <h2 style="margin:0">Right JSON (B)</h2>
+        </div>
+        <div id="tree-left" style="overflow:auto;padding:12px;background:var(--surface);border-radius:10px;max-height:60vh"></div>
+        <div id="tree-right" style="overflow:auto;padding:12px;background:var(--surface);border-radius:10px;max-height:60vh"></div>
+      </div>
+    </div>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -161,80 +199,100 @@
       </header>
 
       <div class="toolbar">
-        <button
-          class="btn primary"
-          id="compare"
-          data-shortcut="run"
-          data-i18n="ui.compare"
-        >
-          Compare
-        </button>
-        <label class="row gap-sm muted" style="font-size: 13px"
-          ><input type="checkbox" id="ignore-order" checked /> Ignore array
-          order</label
-        >
-        <label class="row gap-sm muted" style="font-size: 13px"
-          ><input type="checkbox" id="ignore-keys" /> Ignore key order</label
-        >
-        <span class="spacer"></span>
-        <button
-          class="btn"
-          id="copy-diff"
-          data-shortcut="copy"
-          data-i18n="ui.copy"
-        >
-          Copy diff
-        </button>
-        <button class="btn" id="download-diff" data-i18n="ui.download">
-          Download
-        </button>
-        <button
-          class="btn ghost danger"
-          id="clear"
-          data-shortcut="clear"
-          data-i18n="ui.clear"
-        >
-          Clear
-        </button>
+        <div class="toolbar-group">
+          <button class="btn primary" id="compare" data-shortcut="run">Compare</button>
+          <button class="btn" id="beautify">Beautify</button>
+          <button class="btn" id="swap">Swap</button>
+          <button class="btn" id="load-sample">Load sample</button>
+        </div>
+        <div class="toolbar-group">
+          <label class="row gap-sm muted" style="font-size: 13px"><input type="checkbox" id="ignore-order" checked /> Ignore array order</label>
+          <label class="row gap-sm muted" style="font-size: 13px"><input type="checkbox" id="ignore-keys" /> Ignore key order</label>
+          <label class="row gap-sm muted" style="font-size: 13px"><input type="checkbox" id="hide-unchanged" checked /> Show only differences</label>
+          <label class="row gap-sm muted" style="font-size: 13px"><input type="checkbox" id="ignore-formatting" /> Ignore formatting</label>
+        </div>
+        <div class="spacer"></div>
+        <div class="toolbar-group">
+          <button class="btn" id="view-tree">Tree view</button>
+          <button class="btn" id="view-side">Compact list</button>
+          <button class="btn ghost" id="copy-diff">Copy diff</button>
+          <div class="dropdown">
+            <button class="btn ghost" id="export-btn">Export ▾</button>
+            <div class="dropdown-menu hide" id="export-menu">
+              <button class="dropdown-item" data-export="json">Export JSON</button>
+              <button class="dropdown-item" data-export="txt">Export TXT</button>
+              <button class="dropdown-item" data-export="md">Export Markdown</button>
+            </div>
+          </div>
+          <button class="btn ghost danger" id="clear" data-shortcut="clear">Clear</button>
+        </div>
       </div>
       <div class="io-grid">
         <div class="pane">
           <div class="pane-head">
-            A (left) <span class="spacer"></span
-            ><label class="btn" for="up-a" style="padding: 3px 8px"
-              ><span data-i18n="ui.upload">Upload</span></label
-            ><input id="up-a" type="file" hidden accept=".json" />
+            A (left)
+            <span class="spacer"></span>
+            <div class="pane-actions" style="gap:8px;align-items:center">
+              <input id="fetch-left-url" type="url" placeholder="Fetch JSON from URL" style="min-width:140px;padding:6px 8px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text)" />
+              <button class="btn ghost" id="fetch-left">Fetch</button>
+              <label class="btn" for="up-a" style="padding: 3px 8px"><span data-i18n="ui.upload">Upload</span></label>
+              <input id="up-a" type="file" hidden accept=".json" />
+            </div>
           </div>
-          <textarea
-            id="left"
-            spellcheck="false"
-            autofocus
-            placeholder='{ "name": "alice", "age": 30 }'
-          ></textarea>
+          <div class="code-frame">
+            <pre id="line-numbers-left" class="line-numbers"></pre>
+            <textarea
+              id="left"
+              spellcheck="false"
+              autofocus
+              placeholder='{ "name": "alice", "age": 30 }'
+            ></textarea>
+          </div>
         </div>
         <div class="pane">
           <div class="pane-head">
-            B (right) <span class="spacer"></span
-            ><label class="btn" for="up-b" style="padding: 3px 8px"
-              ><span data-i18n="ui.upload">Upload</span></label
-            ><input id="up-b" type="file" hidden accept=".json" />
+            B (right)
+            <span class="spacer"></span>
+            <div class="pane-actions" style="gap:8px;align-items:center">
+              <input id="fetch-right-url" type="url" placeholder="Fetch JSON from URL" style="min-width:140px;padding:6px 8px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text)" />
+              <button class="btn ghost" id="fetch-right">Fetch</button>
+              <label class="btn" for="up-b" style="padding: 3px 8px"><span data-i18n="ui.upload">Upload</span></label>
+              <input id="up-b" type="file" hidden accept=".json" />
+            </div>
           </div>
-          <textarea
-            id="right"
-            spellcheck="false"
-            placeholder='{ "name": "alice", "age": 31, "city": "NYC" }'
-          ></textarea>
+          <div class="code-frame">
+            <pre id="line-numbers-right" class="line-numbers"></pre>
+            <textarea
+              id="right"
+              spellcheck="false"
+              placeholder='{ "name": "alice", "age": 31, "city": "NYC" }'
+            ></textarea>
+          </div>
         </div>
       </div>
       <div class="pane" style="margin-top: 12px">
         <div class="pane-head">
-          Diff <span class="spacer"></span
-          ><span id="diff-stats" class="badge"></span>
+          Diff <span class="spacer"></span>
+          <span id="diff-stats" class="badge"></span>
         </div>
-        <div
-          id="diff"
-          style="padding: 8px 0; max-height: 520px; overflow: auto"
-        ></div>
+        <div class="diff-summary" style="display:flex;gap:12px;padding:12px 14px;">
+          <div class="stats-card" id="card-add"><h3>Added</h3><p id="card-add-count">0</p></div>
+          <div class="stats-card" id="card-del"><h3>Removed</h3><p id="card-del-count">0</p></div>
+          <div class="stats-card" id="card-mod"><h3>Modified</h3><p id="card-mod-count">0</p></div>
+          <div class="stats-card" id="card-eq"><h3>Unchanged</h3><p id="card-eq-count">0</p></div>
+          <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+            <input id="diff-search" placeholder="Search diff" style="padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text)" />
+            <button class="btn ghost" id="diff-prev">Prev</button>
+            <button class="btn ghost" id="diff-next">Next</button>
+          </div>
+        </div>
+        <div id="diff-grid" style="padding:8px 0; max-height:520px; overflow:auto; display:none;">
+          <div style="display:grid;grid-template-columns:50px 50px 220px 1fr 1fr;gap:8px;padding:8px 12px;font-weight:700;border-bottom:1px solid var(--border);">
+            <div>A</div><div>B</div><div>Path</div><div>Left</div><div>Right</div>
+          </div>
+          <div id="diff-grid-body"></div>
+        </div>
+        <div id="diff" style="padding: 8px 0; max-height: 520px; overflow: auto"></div>
       </div>
 
       <section class="content narrow">
@@ -374,12 +432,209 @@
         R = $("#right"),
         OUT = $("#diff"),
         STATS = $("#diff-stats");
+      // UI elements
+      const DIFF_GRID = $("#diff-grid");
+      const DIFF_GRID_BODY = $("#diff-grid-body");
+      const CARD_ADD = $("#card-add-count");
+      const CARD_DEL = $("#card-del-count");
+      const CARD_MOD = $("#card-mod-count");
+      const CARD_EQ = $("#card-eq-count");
+      const DIFF_SEARCH = $("#diff-search");
+      const LINE_NUMBERS_LEFT = $("#line-numbers-left");
+      const LINE_NUMBERS_RIGHT = $("#line-numbers-right");
+      let viewSide = true;
+      let searchMatches = [];
+      let currentSearchIndex = -1;
+      let lineMapA = new Map();
+      let lineMapB = new Map();
       function tryParse(s, name) {
         try {
           return JSON.parse(s);
         } catch (e) {
           throw new Error(name + ": " + e.message);
         }
+      }
+      function parseWithLines(s, name) {
+        let i = 0,
+          line = 1,
+          col = 1;
+        const map = new Map();
+        const input = s;
+        const eof = () => i >= input.length;
+        const peek = () => input[i];
+        const next = () => {
+          const ch = input[i++];
+          if (ch === "\n") {
+            line++;
+            col = 1;
+          } else {
+            col++;
+          }
+          return ch;
+        };
+        const error = (msg) => {
+          throw new Error(`${name}: ${msg} at line ${line}, column ${col}`);
+        };
+        const skipWS = () => {
+          while (!eof() && /\s/.test(peek())) next();
+        };
+        const parseString = () => {
+          if (next() !== '"') error('Expected string');
+          let value = '';
+          while (!eof()) {
+            const ch = next();
+            if (ch === '"') break;
+            if (ch === '\\') {
+              if (eof()) error('Unterminated escape');
+              const esc = next();
+              if (esc === 'u') {
+                let hex = '';
+                for (let j = 0; j < 4; j++) {
+                  const c = next();
+                  if (!/[0-9A-Fa-f]/.test(c)) error('Invalid unicode escape');
+                  hex += c;
+                }
+                value += String.fromCharCode(parseInt(hex, 16));
+              } else if (esc === 'b') value += '\b';
+              else if (esc === 'f') value += '\f';
+              else if (esc === 'n') value += '\n';
+              else if (esc === 'r') value += '\r';
+              else if (esc === 't') value += '\t';
+              else if (esc === '"' || esc === '\\' || esc === '/') value += esc;
+              else error('Invalid escape');
+            } else {
+              value += ch;
+            }
+          }
+          return value;
+        };
+        const parseNumber = () => {
+          const start = i;
+          if (peek() === '-') next();
+          if (peek() === '0') {
+            next();
+          } else if (/[1-9]/.test(peek())) {
+            while (!eof() && /[0-9]/.test(peek())) next();
+          } else {
+            error('Invalid number');
+          }
+          if (peek() === '.') {
+            next();
+            if (!/[0-9]/.test(peek())) error('Invalid number');
+            while (!eof() && /[0-9]/.test(peek())) next();
+          }
+          if (peek() === 'e' || peek() === 'E') {
+            next();
+            if (peek() === '+' || peek() === '-') next();
+            if (!/[0-9]/.test(peek())) error('Invalid number');
+            while (!eof() && /[0-9]/.test(peek())) next();
+          }
+          const token = input.slice(start, i);
+          const num = Number(token);
+          if (Number.isNaN(num)) error('Invalid number');
+          return num;
+        };
+        const parseLiteral = (text, value) => {
+          for (let j = 0; j < text.length; j++) {
+            if (next() !== text[j]) error('Unexpected token');
+          }
+          return value;
+        };
+        const parseValue = (path) => {
+          skipWS();
+          const startLine = line;
+          const ch = peek();
+          if (ch === '{') return parseObject(path);
+          if (ch === '[') return parseArray(path);
+          if (ch === '"') {
+            const val = parseString();
+            map.set(path, startLine);
+            return val;
+          }
+          if (ch === '-' || /[0-9]/.test(ch)) {
+            const val = parseNumber();
+            map.set(path, startLine);
+            return val;
+          }
+          if (ch === 't') {
+            const val = parseLiteral('true', true);
+            map.set(path, startLine);
+            return val;
+          }
+          if (ch === 'f') {
+            const val = parseLiteral('false', false);
+            map.set(path, startLine);
+            return val;
+          }
+          if (ch === 'n') {
+            const val = parseLiteral('null', null);
+            map.set(path, startLine);
+            return val;
+          }
+          error('Unexpected token');
+        };
+        const parseObject = (path) => {
+          const startLine = line;
+          if (next() !== '{') error('Expected {');
+          skipWS();
+          const obj = {};
+          if (peek() === '}') {
+            next();
+            map.set(path, startLine);
+            return obj;
+          }
+          let first = true;
+          while (true) {
+            if (!first) {
+              if (next() !== ',') error('Expected ,');
+              skipWS();
+            }
+            first = false;
+            const keyLine = line;
+            const key = parseString();
+            skipWS();
+            if (next() !== ':') error('Expected :');
+            const childPath = path ? path + '.' + key : key;
+            const val = parseValue(childPath);
+            obj[key] = val;
+            map.set(childPath, keyLine);
+            skipWS();
+            if (peek() === '}') break;
+          }
+          if (next() !== '}') error('Expected }');
+          return obj;
+        };
+        const parseArray = (path) => {
+          const startLine = line;
+          if (next() !== '[') error('Expected [');
+          skipWS();
+          const arr = [];
+          if (peek() === ']') {
+            next();
+            map.set(path, startLine);
+            return arr;
+          }
+          let idx = 0;
+          while (true) {
+            const childPath = `${path}[${idx}]`;
+            const val = parseValue(childPath);
+            arr.push(val);
+            map.set(childPath, line);
+            idx++;
+            skipWS();
+            if (peek() === ']') {
+              next();
+              break;
+            }
+            if (next() !== ',') error('Expected ,');
+            skipWS();
+          }
+          return arr;
+        };
+        const value = parseValue('');
+        skipWS();
+        if (!eof()) error('Unexpected trailing data');
+        return { value, lineMap: map };
       }
       function sortKeys(o) {
         if (Array.isArray(o)) return o.map(sortKeys);
@@ -453,32 +708,159 @@
         if (typeof v === "object") return "object";
         return "primitive";
       }
+      function updateLineNumbers(el, numEl) {
+        const lines = (el.value || "").split("\n");
+        numEl.innerHTML = lines
+          .map(
+            (_, i) =>
+              `<div class="line-number" data-line="${i + 1}">${i + 1}</div>`,
+          )
+          .join("");
+      }
+      function syncLineNumbers() {
+        updateLineNumbers(L, LINE_NUMBERS_LEFT);
+        updateLineNumbers(R, LINE_NUMBERS_RIGHT);
+      }
+      function highlightDiffLines(items) {
+        const changedA = new Set();
+        const changedB = new Set();
+        items.forEach((it) => {
+          if (it.k === "add" || it.k === "del" || it.k === "mod") {
+            const aLine = lineMapA.get(it.p);
+            const bLine = lineMapB.get(it.p);
+            if (aLine) changedA.add(aLine);
+            if (bLine) changedB.add(bLine);
+          }
+        });
+        [
+          { numEl: LINE_NUMBERS_LEFT, set: changedA },
+          { numEl: LINE_NUMBERS_RIGHT, set: changedB },
+        ].forEach(({ numEl, set }) => {
+          Array.from(numEl.children).forEach((child) => {
+            const line = Number(child.dataset.line);
+            if (set.has(line)) child.classList.add("highlight");
+            else child.classList.remove("highlight");
+          });
+        });
+      }
       function render(items) {
         OUT.innerHTML = "";
+        DIFF_GRID_BODY.innerHTML = "";
         let add = 0,
           del = 0,
-          mod = 0;
+          mod = 0,
+          eq = 0;
+        const hideUnchanged = document.getElementById("hide-unchanged")?.checked;
+        const ignoreFormatting = document.getElementById("ignore-formatting")?.checked;
+
+        const frag = document.createDocumentFragment();
+        const gridFrag = document.createDocumentFragment();
+        let visibleRow = 0;
+
         items.forEach((it) => {
-          if (it.k === "eq") return;
-          const div = document.createElement("div");
-          div.className = "diff-line " + it.k;
-          const sym = { add: "+", del: "-", mod: "~" }[it.k];
-          if (it.k === "mod") {
-            div.textContent = `${sym} ${it.p}: ${JSON.stringify(it.a)} → ${JSON.stringify(it.b)}`;
+          if (it.k === "eq") eq++;
+
+          // Decide whether to render in list
+          if (it.k === "eq" && hideUnchanged) {
+            // skip eq
+          } else if (!viewSide) {
+            const div = document.createElement("div");
+            div.className = "diff-line " + it.k;
+            if (it.k === "eq") {
+              div.textContent = `  ${it.p}: ${JSON.stringify(it.v)}`;
+            } else if (it.k === "mod") {
+              div.textContent = `~ ${it.p}: ${JSON.stringify(it.a)} → ${JSON.stringify(it.b)}`;
+            } else {
+              const sym = it.k === "add" ? "+" : "-";
+              div.textContent = `${sym} ${it.p}: ${JSON.stringify(it.v)}`;
+            }
+            frag.appendChild(div);
+          }
+
+          // Build side-by-side grid rows
+          const row = document.createElement("div");
+          row.style.display = "grid";
+          row.style.gridTemplateColumns = "50px 50px 220px 1fr 1fr";
+          row.style.gap = "8px";
+          row.style.padding = "8px 12px";
+          row.style.borderBottom = "1px solid var(--border)";
+
+          const leftLine = document.createElement("div");
+          leftLine.style.fontFamily = "var(--mono)";
+          leftLine.style.opacity = "0.7";
+          leftLine.textContent = lineMapA.get(it.p) || "";
+
+          const rightLine = document.createElement("div");
+          rightLine.style.fontFamily = "var(--mono)";
+          rightLine.style.opacity = "0.7";
+          rightLine.textContent = lineMapB.get(it.p) || "";
+
+          const cellPath = document.createElement("div");
+          cellPath.style.fontFamily = "var(--mono)";
+          cellPath.textContent = it.p;
+
+          const leftCell = document.createElement("div");
+          const rightCell = document.createElement("div");
+
+          if (it.k === "add") {
+            leftCell.textContent = "";
+            rightCell.textContent = JSON.stringify(it.v);
+            rightCell.style.background = "rgba(34,197,94,0.06)";
+            add++;
+          } else if (it.k === "del") {
+            leftCell.textContent = JSON.stringify(it.v);
+            leftCell.style.background = "rgba(239,68,68,0.06)";
+            rightCell.textContent = "";
+            del++;
+          } else if (it.k === "mod") {
+            leftCell.textContent = JSON.stringify(it.a);
+            rightCell.textContent = JSON.stringify(it.b);
+            leftCell.style.background = "rgba(249,115,22,0.06)";
+            rightCell.style.background = "rgba(249,115,22,0.02)";
             mod++;
           } else {
-            div.textContent = `${sym} ${it.p}: ${JSON.stringify(it.v)}`;
-            it.k === "add" ? add++ : del++;
+            leftCell.textContent = JSON.stringify(it.v);
+            rightCell.textContent = JSON.stringify(it.v);
+            leftCell.style.opacity = "0.85";
+            rightCell.style.opacity = "0.85";
           }
-          OUT.appendChild(div);
+
+          row.appendChild(leftLine);
+          row.appendChild(rightLine);
+          row.appendChild(cellPath);
+          row.appendChild(leftCell);
+          row.appendChild(rightCell);
+
+          // Only append row if not eq when hiding
+          if (!(it.k === "eq" && hideUnchanged)) {
+            gridFrag.appendChild(row);
+          }
         });
+
+        // Attach fragments
+        if (!viewSide) {
+          OUT.appendChild(frag);
+          DIFF_GRID.style.display = "none";
+          OUT.style.display = "block";
+        } else {
+          DIFF_GRID_BODY.appendChild(gridFrag);
+          DIFF_GRID.style.display = "block";
+          OUT.style.display = "none";
+        }
+
+        // Update stats and cards
         STATS.textContent = `+${add}  -${del}  ~${mod}`;
         STATS.className = "badge " + (add + del + mod === 0 ? "ok" : "");
-        if (add + del + mod === 0) {
-          OUT.innerHTML =
-            '<div class="diff-line eq" style="padding:14px">Identical ✓</div>';
+        CARD_ADD.textContent = add;
+        CARD_DEL.textContent = del;
+        CARD_MOD.textContent = mod;
+        CARD_EQ.textContent = eq;
+
+        if (add + del + mod === 0 && hideUnchanged) {
+          OUT.innerHTML = '<div class="diff-line eq" style="padding:14px">Identical ✓</div>';
         }
-        return { add, del, mod };
+
+        return { add, del, mod, eq };
       }
       function go() {
         try {
@@ -499,24 +881,10 @@
             "</div>";
         }
       }
-      $("#compare").onclick = go;
-      [L, R].forEach((el) => el.addEventListener("input", D.debounce(go, 250)));
-      $("#copy-diff").onclick = () =>
-        D.copyText(
-          Array.from(OUT.querySelectorAll(".diff-line"))
-            .map((d) => d.textContent)
-            .join("\n"),
-        );
-      $("#download-diff").onclick = () =>
-        D.downloadText(
-          "diff.txt",
-          Array.from(OUT.querySelectorAll(".diff-line"))
-            .map((d) => d.textContent)
-            .join("\n"),
-        );
       $("#clear").onclick = () => {
         L.value = "";
         R.value = "";
+        syncLineNumbers();
         OUT.innerHTML = "";
         STATS.textContent = "";
         L.focus();
@@ -529,6 +897,282 @@
         R.value = await D.readFileAsText(e.target.files[0]);
         go();
       };
+      // Re-run comparison when hide-unchanged toggles
+      document.getElementById("hide-unchanged").addEventListener("change", () => {
+        go();
+      });
+      // Fetch JSON into left pane
+      $("#fetch-left").onclick = async () => {
+        const url = document.getElementById("fetch-left-url").value.trim();
+        if (!url) {
+          OUT.innerHTML = '<div class="error-box" style="margin:10px">Enter a valid URL for left pane.</div>';
+          return;
+        }
+        try {
+          STATS.textContent = "loading...";
+          const res = await fetch(url, { headers: { Accept: "application/json" } });
+          if (!res.ok) throw new Error(res.status + " " + res.statusText);
+          const text = await res.text();
+          L.value = text;
+          syncLineNumbers();
+          go();
+          STATS.textContent = "loaded";
+        } catch (err) {
+          OUT.innerHTML = '<div class="error-box" style="margin:10px">Left fetch failed: ' + err.message + '</div>';
+          STATS.textContent = "error";
+        }
+      };
+      // Fetch JSON into right pane
+      $("#fetch-right").onclick = async () => {
+        const url = document.getElementById("fetch-right-url").value.trim();
+        if (!url) {
+          OUT.innerHTML = '<div class="error-box" style="margin:10px">Enter a valid URL for right pane.</div>';
+          return;
+        }
+        try {
+          STATS.textContent = "loading...";
+          const res = await fetch(url, { headers: { Accept: "application/json" } });
+          if (!res.ok) throw new Error(res.status + " " + res.statusText);
+          const text = await res.text();
+          R.value = text;
+          syncLineNumbers();
+          go();
+          STATS.textContent = "loaded";
+        } catch (err) {
+          OUT.innerHTML = '<div class="error-box" style="margin:10px">Right fetch failed: ' + err.message + '</div>';
+          STATS.textContent = "error";
+        }
+      };
+      // Keep last diff items for exports/search
+      let lastDiffItems = [];
+      const exportBtn = $("#export-btn"),
+        exportMenu = $("#export-menu");
+
+      // Swap panes
+      $("#swap").onclick = () => {
+        const tmp = L.value;
+        L.value = R.value;
+        R.value = tmp;
+        syncLineNumbers();
+        go();
+      };
+
+      // Beautify both panes
+      $("#beautify").onclick = () => {
+        try {
+          L.value = JSON.stringify(JSON.parse(L.value || "null"), null, 2);
+        } catch (e) {}
+        try {
+          R.value = JSON.stringify(JSON.parse(R.value || "null"), null, 2);
+        } catch (e) {}
+        syncLineNumbers();
+        go();
+      };
+
+      // Load sample payloads
+      $("#load-sample").onclick = () => {
+        const a = {
+          id: 101,
+          user: { id: 1, name: "Alice", roles: ["admin", "user"] },
+          items: [{ id: "x1", price: 9.99 }, { id: "x2", price: 14.5 }],
+          enabled: true,
+          ts: 1680000000,
+        };
+        const b = {
+          id: 101,
+          user: { id: 1, name: "Alice B.", roles: ["admin"] },
+          items: [{ id: "x1", price: 9.99 }, { id: "x2", price: 15.5 }, { id: "x3", price: 4.5 }],
+          enabled: false,
+          ts: 1680003600,
+          meta: { source: "api.v2" },
+        };
+        L.value = JSON.stringify(a, null, 2);
+        R.value = JSON.stringify(b, null, 2);
+        syncLineNumbers();
+        go();
+      };
+
+      // View toggles
+      $("#view-side").onclick = (e) => {
+        viewSide = !viewSide;
+        e.target.textContent = viewSide ? "Compact list" : "Side-by-side";
+        go();
+      };
+      $("#view-tree").onclick = () => {
+        try {
+          const a = tryParse(L.value || "null", "A");
+          const b = tryParse(R.value || "null", "B");
+          const overlay = document.getElementById('tree-overlay');
+          const left = document.getElementById('tree-left');
+          const right = document.getElementById('tree-right');
+          left.innerHTML = '';
+          right.innerHTML = '';
+          function buildTree(node, parentEl) {
+            if (node === null || typeof node !== 'object') {
+              const span = document.createElement('div');
+              span.style.fontFamily = 'var(--mono)';
+              span.textContent = JSON.stringify(node);
+              parentEl.appendChild(span);
+              return;
+            }
+            if (Array.isArray(node)) {
+              node.forEach((item, i) => {
+                const details = document.createElement('details');
+                details.innerHTML = `<summary>[${i}]</summary>`;
+                parentEl.appendChild(details);
+                buildTree(item, details);
+              });
+            } else {
+              Object.keys(node).forEach((k) => {
+                const details = document.createElement('details');
+                details.innerHTML = `<summary>${k}</summary>`;
+                parentEl.appendChild(details);
+                buildTree(node[k], details);
+              });
+            }
+          }
+          buildTree(a, left);
+          buildTree(b, right);
+          overlay.classList.remove('hide');
+          overlay.classList.add('active');
+        } catch (e) {
+          OUT.innerHTML = '<div class="error-box" style="margin:10px">' + e.message + '</div>';
+        }
+      };
+
+      // Export menu
+      exportBtn.onclick = (ev) => {
+        ev.stopPropagation();
+        exportMenu.classList.toggle("hide");
+      };
+      exportMenu.addEventListener("click", (ev) => {
+        const t = ev.target.dataset.export;
+        if (!t) return;
+        ev.stopPropagation();
+        exportMenu.classList.add("hide");
+        // ensure we have latest diff
+        const items = lastDiffItems.slice();
+        if (t === "json") {
+          const payload = JSON.stringify(items, null, 2);
+          D.downloadText("diff.json", payload, "application/json");
+        } else if (t === "txt") {
+          D.downloadText("diff.txt", items.map(it => `${it.k} ${it.p} ${it.k==='mod'? JSON.stringify(it.a)+" -> "+JSON.stringify(it.b): JSON.stringify(it.v)}`).join("\n"), "text/plain");
+        } else if (t === "md") {
+          const md = items.map(it => {
+            if (it.k === 'add') return `+ **${it.p}**: ${JSON.stringify(it.v)}`;
+            if (it.k === 'del') return `- **${it.p}**: ${JSON.stringify(it.v)}`;
+            if (it.k === 'mod') return `~ **${it.p}**: ${JSON.stringify(it.a)} → ${JSON.stringify(it.b)}`;
+            return `  **${it.p}**: ${JSON.stringify(it.v)}`;
+          }).join('\n');
+          D.downloadText("diff.md", md, "text/markdown");
+        }
+      });
+
+      // Copy functions adapt to view
+      $("#copy-diff").onclick = () => {
+        const items = lastDiffItems.length ? lastDiffItems : [];
+        const txt = items.map(it => {
+          if (it.k === 'mod') return `~ ${it.p}: ${JSON.stringify(it.a)} → ${JSON.stringify(it.b)}`;
+          if (it.k === 'add') return `+ ${it.p}: ${JSON.stringify(it.v)}`;
+          if (it.k === 'del') return `- ${it.p}: ${JSON.stringify(it.v)}`;
+          return `  ${it.p}: ${JSON.stringify(it.v)}`;
+        }).join('\n');
+        D.copyText(txt);
+      };
+
+      // Search inside diff (side-by-side or list)
+      DIFF_SEARCH.addEventListener('input', D.debounce(() => {
+        const q = DIFF_SEARCH.value.trim().toLowerCase();
+        searchMatches = [];
+        currentSearchIndex = -1;
+        if (!q) return;
+        if (viewSide) {
+          const rows = Array.from(DIFF_GRID_BODY.children);
+          rows.forEach((r,i) => {
+            if (r.textContent.toLowerCase().includes(q)) {
+              r.classList.add('node-match');
+              searchMatches.push(r);
+            } else r.classList.remove('node-match');
+          });
+        } else {
+          const lines = Array.from(OUT.querySelectorAll('.diff-line'));
+          lines.forEach(l => {
+            if (l.textContent.toLowerCase().includes(q)) {
+              l.classList.add('node-match');
+              searchMatches.push(l);
+            } else l.classList.remove('node-match');
+          });
+        }
+        if (searchMatches.length) {
+          currentSearchIndex = 0;
+          searchMatches[0].classList.add('node-current');
+          searchMatches[0].scrollIntoView({behavior:'smooth', block:'center'});
+        }
+      }, 200));
+
+      $("#diff-next").onclick = () => {
+        if (!searchMatches.length) return;
+        searchMatches[currentSearchIndex].classList.remove('node-current');
+        currentSearchIndex = (currentSearchIndex+1) % searchMatches.length;
+        searchMatches[currentSearchIndex].classList.add('node-current');
+        searchMatches[currentSearchIndex].scrollIntoView({behavior:'smooth', block:'center'});
+      };
+      $("#diff-prev").onclick = () => {
+        if (!searchMatches.length) return;
+        searchMatches[currentSearchIndex].classList.remove('node-current');
+        currentSearchIndex = (currentSearchIndex-1+searchMatches.length) % searchMatches.length;
+        searchMatches[currentSearchIndex].classList.add('node-current');
+        searchMatches[currentSearchIndex].scrollIntoView({behavior:'smooth', block:'center'});
+      };
+
+      // Capture lastDiffItems whenever go() runs
+      const _origGo = go;
+      go = function() {
+        try {
+          const parsedA = parseWithLines(L.value || "null", "A");
+          const parsedB = parseWithLines(R.value || "null", "B");
+          let a = parsedA.value;
+          let b = parsedB.value;
+          lineMapA = parsedA.lineMap;
+          lineMapB = parsedB.lineMap;
+          const opts = { ignoreOrder: $("#ignore-order").checked };
+          if ($("#ignore-keys").checked) {
+            a = sortKeys(a);
+            b = sortKeys(b);
+          }
+          const acc = [];
+          diff(a, b, "", acc, opts);
+          lastDiffItems = acc;
+          render(acc);
+          highlightDiffLines(acc);
+        } catch (e) {
+          OUT.innerHTML = '<div class="error-box" style="margin:10px">' + e.message + '</div>';
+        }
+      };
+      // Tree overlay close handler + ESC key
+      const treeOverlay = document.getElementById('tree-overlay');
+      document.getElementById('tree-close').addEventListener('click', ()=>{
+        treeOverlay.classList.remove('active');
+        treeOverlay.classList.add('hide');
+      });
+      document.addEventListener('keydown', (e)=>{
+        if(e.key==='Escape'){
+          if(treeOverlay && treeOverlay.classList.contains('active')) {
+            treeOverlay.classList.remove('active');
+            treeOverlay.classList.add('hide');
+          }
+        }
+      });
+      // Rebind handlers to the new go implementation
+      $("#compare").onclick = go;
+      [L, R].forEach((el) => el.removeEventListener("input", D.debounce(go, 250)));
+      [L, R].forEach((el) => el.addEventListener("input", D.debounce(go, 250)));
+      [L, R].forEach((el, idx) => {
+        const lineEl = idx === 0 ? LINE_NUMBERS_LEFT : LINE_NUMBERS_RIGHT;
+        el.addEventListener('input', () => updateLineNumbers(el, lineEl));
+        el.addEventListener('scroll', () => { lineEl.scrollTop = el.scrollTop; });
+      });
+      syncLineNumbers();
     </script>
   </body>
 </html>
