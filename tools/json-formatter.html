@@ -91,11 +91,9 @@
       #exit-fullscreen { display: none; }
       body.fullscreen #exit-fullscreen { display: inline-flex; }
       .pane-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
-      .pane-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: flex-end; }
-      .pane-actions .toolbar-group { display: flex; flex-wrap: wrap; gap: 8px; }
+      .pane-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
       .fetch-bar { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 14px; border-bottom: 1px solid var(--border); background: var(--bg-alt); }
       .fetch-bar input[type="url"] { flex: 1 1 260px; min-width: 180px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
-      #input { display: block; box-sizing: border-box; width: 100%; overflow: visible !important; white-space: pre-wrap; word-break: break-word; min-height: 300px; max-height: none !important; flex: none !important; resize: none !important; height: auto !important; }
       .code-frame { display: grid; grid-template-columns: auto 1fr; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--bg-alt); min-height: 260px; }
       .toolbar .spacer { flex: 1; }
       body.fullscreen { overflow: hidden; }
@@ -118,10 +116,9 @@
       .stats-card { padding: 14px 16px; border-radius: 16px; background: var(--bg-alt); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
       .stats-card h3 { margin: 0 0 8px; font-size: 0.95rem; color: var(--text-dim); }
       .stats-card p { margin: 0; font-size: 1.3rem; font-weight: 700; color: var(--text); }
-      .drop-zone { position: relative; display: flex; flex-direction: column; gap: 10px; border: 2px dashed transparent; transition: border-color 0.2s ease, background 0.2s ease; overflow: visible; }
+      .drop-zone { position: relative; border: 2px dashed transparent; transition: border-color 0.2s ease, background 0.2s ease; }
       .drop-zone.drag-over { border-color: var(--accent); background: rgba(66, 135, 255, 0.08); }
-      .drop-zone .drop-message { position: static; margin: 0; font-size: 0.85rem; color: var(--text-dim); }
-      .io-grid > .pane.full:first-child { overflow: visible; }
+      .drop-zone .drop-message { position: absolute; right: 16px; bottom: 16px; font-size: 0.85rem; color: var(--text-dim); }
       .code-frame { display: grid; grid-template-columns: auto 1fr; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--bg-alt); }
       .code-frame .line-numbers { text-align: right; padding: 12px 8px; user-select: none; color: var(--text-dim); border-right: 1px solid var(--border); line-height: 1.5; min-width: 40px; }
       .code-frame pre { margin: 0; padding: 12px; overflow: auto; white-space: pre; font-family: var(--font-mono); font-size: 0.95rem; }
@@ -332,19 +329,13 @@
             <span data-i18n="ui.output">Output</span>
             <span class="spacer"></span>
             <div class="pane-actions">
-              <div class="toolbar-group">
-                <button class="btn ghost" id="view-tree" data-i18n="ui.tree">Tree</button>
-                <button class="btn ghost" id="view-raw" data-i18n="ui.raw">Raw</button>
-              </div>
-              <div class="toolbar-group">
-                <button class="btn ghost" id="copy" data-i18n="ui.copy">Copy</button>
-                <button class="btn ghost" id="download" data-i18n="ui.download">Download</button>
-              </div>
-              <div class="toolbar-group">
-                <button class="btn ghost" id="expand-all">Expand All</button>
-                <button class="btn ghost" id="collapse-all">Collapse All</button>
-                <button class="btn ghost" id="sort-keys">Sort Keys</button>
-              </div>
+              <button class="btn ghost" id="view-tree" data-i18n="ui.tree">Tree</button>
+              <button class="btn ghost" id="view-raw" data-i18n="ui.raw">Raw</button>
+              <button class="btn ghost" id="copy" data-i18n="ui.copy">Copy</button>
+              <button class="btn ghost" id="download" data-i18n="ui.download">Download</button>
+              <button class="btn ghost" id="expand-all">Expand All</button>
+              <button class="btn ghost" id="collapse-all">Collapse All</button>
+              <button class="btn ghost" id="sort-keys">Sort Keys</button>
             </div>
             <span id="status-badge" class="badge">empty</span>
           </div>
@@ -1052,7 +1043,6 @@
 
       function setInputFromSample(text) {
         inEl.value = text;
-        resizeInput();
         setSize();
         renderFromInput();
       }
@@ -1116,7 +1106,6 @@
         const file = files[0];
         return D.readFileAsText(file).then((text) => {
           inEl.value = text;
-          resizeInput();
           setSize();
           renderFromInput();
         });
@@ -1209,7 +1198,6 @@
 
       buttons.clear.onclick = () => {
         inEl.value = "";
-        resizeInput();
         outEl.textContent = "";
         tree.innerHTML = "";
         statsPanel.innerHTML = "";
@@ -1290,53 +1278,18 @@
         }
       });
 
-      function resizeInput() {
-        inEl.style.height = "auto";
-        inEl.style.height = `${Math.max(inEl.scrollHeight, 300)}px`;
-      }
-
-      const scheduleInputUpdate = D.debounce(() => {
-        setSize();
-        renderFromInput();
-      }, 200);
-
-      const dropMessage = document.querySelector("#input-wrapper .drop-message");
-      function updateDropMessage() {
-        if (!dropMessage) return;
-        dropMessage.classList.toggle("hide", Boolean(inEl.value.trim()));
-      }
-
-      inEl.addEventListener("input", () => {
-        requestAnimationFrame(() => {
-          resizeInput();
-          updateDropMessage();
-          scheduleInputUpdate();
-        });
-      });
-
-      inEl.addEventListener("paste", () => {
-        requestAnimationFrame(() => {
-          resizeInput();
-          updateDropMessage();
-        });
-      });
-
-      function renderFromInput() {
-        const obj = parse();
-        if (obj !== null) {
-          updateStats(obj);
-          renderTree(obj);
-        }
-        resizeInput();
-        updateDropMessage();
-      }
+      inEl.addEventListener(
+        "input",
+        D.debounce(() => {
+          setSize();
+          renderFromInput();
+        }, 200),
+      );
 
       function init() {
         createExampleButtons();
         registerShortcuts();
         setSize();
-        resizeInput();
-        updateDropMessage();
       }
 
       init();
