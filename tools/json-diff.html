@@ -90,11 +90,17 @@
       .diff-line.eq{color:var(--text-dim)}
       .node-match{outline:2px solid rgba(124,92,255,0.12)}
       .node-current{outline:2px solid rgba(124,92,255,0.28);box-shadow:0 6px 24px rgba(124,92,255,0.06)}
-      .code-frame{display:grid;grid-template-columns:auto 1fr;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--bg-alt);}
-      .code-frame .line-numbers{display:flex;flex-direction:column;align-items:flex-end;padding:12px 10px 12px 14px;user-select:none;color:var(--text-dim);border-right:1px solid var(--border);text-align:right;line-height:1.55;min-width:44px;overflow:hidden;}
+      .code-frame{display:grid;grid-template-columns:auto 1fr;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--bg-alt);position:relative}
+      .code-frame .line-numbers{display:flex;flex-direction:column;align-items:flex-end;padding:12px 10px 12px 14px;user-select:none;color:var(--text-dim);border-right:1px solid var(--border);text-align:right;line-height:1.55;min-width:44px;overflow:auto}
+      .code-frame .line-numbers::-webkit-scrollbar{width:0;height:0}
+      .code-frame .line-numbers{ -ms-overflow-style: none; scrollbar-width: none; }
       .code-frame .line-number{min-height:1.55em;line-height:1.55;width:100%;padding-right:4px;}
       .code-frame .line-number.highlight{background:rgba(239,68,68,0.16);color:var(--text);border-radius:6px;}
-      .code-frame textarea{border:none;background:transparent;outline:none;resize:none;min-height:300px;padding:12px 14px;line-height:1.55;}
+      .code-frame .editor-wrap{position:relative;display:flex;flex:1;min-height:300px}
+      .code-frame .code-overlay{position:absolute;inset:0;padding:12px 14px;white-space:pre-wrap;font-family:var(--font-mono);font-size:0.95rem;line-height:1.55;color:transparent;pointer-events:none;overflow:hidden;z-index:1}
+      .code-frame .code-overlay .overlay-inner{position:absolute;top:0;left:0;white-space:pre-wrap;word-wrap:break-word}
+      .code-frame .code-overlay .highlight-word{background:rgba(239,68,68,0.18);color:var(--text);border-radius:4px;padding:0 2px}
+      .code-frame textarea{position:relative;border:none;background:transparent;outline:none;resize:none;min-height:300px;padding:12px 14px;line-height:1.55;color:var(--text);}
       .shortcuts-overlay{position:fixed;inset:0;z-index:999;background:rgba(11,13,18,0.92);color:var(--text);display:none;align-items:center;justify-content:center;padding:24px}
       .shortcuts-overlay.active{display:flex}
       .shortcuts-card{max-width:1000px;width:100%;background:var(--surface);border-radius:20px;padding:24px;box-shadow:0 18px 80px rgba(0,0,0,0.35)}
@@ -203,7 +209,6 @@
           <button class="btn primary" id="compare" data-shortcut="run">Compare</button>
           <button class="btn" id="beautify">Beautify</button>
           <button class="btn" id="swap">Swap</button>
-          <button class="btn" id="load-sample">Load sample</button>
         </div>
         <div class="toolbar-group">
           <label class="row gap-sm muted" style="font-size: 13px"><input type="checkbox" id="ignore-order" checked /> Ignore array order</label>
@@ -241,12 +246,15 @@
           </div>
           <div class="code-frame">
             <pre id="line-numbers-left" class="line-numbers"></pre>
-            <textarea
-              id="left"
-              spellcheck="false"
-              autofocus
-              placeholder='{ "name": "alice", "age": 30 }'
-            ></textarea>
+            <div class="editor-wrap">
+              <div id="overlay-left" class="code-overlay" aria-hidden="true"></div>
+              <textarea
+                id="left"
+                spellcheck="false"
+                autofocus
+                placeholder='{ "name": "alice", "age": 30 }'
+              ></textarea>
+            </div>
           </div>
         </div>
         <div class="pane">
@@ -262,11 +270,14 @@
           </div>
           <div class="code-frame">
             <pre id="line-numbers-right" class="line-numbers"></pre>
-            <textarea
-              id="right"
-              spellcheck="false"
-              placeholder='{ "name": "alice", "age": 31, "city": "NYC" }'
-            ></textarea>
+            <div class="editor-wrap">
+              <div id="overlay-right" class="code-overlay" aria-hidden="true"></div>
+              <textarea
+                id="right"
+                spellcheck="false"
+                placeholder='{ "name": "alice", "age": 31, "city": "NYC" }'
+              ></textarea>
+            </div>
           </div>
         </div>
       </div>
@@ -442,6 +453,8 @@
       const DIFF_SEARCH = $("#diff-search");
       const LINE_NUMBERS_LEFT = $("#line-numbers-left");
       const LINE_NUMBERS_RIGHT = $("#line-numbers-right");
+      const OVERLAY_LEFT = $("#overlay-left");
+      const OVERLAY_RIGHT = $("#overlay-right");
       let viewSide = true;
       let searchMatches = [];
       let currentSearchIndex = -1;
@@ -659,6 +672,16 @@
         if (ta === "array") {
           if (opts.ignoreOrder) {
             const used = new Set();
+            const sameShape = (x, y) => {
+              const tx = typeOf(x);
+              const ty = typeOf(y);
+              if (tx !== ty) return false;
+              if (tx !== "object") return false;
+              const ka = Object.keys(x).sort();
+              const kb = Object.keys(y).sort();
+              return ka.length === kb.length && ka.every((k, idx) => k === kb[idx]);
+            };
+
             a.forEach((x, i) => {
               const j = b.findIndex(
                 (y, k) =>
@@ -667,8 +690,20 @@
               if (j >= 0) {
                 used.add(j);
                 acc.push({ k: "eq", p: path + "[" + i + "]", v: x });
-              } else acc.push({ k: "del", p: path + "[" + i + "]", v: x });
+                return;
+              }
+
+              const k = b.findIndex(
+                (y, idx) => !used.has(idx) && sameShape(x, y),
+              );
+              if (k >= 0) {
+                used.add(k);
+                diff(x, b[k], path + "[" + i + "]", acc, opts);
+              } else {
+                acc.push({ k: "del", p: path + "[" + i + "]", v: x });
+              }
             });
+
             b.forEach((y, i) => {
               if (!used.has(i)) {
                 const j = a.findIndex(
@@ -721,17 +756,118 @@
         updateLineNumbers(L, LINE_NUMBERS_LEFT);
         updateLineNumbers(R, LINE_NUMBERS_RIGHT);
       }
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+      function escapeRegExp(s) {
+        return String(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      }
+      function updateOverlay(text, overlayEl, tokenMap) {
+        const lines = (text || "").split("\n");
+        let html = "";
+        lines.forEach((line, idx) => {
+          const ln = idx + 1;
+          let out = escapeHtml(line) || " ";
+          const tokens = tokenMap.get(ln) || [];
+          tokens.forEach((tok) => {
+            if (!tok) return;
+            try {
+              const re = new RegExp(escapeRegExp(tok), "g");
+              out = out.replace(re, `<span class="highlight-word">${escapeHtml(tok)}</span>`);
+            } catch (e) {}
+          });
+          html += out + (idx < lines.length - 1 ? "\n" : "");
+        });
+        let inner = overlayEl.querySelector('.overlay-inner');
+        if (!inner) {
+          inner = document.createElement('div');
+          inner.className = 'overlay-inner';
+          overlayEl.appendChild(inner);
+        }
+        inner.innerHTML = html;
+        const scroll = overlayEl.__lastScroll || 0;
+        inner.style.transform = `translateY(-${scroll}px)`;
+      }
+      function stringifyForSearch(v) {
+        try {
+          return JSON.stringify(v);
+        } catch (e) {
+          return String(v);
+        }
+      }
       function highlightDiffLines(items) {
-        const changedA = new Set();
-        const changedB = new Set();
+        const mapA = new Map();
+        const mapB = new Map();
+
         items.forEach((it) => {
-          if (it.k === "add" || it.k === "del" || it.k === "mod") {
+          if (it.k === "add") {
+            const bLine = lineMapB.get(it.p);
+            if (bLine) {
+              const tok = stringifyForSearch(it.v);
+              const arr = mapB.get(bLine) || [];
+              arr.push(tok);
+              mapB.set(bLine, arr);
+            }
+          } else if (it.k === "del") {
+            const aLine = lineMapA.get(it.p);
+            if (aLine) {
+              const tok = stringifyForSearch(it.v);
+              const arr = mapA.get(aLine) || [];
+              arr.push(tok);
+              mapA.set(aLine, arr);
+            }
+          } else if (it.k === "mod") {
             const aLine = lineMapA.get(it.p);
             const bLine = lineMapB.get(it.p);
-            if (aLine) changedA.add(aLine);
-            if (bLine) changedB.add(bLine);
+            if (aLine) {
+              const tok = stringifyForSearch(it.a);
+              const arr = mapA.get(aLine) || [];
+              arr.push(tok);
+              mapA.set(aLine, arr);
+            }
+            if (bLine) {
+              const tok = stringifyForSearch(it.b);
+              const arr = mapB.get(bLine) || [];
+              arr.push(tok);
+              mapB.set(bLine, arr);
+            }
           }
         });
+
+        // also highlight the key name if present
+        items.forEach((it) => {
+          const parts = it.p.split(".");
+          const last = parts[parts.length - 1] || "";
+          const key = last.replace(/\[[0-9]+\]/, "").replace(/\[|\]/g, "");
+          if (key) {
+            const keyTok = `"${key}"`;
+            const aLine = lineMapA.get(it.p);
+            const bLine = lineMapB.get(it.p);
+            if (aLine) {
+              const arr = mapA.get(aLine) || [];
+              arr.push(keyTok);
+              mapA.set(aLine, arr);
+            }
+            if (bLine) {
+              const arr = mapB.get(bLine) || [];
+              arr.push(keyTok);
+              mapB.set(bLine, arr);
+            }
+          }
+        });
+
+        // update overlays
+        updateOverlay(L.value, OVERLAY_LEFT, mapA);
+        updateOverlay(R.value, OVERLAY_RIGHT, mapB);
+
+        // gutter highlights
+        const changedA = new Set(mapA.keys());
+        const changedB = new Set(mapB.keys());
         [
           { numEl: LINE_NUMBERS_LEFT, set: changedA },
           { numEl: LINE_NUMBERS_RIGHT, set: changedB },
@@ -757,7 +893,112 @@
         const gridFrag = document.createDocumentFragment();
         let visibleRow = 0;
 
-        items.forEach((it) => {
+        const formatValue = (value) => {
+          if (value === null || typeof value !== "object") return JSON.stringify(value);
+          try {
+            return JSON.stringify(value, null, 2);
+          } catch (e) {
+            return JSON.stringify(value);
+          }
+        };
+
+        const splitPath = (path) => {
+          if (!path) return [];
+          return path.split(".").flatMap((segment) => {
+            const parts = [];
+            const re = /([^\[\]]+)|\[(\d+)\]/g;
+            let match;
+            while ((match = re.exec(segment))) {
+              if (match[1] !== undefined) parts.push(match[1]);
+              else if (match[2] !== undefined) parts.push(Number(match[2]));
+            }
+            return parts;
+          });
+        };
+
+        const setNested = (target, pathParts, value) => {
+          let node = target;
+          for (let i = 0; i < pathParts.length; i++) {
+            const key = pathParts[i];
+            const isLast = i === pathParts.length - 1;
+            if (isLast) {
+              node[key] = value;
+              return;
+            }
+            const nextKey = pathParts[i + 1];
+            if (typeof nextKey === "number") {
+              node[key] = node[key] || [];
+            } else {
+              node[key] = node[key] || {};
+            }
+            node = node[key];
+          }
+        };
+
+        const buildSummaryTree = (a, b) => {
+          const diffItems = [];
+          diff(a, b, "", diffItems, { ignoreOrder: false });
+          const leftSummary = Array.isArray(a) ? [] : {};
+          const rightSummary = Array.isArray(b) ? [] : {};
+          diffItems.forEach((item) => {
+            if (item.k === "eq") return;
+            const pathParts = splitPath(item.p);
+            if (item.k === "mod") {
+              setNested(leftSummary, pathParts, item.a);
+              setNested(rightSummary, pathParts, item.b);
+            } else if (item.k === "add") {
+              setNested(rightSummary, pathParts, item.v);
+            } else if (item.k === "del") {
+              setNested(leftSummary, pathParts, item.v);
+            }
+          });
+          return [leftSummary, rightSummary];
+        };
+
+        const formatDiffValue = (it, side) => {
+          if (it.k === "mod" && it.a && it.b && typeof it.a === "object" && typeof it.b === "object") {
+            const [leftSummary, rightSummary] = buildSummaryTree(it.a, it.b);
+            return formatValue(side === "a" ? leftSummary : rightSummary);
+          }
+          return formatValue(side === "a" ? it.a : it.b);
+        };
+
+        const normalizedItems = [];
+        for (let i = 0; i < items.length; i++) {
+          const current = items[i];
+          const next = items[i + 1];
+          if (
+            current.k === "del" &&
+            next &&
+            next.k === "add" &&
+            current.p === next.p
+          ) {
+            normalizedItems.push({
+              k: "mod",
+              p: current.p,
+              a: current.v,
+              b: next.v,
+            });
+            i++;
+          } else if (
+            current.k === "add" &&
+            next &&
+            next.k === "del" &&
+            current.p === next.p
+          ) {
+            normalizedItems.push({
+              k: "mod",
+              p: current.p,
+              a: next.v,
+              b: current.v,
+            });
+            i++;
+          } else {
+            normalizedItems.push(current);
+          }
+        }
+
+        normalizedItems.forEach((it) => {
           if (it.k === "eq") eq++;
 
           // Decide whether to render in list
@@ -767,12 +1008,14 @@
             const div = document.createElement("div");
             div.className = "diff-line " + it.k;
             if (it.k === "eq") {
-              div.textContent = `  ${it.p}: ${JSON.stringify(it.v)}`;
+              div.textContent = `  ${it.p}: ${formatValue(it.v)}`;
             } else if (it.k === "mod") {
-              div.textContent = `~ ${it.p}: ${JSON.stringify(it.a)} → ${JSON.stringify(it.b)}`;
+              const leftText = formatDiffValue(it, "a");
+              const rightText = formatDiffValue(it, "b");
+              div.textContent = `~ ${it.p}: ${leftText} → ${rightText}`;
             } else {
               const sym = it.k === "add" ? "+" : "-";
-              div.textContent = `${sym} ${it.p}: ${JSON.stringify(it.v)}`;
+              div.textContent = `${sym} ${it.p}: ${formatValue(it.v)}`;
             }
             frag.appendChild(div);
           }
@@ -801,26 +1044,30 @@
 
           const leftCell = document.createElement("div");
           const rightCell = document.createElement("div");
+          leftCell.style.whiteSpace = "pre-wrap";
+          leftCell.style.wordBreak = "break-word";
+          rightCell.style.whiteSpace = "pre-wrap";
+          rightCell.style.wordBreak = "break-word";
 
           if (it.k === "add") {
             leftCell.textContent = "";
-            rightCell.textContent = JSON.stringify(it.v);
+            rightCell.textContent = formatValue(it.v);
             rightCell.style.background = "rgba(34,197,94,0.06)";
             add++;
           } else if (it.k === "del") {
-            leftCell.textContent = JSON.stringify(it.v);
+            leftCell.textContent = formatValue(it.v);
             leftCell.style.background = "rgba(239,68,68,0.06)";
             rightCell.textContent = "";
             del++;
           } else if (it.k === "mod") {
-            leftCell.textContent = JSON.stringify(it.a);
-            rightCell.textContent = JSON.stringify(it.b);
+            leftCell.textContent = formatDiffValue(it, "a");
+            rightCell.textContent = formatDiffValue(it, "b");
             leftCell.style.background = "rgba(249,115,22,0.06)";
             rightCell.style.background = "rgba(249,115,22,0.02)";
             mod++;
           } else {
-            leftCell.textContent = JSON.stringify(it.v);
-            rightCell.textContent = JSON.stringify(it.v);
+            leftCell.textContent = formatValue(it.v);
+            rightCell.textContent = formatValue(it.v);
             leftCell.style.opacity = "0.85";
             rightCell.style.opacity = "0.85";
           }
@@ -965,29 +1212,6 @@
         try {
           R.value = JSON.stringify(JSON.parse(R.value || "null"), null, 2);
         } catch (e) {}
-        syncLineNumbers();
-        go();
-      };
-
-      // Load sample payloads
-      $("#load-sample").onclick = () => {
-        const a = {
-          id: 101,
-          user: { id: 1, name: "Alice", roles: ["admin", "user"] },
-          items: [{ id: "x1", price: 9.99 }, { id: "x2", price: 14.5 }],
-          enabled: true,
-          ts: 1680000000,
-        };
-        const b = {
-          id: 101,
-          user: { id: 1, name: "Alice B.", roles: ["admin"] },
-          items: [{ id: "x1", price: 9.99 }, { id: "x2", price: 15.5 }, { id: "x3", price: 4.5 }],
-          enabled: false,
-          ts: 1680003600,
-          meta: { source: "api.v2" },
-        };
-        L.value = JSON.stringify(a, null, 2);
-        R.value = JSON.stringify(b, null, 2);
         syncLineNumbers();
         go();
       };
@@ -1169,8 +1393,14 @@
       [L, R].forEach((el) => el.addEventListener("input", D.debounce(go, 250)));
       [L, R].forEach((el, idx) => {
         const lineEl = idx === 0 ? LINE_NUMBERS_LEFT : LINE_NUMBERS_RIGHT;
+        const overlayEl = idx === 0 ? OVERLAY_LEFT : OVERLAY_RIGHT;
         el.addEventListener('input', () => updateLineNumbers(el, lineEl));
-        el.addEventListener('scroll', () => { lineEl.scrollTop = el.scrollTop; });
+        el.addEventListener('scroll', () => {
+          lineEl.scrollTop = el.scrollTop;
+          overlayEl.__lastScroll = el.scrollTop;
+          const inner = overlayEl.querySelector('.overlay-inner');
+          if (inner) inner.style.transform = `translateY(-${el.scrollTop}px)`;
+        });
       });
       syncLineNumbers();
     </script>
