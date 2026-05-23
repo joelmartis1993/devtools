@@ -99,7 +99,7 @@
       .code-frame .editor-wrap{position:relative;display:flex;flex:1;min-height:300px}
       .code-frame .code-overlay{position:absolute;inset:0;padding:12px 14px;white-space:pre-wrap;font-family:var(--font-mono);font-size:0.95rem;line-height:1.55;color:transparent;pointer-events:none;overflow:hidden;z-index:1}
       .code-frame .code-overlay .overlay-inner{position:absolute;top:0;left:0;white-space:pre-wrap;word-wrap:break-word}
-      .code-frame .code-overlay .highlight-word{background:rgba(239,68,68,0.18);color:var(--text);border-radius:4px;padding:0 2px}
+      .code-frame .code-overlay .highlight-word{background:rgba(239,68,68,0.18);color:transparent;border-radius:4px;padding:0 2px}
       .code-frame textarea{position:relative;border:none;background:transparent;outline:none;resize:none;min-height:300px;padding:12px 14px;line-height:1.55;color:var(--text);}
       .shortcuts-overlay{position:fixed;inset:0;z-index:999;background:rgba(11,13,18,0.92);color:var(--text);display:none;align-items:center;justify-content:center;padding:24px}
       .shortcuts-overlay.active{display:flex}
@@ -777,8 +777,9 @@
           tokens.forEach((tok) => {
             if (!tok) return;
             try {
-              const re = new RegExp(escapeRegExp(tok), "g");
-              out = out.replace(re, `<span class="highlight-word">${escapeHtml(tok)}</span>`);
+              const escapedTok = escapeHtml(tok);
+              const re = new RegExp(escapeRegExp(escapedTok), "g");
+              out = out.replace(re, `<span class="highlight-word">${escapedTok}</span>`);
             } catch (e) {}
           });
           html += out + (idx < lines.length - 1 ? "\n" : "");
@@ -800,6 +801,23 @@
           return String(v);
         }
       }
+      function getHighlightToken(item, side) {
+        const parts = item.p.split(".");
+        const last = parts[parts.length - 1] || "";
+        const key = last.replace(/\[[0-9]+\]/g, "").replace(/\[|\]/g, "");
+        let value;
+
+        if (item.k === "mod") {
+          value = stringifyForSearch(side === "a" ? item.a : item.b);
+        } else {
+          value = stringifyForSearch(item.v);
+        }
+
+        if (key) {
+          return `"${key}": ${value}`;
+        }
+        return value;
+      }
       function highlightDiffLines(items) {
         const mapA = new Map();
         const mapB = new Map();
@@ -808,7 +826,7 @@
           if (it.k === "add") {
             const bLine = lineMapB.get(it.p);
             if (bLine) {
-              const tok = stringifyForSearch(it.v);
+              const tok = getHighlightToken(it, "b");
               const arr = mapB.get(bLine) || [];
               arr.push(tok);
               mapB.set(bLine, arr);
@@ -816,7 +834,7 @@
           } else if (it.k === "del") {
             const aLine = lineMapA.get(it.p);
             if (aLine) {
-              const tok = stringifyForSearch(it.v);
+              const tok = getHighlightToken(it, "a");
               const arr = mapA.get(aLine) || [];
               arr.push(tok);
               mapA.set(aLine, arr);
@@ -825,37 +843,15 @@
             const aLine = lineMapA.get(it.p);
             const bLine = lineMapB.get(it.p);
             if (aLine) {
-              const tok = stringifyForSearch(it.a);
+              const tok = getHighlightToken(it, "a");
               const arr = mapA.get(aLine) || [];
               arr.push(tok);
               mapA.set(aLine, arr);
             }
             if (bLine) {
-              const tok = stringifyForSearch(it.b);
+              const tok = getHighlightToken(it, "b");
               const arr = mapB.get(bLine) || [];
               arr.push(tok);
-              mapB.set(bLine, arr);
-            }
-          }
-        });
-
-        // also highlight the key name if present
-        items.forEach((it) => {
-          const parts = it.p.split(".");
-          const last = parts[parts.length - 1] || "";
-          const key = last.replace(/\[[0-9]+\]/, "").replace(/\[|\]/g, "");
-          if (key) {
-            const keyTok = `"${key}"`;
-            const aLine = lineMapA.get(it.p);
-            const bLine = lineMapB.get(it.p);
-            if (aLine) {
-              const arr = mapA.get(aLine) || [];
-              arr.push(keyTok);
-              mapA.set(aLine, arr);
-            }
-            if (bLine) {
-              const arr = mapB.get(bLine) || [];
-              arr.push(keyTok);
               mapB.set(bLine, arr);
             }
           }
