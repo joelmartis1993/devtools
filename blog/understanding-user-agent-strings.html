@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>How User Agent Strings Actually Work (And What They Reveal) | DevToolsHive</title>
+  <meta name="description" content="Why every browser still claims to be Mozilla, what UA strings reveal about your users, how bots and crawlers identify themselves, and the privacy trade-offs of UA-based detection." />
+  <link rel="canonical" href="https://devtoolshive.com/blog/understanding-user-agent-strings.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="How User Agent Strings Actually Work" />
+  <meta property="og:description" content="Browser detection, bots, privacy implications, and real UA examples." />
+  <meta property="og:url" content="https://devtoolshive.com/blog/understanding-user-agent-strings.html" />
+  <meta property="og:image" content="https://devtoolshive.com/assets/img/favicon.svg" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="How User Agent Strings Actually Work" />
+  <meta name="twitter:description" content="Browser detection, bots, and privacy." />
+  <meta name="robots" content="index,follow" />
+  <meta name="theme-color" content="#0b0d12" />
+  <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg" />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+  <script src="/assets/js/theme.js"></script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Article","headline":"How User Agent Strings Actually Work","description":"Browser detection, bot identification and privacy implications of the UA header.","author":{"@type":"Organization","name":"DevToolsHive"},"publisher":{"@type":"Organization","name":"DevToolsHive","url":"https://devtoolshive.com/"},"mainEntityOfPage":"https://devtoolshive.com/blog/understanding-user-agent-strings.html","datePublished":"2026-05-20","image":"https://devtoolshive.com/assets/img/favicon.svg"}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"Why does Chrome's User Agent contain the word Mozilla?","acceptedAnswer":{"@type":"Answer","text":"For backward compatibility. Early web servers gated features on whether the UA started with Mozilla/. Every subsequent browser added the prefix to avoid being blocked, and the convention stuck."}},
+  {"@type":"Question","name":"Can I trust the User Agent header?","acceptedAnswer":{"@type":"Answer","text":"No. The UA is sent by the client and can be set to any string. Use it for analytics and progressive enhancement, never for security decisions."}},
+  {"@type":"Question","name":"What is User-Agent Client Hints?","acceptedAnswer":{"@type":"Answer","text":"A modern replacement for the UA header that exposes browser, platform and device information through structured Sec-CH-UA-* headers, with the browser deciding what to expose."}}
+  ]}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div id="site-header"></div>
+  <main id="main" class="container">
+    <article class="article">
+      <div class="crumbs"><a href="/">Home</a> · <a href="/blog/index.html">Blog</a> · User Agent Strings</div>
+      <header>
+        <span class="cat">HTTP · Privacy</span>
+        <h1>How User Agent Strings Actually Work</h1>
+        <p class="lede">The HTTP <code>User-Agent</code> header is one of the strangest artifacts of web history. Here's what it actually contains, how browsers and bots identify themselves, and what UA-based detection really costs in 2026.</p>
+        <div class="meta"><span>9 min read</span><span>·</span><span>Updated May 2026</span></div>
+      </header>
+
+      <h2>Anatomy of a modern UA string</h2>
+      <p>Take a typical Chrome on macOS:</p>
+<pre><code>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)
+AppleWebKit/537.36 (KHTML, like Gecko)
+Chrome/124.0.0.0 Safari/537.36</code></pre>
+      <p>That single line contains five claims, none of which are exactly true:</p>
+      <ul>
+        <li><strong>Mozilla/5.0</strong> — historical prefix; means nothing today.</li>
+        <li><strong>(Macintosh; Intel Mac OS X 10_15_7)</strong> — the OS family, plus a frozen version (Apple stopped advancing this for privacy).</li>
+        <li><strong>AppleWebKit/537.36 (KHTML, like Gecko)</strong> — the rendering engine, claiming compatibility with KHTML and Gecko.</li>
+        <li><strong>Chrome/124.0.0.0</strong> — the actual browser, with a zeroed-out minor version (also privacy-driven).</li>
+        <li><strong>Safari/537.36</strong> — a Safari compatibility token, because some sites still gate on it.</li>
+      </ul>
+
+      <h2>Why every browser claims to be Mozilla</h2>
+      <p>In 1995, Netscape (Mozilla) shipped frames. Web servers started sending the frames version of pages only to UAs starting with <code>Mozilla/</code>. When Internet Explorer added frame support, Microsoft prefixed its UA with <code>Mozilla/</code> to qualify — and added the real identifier later as a "compatible" token. Every browser since has done the same thing. The web's compatibility story is written in the UA string.</p>
+
+      <div class="callout"><strong>Quick demo</strong>Paste your current UA into the <a href="/tools/user-agent.html">User Agent Parser</a> to see exactly which browser, engine, OS and device it claims to be.</div>
+
+      <h2>Detecting devices, bots and crawlers</h2>
+      <h3>Mobile vs desktop</h3>
+      <p>The reliable signal is the literal substring <code>Mobile</code> in Chrome/Safari UAs, plus form-factor tokens like <code>iPhone</code>, <code>iPad</code> and <code>Android</code>. Don't rely on screen size — desktop browsers can be narrow, and tablets can be wide.</p>
+
+      <h3>Bots and crawlers</h3>
+      <p>Well-behaved bots identify themselves clearly:</p>
+<pre><code>Googlebot/2.1 (+http://www.google.com/bot.html)
+Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)
+Mozilla/5.0 (compatible; AhrefsBot/7.0; +http://ahrefs.com/robot/)</code></pre>
+      <p>Look for <code>bot</code>, <code>crawler</code>, <code>spider</code>, or a <code>+http</code> URL pointing to the operator. Verify with reverse DNS — anyone can <em>claim</em> to be Googlebot.</p>
+
+      <h3>Headless browsers and scrapers</h3>
+      <p>Default Puppeteer leaks <code>HeadlessChrome</code>; default Playwright leaks nothing in the UA but exposes itself through <code>navigator.webdriver</code>. Sophisticated scrapers spoof real UAs, which is why UA-based bot detection alone is never enough.</p>
+
+      <h2>Privacy implications</h2>
+      <p>The UA string is a passive fingerprinting vector. Combined with screen resolution, timezone, language and installed fonts, it routinely identifies an individual browser. Browsers have responded by:</p>
+      <ul>
+        <li>Freezing OS version strings (Safari, Chrome).</li>
+        <li>Reducing Chrome's minor version to <code>0.0.0</code>.</li>
+        <li>Shipping <strong>User-Agent Client Hints</strong> — a structured replacement (<code>Sec-CH-UA</code>, <code>Sec-CH-UA-Platform</code>) where the browser decides what to expose.</li>
+      </ul>
+      <p>If you're building new server-side logic, prefer Client Hints. Treat the legacy UA as a coarse hint, not a fact.</p>
+
+      <h2>What to actually do with the UA header</h2>
+      <ul>
+        <li><strong>Analytics:</strong> aggregate by browser/OS family for capacity planning.</li>
+        <li><strong>Progressive enhancement:</strong> serve a polyfill to old engines.</li>
+        <li><strong>Bot triage:</strong> deprioritize obvious crawlers in expensive endpoints.</li>
+      </ul>
+      <p>What <em>not</em> to do:</p>
+      <ul>
+        <li>Never gate security features on UA.</li>
+        <li>Never block a browser by version range — the next minor update will break your site.</li>
+        <li>Never trust the UA to determine device capabilities. Use feature detection instead.</li>
+      </ul>
+
+      <h2>FAQ</h2>
+      <div class="faq">
+        <details><summary>Why does Chrome's User Agent contain the word Mozilla?</summary><div class="a">For backward compatibility. Early servers gated content on whether the UA started with <code>Mozilla/</code>. Every browser since has kept the prefix to avoid being downgraded.</div></details>
+        <details><summary>Can I trust the User Agent header?</summary><div class="a">No. The UA is sent by the client and can be set to any string. Use it for analytics and progressive enhancement, never for security decisions or authorization.</div></details>
+        <details><summary>What is User-Agent Client Hints?</summary><div class="a">A structured replacement for the UA header. Browsers expose information via <code>Sec-CH-UA-*</code> headers and decide what to share with each origin.</div></details>
+        <details><summary>How do I verify Googlebot is really Googlebot?</summary><div class="a">Do a reverse DNS lookup on the request IP and check it resolves under <code>googlebot.com</code> or <code>google.com</code>, then forward-resolve that hostname back to the original IP.</div></details>
+      </div>
+
+      <section class="related-tools">
+        <h2>Related developer tools</h2>
+        <div class="related">
+          <a href="/tools/user-agent.html"><strong>User Agent Parser</strong><br><span class="muted">Decode browser, OS and device.</span></a>
+          <a href="/tools/api-builder.html"><strong>API Request Builder</strong><br><span class="muted">Send custom UA headers.</span></a>
+          <a href="/tools/regex.html"><strong>Regex Tester</strong><br><span class="muted">Build UA-matching patterns.</span></a>
+          <a href="/tools/url-encoder.html"><strong>URL Encoder</strong><br><span class="muted">Inspect query strings and paths.</span></a>
+        </div>
+        <p style="margin-top:18px"><a href="/blog/index.html">← Back to all articles</a></p>
+      </section>
+    </article>
+  </main>
+  <div id="site-footer"></div>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/i18n/translations.js"></script>
+  <script src="/assets/js/i18n.js"></script>
+  <script src="/assets/js/partials.js"></script>
+</body>
+</html>

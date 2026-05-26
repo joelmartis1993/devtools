@@ -1,7 +1,7 @@
 /* DevToolsHive translations: shell + tool UI labels. SEO long-form content remains English. */
 window.DTH_I18N = {
   en: {
-    "nav.home":"Home","nav.tools":"Tools","nav.about":"About",
+    "nav.home":"Home","nav.tools":"Tools","nav.blog":"Blog","nav.about":"About",
     "footer.tagline":"Fast, private developer utilities. Everything runs in your browser.",
     "footer.tools":"Tools","footer.popular":"Popular","footer.legal":"Legal",
     "footer.privacy":"Privacy","footer.terms":"Terms","footer.github":"GitHub",
@@ -52,7 +52,7 @@ window.DTH_I18N = {
     "ui.faq":"FAQ"
   },
   es: {
-    "nav.home":"Inicio","nav.tools":"Herramientas","nav.about":"Acerca de",
+    "nav.home":"Inicio","nav.tools":"Herramientas","nav.blog":"Blog","nav.about":"Acerca de",
     "footer.tagline":"Utilidades para desarrolladores, rápidas y privadas. Todo se ejecuta en tu navegador.",
     "footer.tools":"Herramientas","footer.popular":"Populares","footer.legal":"Legal",
     "footer.privacy":"Privacidad","footer.terms":"Términos","footer.github":"GitHub",
@@ -87,7 +87,7 @@ window.DTH_I18N = {
     "ui.related":"Herramientas relacionadas","ui.faq":"Preguntas frecuentes"
   },
   de: {
-    "nav.home":"Start","nav.tools":"Werkzeuge","nav.about":"Über",
+    "nav.home":"Start","nav.tools":"Werkzeuge","nav.blog":"Blog","nav.about":"Über",
     "footer.tagline":"Schnelle, private Entwickler-Tools. Alles läuft in deinem Browser.",
     "footer.tools":"Werkzeuge","footer.popular":"Beliebt","footer.legal":"Rechtliches",
     "footer.privacy":"Datenschutz","footer.terms":"AGB","footer.github":"GitHub",
@@ -122,7 +122,7 @@ window.DTH_I18N = {
     "ui.related":"Verwandte Werkzeuge","ui.faq":"FAQ"
   },
   fr: {
-    "nav.home":"Accueil","nav.tools":"Outils","nav.about":"À propos",
+    "nav.home":"Accueil","nav.tools":"Outils","nav.blog":"Blog","nav.about":"À propos",
     "footer.tagline":"Outils pour développeurs rapides et privés. Tout s'exécute dans votre navigateur.",
     "footer.tools":"Outils","footer.popular":"Populaires","footer.legal":"Mentions",
     "footer.privacy":"Confidentialité","footer.terms":"Conditions","footer.github":"GitHub",
@@ -157,7 +157,7 @@ window.DTH_I18N = {
     "ui.related":"Outils connexes","ui.faq":"FAQ"
   },
   ja: {
-    "nav.home":"ホーム","nav.tools":"ツール","nav.about":"概要",
+    "nav.home":"ホーム","nav.tools":"ツール","nav.blog":"ブログ","nav.about":"概要",
     "footer.tagline":"高速でプライベートな開発者ツール。すべてブラウザ内で動作します。",
     "footer.tools":"ツール","footer.popular":"人気","footer.legal":"法的情報",
     "footer.privacy":"プライバシー","footer.terms":"利用規約","footer.github":"GitHub",
