@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DevToolsHive Blog — Developer Guides, Debugging Tutorials & Engineering Utilities</title>
+  <meta name="description" content="In-depth developer guides on JSON debugging, JWT internals, cron scheduling, user agent parsing, regex, and privacy-first browser tooling. Written by engineers, for engineers." />
+  <link rel="canonical" href="https://devtoolshive.com/blog/index.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="DevToolsHive Blog — Developer Guides & Debugging Tutorials" />
+  <meta property="og:description" content="Long-form, no-fluff guides on JSON, JWT, cron, regex and developer productivity." />
+  <meta property="og:url" content="https://devtoolshive.com/blog/index.html" />
+  <meta property="og:image" content="https://devtoolshive.com/assets/img/favicon.svg" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="DevToolsHive Blog" />
+  <meta name="twitter:description" content="Developer guides, debugging tutorials and engineering utilities." />
+  <meta name="robots" content="index,follow" />
+  <meta name="theme-color" content="#0b0d12" />
+  <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg" />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+  <script src="/assets/js/theme.js"></script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Blog","name":"DevToolsHive Blog","url":"https://devtoolshive.com/blog/index.html","description":"Developer guides, debugging tutorials and engineering utilities.","publisher":{"@type":"Organization","name":"DevToolsHive","url":"https://devtoolshive.com/"}}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div id="site-header"></div>
+  <main id="main">
+    <section class="blog-hero">
+      <div class="container">
+        <h1>Developer Guides, Debugging Tutorials &amp; Engineering Utilities</h1>
+        <p>Practical, long-form posts on JSON debugging, JWT internals, cron scheduling, regex, and the privacy-first browser tooling we build at DevToolsHive. No fluff. No tracking. No upsell.</p>
+      </div>
+    </section>
+
+    <div class="container">
+      <section>
+        <h2 style="margin:28px 0 6px">Featured articles</h2>
+        <p class="muted" style="margin:0 0 8px">Hand-picked guides that pair real engineering use cases with the tools we ship.</p>
+        <div class="blog-grid">
+          <a class="blog-card" href="/blog/json-diff-vs-text-diff.html">
+            <span class="cat">JSON · Debugging</span>
+            <h2>Why JSON Diff Beats Plain Text Comparison</h2>
+            <p>How structural diffs eliminate formatting noise when comparing API responses, configs, and nested payloads.</p>
+            <div class="meta"><span>8 min read</span><span class="dot"></span><span>API Debugging</span></div>
+          </a>
+          <a class="blog-card" href="/blog/common-json-errors.html">
+            <span class="cat">JSON · Tutorial</span>
+            <h2>The Most Common JSON Parsing Errors, Explained</h2>
+            <p>Trailing commas, smart quotes, NaN, BOMs — the real reasons <code>JSON.parse</code> blows up, with fixes.</p>
+            <div class="meta"><span>7 min read</span><span class="dot"></span><span>Tutorial</span></div>
+          </a>
+          <a class="blog-card" href="/blog/understanding-user-agent-strings.html">
+            <span class="cat">HTTP · Privacy</span>
+            <h2>How User Agent Strings Actually Work</h2>
+            <p>Why every browser still claims to be Mozilla, what UA reveals about your users, and how bots blend in.</p>
+            <div class="meta"><span>9 min read</span><span class="dot"></span><span>HTTP Internals</span></div>
+          </a>
+          <a class="blog-card" href="/blog/jwt-tokens-explained.html">
+            <span class="cat">Auth · Security</span>
+            <h2>JWT Tokens Explained Simply</h2>
+            <p>Header, payload, signature — what each part means, how expiration works, and the security mistakes to avoid.</p>
+            <div class="meta"><span>10 min read</span><span class="dot"></span><span>Authentication</span></div>
+          </a>
+          <a class="blog-card" href="/blog/cron-expressions-explained.html">
+            <span class="cat">DevOps · Scheduling</span>
+            <h2>Cron Expressions Explained, With Examples</h2>
+            <p>The five (or six) fields, the gotchas, and a reference table of cron expressions you'll actually use.</p>
+            <div class="meta"><span>8 min read</span><span class="dot"></span><span>DevOps</span></div>
+          </a>
+        </div>
+      </section>
+
+      <section style="margin:36px 0 60px">
+        <h2 style="margin:0 0 10px">Tool guides by category</h2>
+        <p class="muted" style="margin:0 0 18px">Jump straight into the tool that solves your current problem. Everything runs locally in your browser.</p>
+        <div class="related">
+          <a href="/tools/json-formatter.html"><strong>JSON Formatter</strong><br><span class="muted">Format, validate, minify JSON.</span></a>
+          <a href="/tools/json-diff.html"><strong>JSON Diff</strong><br><span class="muted">Structural comparison of two payloads.</span></a>
+          <a href="/tools/jwt-decoder.html"><strong>JWT Decoder</strong><br><span class="muted">Inspect header, payload, expiry.</span></a>
+          <a href="/tools/cron-generator.html"><strong>Cron Generator</strong><br><span class="muted">Build and explain cron expressions.</span></a>
+          <a href="/tools/user-agent.html"><strong>User Agent Parser</strong><br><span class="muted">Decode browser and bot UA strings.</span></a>
+          <a href="/tools/regex.html"><strong>Regex Tester</strong><br><span class="muted">Live regex matching with groups.</span></a>
+          <a href="/tools/base64.html"><strong>Base64</strong><br><span class="muted">Encode and decode safely.</span></a>
+          <a href="/tools/url-encoder.html"><strong>URL Encoder</strong><br><span class="muted">Encode query params and paths.</span></a>
+        </div>
+      </section>
+    </div>
+  </main>
+  <div id="site-footer"></div>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/i18n/translations.js"></script>
+  <script src="/assets/js/i18n.js"></script>
+  <script src="/assets/js/partials.js"></script>
+</body>
+</html>

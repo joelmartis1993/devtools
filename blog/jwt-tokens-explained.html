@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>JWT Tokens Explained Simply — Header, Payload, Signature & Expiry | DevToolsHive</title>
+  <meta name="description" content="What a JWT actually contains, how header/payload/signature fit together, how expiration and signing work, and the security mistakes that keep showing up in production." />
+  <link rel="canonical" href="https://devtoolshive.com/blog/jwt-tokens-explained.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="JWT Tokens Explained Simply" />
+  <meta property="og:description" content="Header, payload, signature, expiration and the security basics." />
+  <meta property="og:url" content="https://devtoolshive.com/blog/jwt-tokens-explained.html" />
+  <meta property="og:image" content="https://devtoolshive.com/assets/img/favicon.svg" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="JWT Tokens Explained Simply" />
+  <meta name="twitter:description" content="Header, payload, signature and security basics." />
+  <meta name="robots" content="index,follow" />
+  <meta name="theme-color" content="#0b0d12" />
+  <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg" />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+  <script src="/assets/js/theme.js"></script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Article","headline":"JWT Tokens Explained Simply","description":"What a JWT contains, how signing and expiration work, and the security mistakes to avoid.","author":{"@type":"Organization","name":"DevToolsHive"},"publisher":{"@type":"Organization","name":"DevToolsHive","url":"https://devtoolshive.com/"},"mainEntityOfPage":"https://devtoolshive.com/blog/jwt-tokens-explained.html","datePublished":"2026-05-20","image":"https://devtoolshive.com/assets/img/favicon.svg"}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"Is a JWT encrypted?","acceptedAnswer":{"@type":"Answer","text":"By default no. A standard JWT is signed but not encrypted — anyone with the token can read the payload. Use JWE if you need encryption."}},
+  {"@type":"Question","name":"Where should I store a JWT in the browser?","acceptedAnswer":{"@type":"Answer","text":"Prefer an httpOnly, Secure, SameSite cookie. localStorage exposes the token to any XSS on your origin."}},
+  {"@type":"Question","name":"What does exp mean in a JWT?","acceptedAnswer":{"@type":"Answer","text":"exp is the expiration time as a Unix timestamp in seconds. Servers reject tokens whose exp is in the past."}}
+  ]}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div id="site-header"></div>
+  <main id="main" class="container">
+    <article class="article">
+      <div class="crumbs"><a href="/">Home</a> · <a href="/blog/index.html">Blog</a> · JWT Tokens Explained</div>
+      <header>
+        <span class="cat">Auth · Security</span>
+        <h1>JWT Tokens Explained Simply</h1>
+        <p class="lede">A JWT is three Base64URL chunks separated by dots. That's it. Here's what each chunk means, how signing keeps them honest, and the mistakes that keep landing in security audits.</p>
+        <div class="meta"><span>10 min read</span><span>·</span><span>Updated May 2026</span></div>
+      </header>
+
+      <h2>The three parts</h2>
+      <p>A JSON Web Token looks like this:</p>
+<pre><code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+.eyJzdWIiOiIxMjMiLCJuYW1lIjoiQWRhIiwiZXhwIjoxNzM1Njg5NjAwfQ
+.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c</code></pre>
+      <p>Three Base64URL-encoded strings separated by dots: <strong>header</strong>, <strong>payload</strong>, <strong>signature</strong>.</p>
+
+      <h3>Header</h3>
+      <p>Tells the verifier which algorithm to use.</p>
+<pre><code>{ "alg": "HS256", "typ": "JWT" }</code></pre>
+
+      <h3>Payload (claims)</h3>
+      <p>JSON object of claims. Some are standardized:</p>
+      <ul>
+        <li><code>iss</code> — issuer</li>
+        <li><code>sub</code> — subject (usually the user ID)</li>
+        <li><code>aud</code> — audience (which service the token is for)</li>
+        <li><code>exp</code> — expiration time (Unix seconds)</li>
+        <li><code>nbf</code> — not-before time</li>
+        <li><code>iat</code> — issued at</li>
+        <li><code>jti</code> — unique token ID (for revocation)</li>
+      </ul>
+      <p>Custom claims live alongside these. Keep the payload small — every request carries it.</p>
+
+      <h3>Signature</h3>
+      <p>The signature is computed over <code>base64url(header) + "." + base64url(payload)</code> using the algorithm declared in the header. With HS256, that's an HMAC-SHA256 with a shared secret. With RS256, it's RSA-SHA256 with a private key.</p>
+
+      <div class="callout"><strong>Read, don't trust</strong>You can decode any JWT in your browser without the secret — the payload is just Base64URL. <a href="/tools/jwt-decoder.html">Try it in the JWT Decoder</a>. Decoding ≠ verifying.</div>
+
+      <h2>How verification actually works</h2>
+      <ol>
+        <li>Split the token on <code>.</code> into three parts.</li>
+        <li>Base64URL-decode the header and read <code>alg</code>.</li>
+        <li>Recompute the signature over <code>header.payload</code> using your key.</li>
+        <li>Compare against the provided signature in constant time.</li>
+        <li>If it matches, validate the claims: <code>exp</code> in the future, <code>nbf</code> in the past, <code>iss</code>/<code>aud</code> match what you expect.</li>
+      </ol>
+
+      <h2>Expiration: <code>exp</code>, <code>nbf</code>, <code>iat</code></h2>
+      <p>All three are Unix timestamps in <em>seconds</em>, not milliseconds. A 10-minute token issued now has <code>exp = Math.floor(Date.now()/1000) + 600</code>. Clock skew is the most common source of "token not yet valid" errors — allow a few seconds of leeway on both ends.</p>
+
+      <h2>Security mistakes that keep happening</h2>
+
+      <h3>1. Accepting <code>alg: none</code></h3>
+      <p>Some early libraries honored a header of <code>{"alg":"none"}</code> and skipped signature verification entirely. An attacker could forge any payload. Hardcode the expected algorithm on the server — never derive it from the incoming header.</p>
+
+      <h3>2. HS256 / RS256 confusion</h3>
+      <p>If your server accepts both and uses the RSA public key as the HMAC secret, an attacker can sign tokens with HS256 using that public key. Pin one algorithm per endpoint.</p>
+
+      <h3>3. Storing tokens in <code>localStorage</code></h3>
+      <p>Any XSS on your origin reads <code>localStorage</code> instantly. Prefer an <code>httpOnly</code>, <code>Secure</code>, <code>SameSite=Lax</code> cookie. If you must use <code>localStorage</code> (e.g. for a single-page app calling a different origin), keep token lifetimes short.</p>
+
+      <h3>4. Putting secrets in the payload</h3>
+      <p>The payload is <em>readable by anyone</em>. Don't include PII you wouldn't expose in an API response. Don't put database connection strings or feature flags an attacker shouldn't see.</p>
+
+      <h3>5. No revocation strategy</h3>
+      <p>JWTs are stateless. Once issued, they're valid until <code>exp</code>. Plan for the day you need to revoke one: short-lived access tokens (5–15 min) plus a refresh token with a server-side allowlist is the common pattern.</p>
+
+      <h2>When JWTs are the wrong choice</h2>
+      <p>JWTs shine for service-to-service auth, OAuth/OIDC flows, and stateless APIs where the issuer and verifier are different parties. For a classic single-server web app with a session, an opaque session cookie is simpler, smaller, and trivially revocable.</p>
+
+      <div class="callout tip"><strong>Debugging tip</strong>When a token mysteriously fails, decode it and check three things first: <code>exp</code> vs current time, <code>aud</code> against your service ID, and <code>alg</code> against your expected algorithm.</div>
+
+      <h2>FAQ</h2>
+      <div class="faq">
+        <details><summary>Is a JWT encrypted?</summary><div class="a">By default no. A standard JWT (JWS) is signed but not encrypted — anyone holding the token can read the payload. Use JWE if you need encryption.</div></details>
+        <details><summary>Where should I store a JWT in the browser?</summary><div class="a">Prefer an <code>httpOnly</code>, <code>Secure</code>, <code>SameSite</code> cookie. <code>localStorage</code> exposes the token to any XSS on your origin.</div></details>
+        <details><summary>What does exp mean in a JWT?</summary><div class="a"><code>exp</code> is the expiration time as a Unix timestamp in seconds. Servers reject tokens whose <code>exp</code> is in the past (allowing for a few seconds of clock skew).</div></details>
+        <details><summary>Can I shorten a JWT?</summary><div class="a">Only by trimming the payload. The structure is fixed. Avoid bloating claims; if a token is over 1–2 KB, reconsider what you're including.</div></details>
+      </div>
+
+      <section class="related-tools">
+        <h2>Related developer tools</h2>
+        <div class="related">
+          <a href="/tools/jwt-decoder.html"><strong>JWT Decoder</strong><br><span class="muted">Inspect header, payload and expiry.</span></a>
+          <a href="/tools/base64.html"><strong>Base64</strong><br><span class="muted">Decode the individual segments.</span></a>
+          <a href="/tools/timestamp.html"><strong>Unix Timestamp</strong><br><span class="muted">Convert <code>exp</code> to a readable date.</span></a>
+          <a href="/tools/api-builder.html"><strong>API Request Builder</strong><br><span class="muted">Send Bearer tokens against your API.</span></a>
+        </div>
+        <p style="margin-top:18px"><a href="/blog/index.html">← Back to all articles</a></p>
+      </section>
+    </article>
+  </main>
+  <div id="site-footer"></div>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/i18n/translations.js"></script>
+  <script src="/assets/js/i18n.js"></script>
+  <script src="/assets/js/partials.js"></script>
+</body>
+</html>

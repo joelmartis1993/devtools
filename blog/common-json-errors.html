@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>The Most Common JSON Parsing Errors, Explained (With Fixes) | DevToolsHive</title>
+  <meta name="description" content="Trailing commas, smart quotes, NaN, BOMs, single quotes — the real reasons JSON.parse throws SyntaxError, and how to fix each one quickly." />
+  <link rel="canonical" href="https://devtoolshive.com/blog/common-json-errors.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="The Most Common JSON Parsing Errors, Explained" />
+  <meta property="og:description" content="The real reasons JSON.parse throws SyntaxError, and how to fix each one." />
+  <meta property="og:url" content="https://devtoolshive.com/blog/common-json-errors.html" />
+  <meta property="og:image" content="https://devtoolshive.com/assets/img/favicon.svg" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Most Common JSON Parsing Errors" />
+  <meta name="twitter:description" content="Why JSON.parse fails, with fixes." />
+  <meta name="robots" content="index,follow" />
+  <meta name="theme-color" content="#0b0d12" />
+  <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg" />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+  <script src="/assets/js/theme.js"></script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Article","headline":"The Most Common JSON Parsing Errors, Explained","description":"Trailing commas, smart quotes, NaN, BOMs and other reasons JSON.parse throws.","author":{"@type":"Organization","name":"DevToolsHive"},"publisher":{"@type":"Organization","name":"DevToolsHive","url":"https://devtoolshive.com/"},"mainEntityOfPage":"https://devtoolshive.com/blog/common-json-errors.html","datePublished":"2026-05-20","image":"https://devtoolshive.com/assets/img/favicon.svg"}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"Why does JSON.parse fail on valid-looking JSON?","acceptedAnswer":{"@type":"Answer","text":"Usually because the source includes a trailing comma, single quotes, smart quotes from a word processor, an unescaped newline inside a string, or a leading byte-order-mark (BOM). All are common in copy-pasted JSON."}},
+  {"@type":"Question","name":"Is NaN valid JSON?","acceptedAnswer":{"@type":"Answer","text":"No. The JSON spec only allows finite numbers. NaN, Infinity and -Infinity are invalid. Serialize them as null or a sentinel string."}},
+  {"@type":"Question","name":"Can JSON keys be unquoted?","acceptedAnswer":{"@type":"Answer","text":"No. Unlike JavaScript object literals, JSON requires every key to be a double-quoted string."}}
+  ]}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div id="site-header"></div>
+  <main id="main" class="container">
+    <article class="article">
+      <div class="crumbs"><a href="/">Home</a> · <a href="/blog/index.html">Blog</a> · Common JSON Errors</div>
+      <header>
+        <span class="cat">JSON · Tutorial</span>
+        <h1>The Most Common JSON Parsing Errors, Explained</h1>
+        <p class="lede"><code>SyntaxError: Unexpected token } in JSON at position 47</code>. We've all seen it. Here are the actual root causes — and how to fix each one in seconds.</p>
+        <div class="meta"><span>7 min read</span><span>·</span><span>Updated May 2026</span></div>
+      </header>
+
+      <p>JSON looks simple, which is exactly why it bites. The spec is small but unforgiving — anything that's <em>almost</em> JSON (like a JavaScript object literal, or a YAML fragment, or a pretty-printed log line) will fail to parse. These are the errors we see most often, in roughly the order they show up in real codebases.</p>
+
+      <h2>1. Trailing commas</h2>
+      <p>The single most common mistake. JavaScript and Python both tolerate trailing commas in arrays and objects; JSON does not.</p>
+<pre><code>{
+  "name": "Ada",
+  "tags": ["math", "logic",]   // ← invalid
+}</code></pre>
+      <p>Remove the comma after <code>"logic"</code>. If your data comes from a code generator, look for an extra <code>+ ","</code> in the template.</p>
+
+      <h2>2. Single quotes instead of double quotes</h2>
+      <p>JSON strings and keys must use double quotes. Single quotes are a JavaScript convention only.</p>
+<pre><code>{ 'id': 1, 'name': 'Ada' }   // ← invalid JSON
+{ "id": 1, "name": "Ada" }   // ✓ valid</code></pre>
+
+      <h2>3. Smart quotes from a word processor</h2>
+      <p>Pasting JSON from Notion, Word, Slack or Google Docs often replaces straight quotes with typographic quotes: <code>"</code> <code>"</code> <code>'</code> <code>'</code>. They look right and fail to parse.</p>
+      <div class="callout warn"><strong>Fix</strong>Paste your JSON into a tool that highlights the failing position — like the <a href="/tools/json-formatter.html">JSON Formatter</a> — and replace smart quotes with straight ones.</div>
+
+      <h2>4. Unquoted keys</h2>
+      <p>JavaScript lets you write <code>{ id: 1 }</code>. JSON does not.</p>
+<pre><code>{ id: 1 }       // ← invalid
+{ "id": 1 }     // ✓ valid</code></pre>
+
+      <h2>5. Comments</h2>
+      <p>JSON has no comment syntax. No <code>//</code>, no <code>/* */</code>, no <code>#</code>. If you need comments, use JSONC, JSON5, or YAML — and convert before parsing.</p>
+
+      <h2>6. <code>NaN</code>, <code>Infinity</code>, <code>undefined</code></h2>
+      <p>The JSON spec only allows finite numbers, strings, booleans, <code>null</code>, arrays and objects. <code>NaN</code> and <code>Infinity</code> are JavaScript-only. Serializers often emit them by mistake.</p>
+<pre><code>{ "ratio": NaN }       // ← invalid
+{ "ratio": null }      // ✓ common substitute</code></pre>
+
+      <h2>7. Unescaped control characters in strings</h2>
+      <p>Literal newlines, tabs, or backslashes inside a JSON string break the parser.</p>
+<pre><code>{ "msg": "line one
+line two" }            // ← invalid
+{ "msg": "line one\nline two" }   // ✓ valid</code></pre>
+
+      <h2>8. UTF-8 BOM at the start of the file</h2>
+      <p>A byte-order mark (<code>\uFEFF</code>) at position 0 is invisible in most editors but trips up strict parsers. The error message often says <em>"Unexpected token ﻿"</em> with no visible character.</p>
+      <p>Re-save the file as UTF-8 <em>without</em> BOM, or strip the first byte before parsing:</p>
+<pre><code>const clean = raw.replace(/^\uFEFF/, '');
+const data  = JSON.parse(clean);</code></pre>
+
+      <h2>9. Truncated payloads</h2>
+      <p>When a network request fails mid-stream, you get well-formed JSON up to a point and then nothing. The parser reports an unexpected end of input. Check the response's <code>Content-Length</code> against the body length, and verify your HTTP client isn't aborting on timeout.</p>
+
+      <h2>10. Wrong root type</h2>
+      <p>A JSON document's root must be a value — usually an object or array. A bare identifier or a stray HTML error page (very common from misconfigured proxies) is not JSON.</p>
+      <div class="callout"><strong>Quick debug</strong>If <code>JSON.parse</code> fails on production data, log the first 200 characters of the response. Nine times out of ten you'll find an HTML error page from a load balancer.</div>
+
+      <h2>Debugging workflow</h2>
+      <ol>
+        <li>Paste the payload into the <a href="/tools/json-formatter.html">JSON Formatter</a>. The error will point to a specific line and column.</li>
+        <li>If the source is a file, check the byte length and the first few bytes for a BOM.</li>
+        <li>If the source is an HTTP response, log the <code>Content-Type</code> header — you may be parsing HTML.</li>
+        <li>If two payloads should match but don't, run them through <a href="/tools/json-diff.html">JSON Diff</a> to see the structural change rather than guessing.</li>
+      </ol>
+
+      <h2>FAQ</h2>
+      <div class="faq">
+        <details><summary>Why does JSON.parse fail on valid-looking JSON?</summary><div class="a">Usually because the source includes a trailing comma, single quotes, smart quotes from a word processor, an unescaped newline inside a string, or a leading UTF-8 BOM. All are common in copy-pasted JSON.</div></details>
+        <details><summary>Is NaN valid JSON?</summary><div class="a">No. The JSON spec only allows finite numbers. <code>NaN</code>, <code>Infinity</code> and <code>-Infinity</code> are invalid. Serialize them as <code>null</code> or a sentinel string and document the choice.</div></details>
+        <details><summary>Can JSON keys be unquoted?</summary><div class="a">No. JSON requires every key to be a double-quoted string. JavaScript object literals are more permissive.</div></details>
+        <details><summary>What's the difference between JSON, JSONC and JSON5?</summary><div class="a">JSON is the strict spec. JSONC adds comments (used by VS Code's <code>tsconfig.json</code>). JSON5 adds comments, trailing commas, unquoted keys and more. Strip comments and trailing commas before passing to a strict parser.</div></details>
+      </div>
+
+      <section class="related-tools">
+        <h2>Related developer tools</h2>
+        <div class="related">
+          <a href="/tools/json-formatter.html"><strong>JSON Formatter</strong><br><span class="muted">Pinpoint the failing line and column.</span></a>
+          <a href="/tools/json-diff.html"><strong>JSON Diff</strong><br><span class="muted">Compare two payloads structurally.</span></a>
+          <a href="/tools/base64.html"><strong>Base64</strong><br><span class="muted">Decode embedded payloads.</span></a>
+          <a href="/tools/api-builder.html"><strong>API Request Builder</strong><br><span class="muted">Re-fetch and inspect responses.</span></a>
+        </div>
+        <p style="margin-top:18px"><a href="/blog/index.html">← Back to all articles</a></p>
+      </section>
+    </article>
+  </main>
+  <div id="site-footer"></div>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/i18n/translations.js"></script>
+  <script src="/assets/js/i18n.js"></script>
+  <script src="/assets/js/partials.js"></script>
+</body>
+</html>

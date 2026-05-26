@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cron Expressions Explained, With Examples (5-Field & 6-Field) | DevToolsHive</title>
+  <meta name="description" content="A no-nonsense reference for cron expressions: the five fields, the special characters, the most common gotchas, and a table of expressions you'll actually use." />
+  <link rel="canonical" href="https://devtoolshive.com/blog/cron-expressions-explained.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Cron Expressions Explained, With Examples" />
+  <meta property="og:description" content="The five fields, the gotchas, and a reference table of cron expressions you'll actually use." />
+  <meta property="og:url" content="https://devtoolshive.com/blog/cron-expressions-explained.html" />
+  <meta property="og:image" content="https://devtoolshive.com/assets/img/favicon.svg" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Cron Expressions Explained" />
+  <meta name="twitter:description" content="Fields, gotchas, and a reference table." />
+  <meta name="robots" content="index,follow" />
+  <meta name="theme-color" content="#0b0d12" />
+  <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg" />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+  <script src="/assets/js/theme.js"></script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Article","headline":"Cron Expressions Explained, With Examples","description":"The five fields of cron, special characters, common mistakes and a reference table of useful expressions.","author":{"@type":"Organization","name":"DevToolsHive"},"publisher":{"@type":"Organization","name":"DevToolsHive","url":"https://devtoolshive.com/"},"mainEntityOfPage":"https://devtoolshive.com/blog/cron-expressions-explained.html","datePublished":"2026-05-20","image":"https://devtoolshive.com/assets/img/favicon.svg"}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"Why is my cron job not running at midnight on the 1st?","acceptedAnswer":{"@type":"Answer","text":"Day-of-month and day-of-week are OR'd, not AND'd, in standard cron. Setting both to non-* values fires more often than most people expect."}},
+  {"@type":"Question","name":"Does cron use UTC or local time?","acceptedAnswer":{"@type":"Answer","text":"Linux cron uses the system timezone. Managed schedulers (AWS EventBridge, Kubernetes CronJob) typically use UTC. Always document the timezone next to the expression."}},
+  {"@type":"Question","name":"What's the difference between 5-field and 6-field cron?","acceptedAnswer":{"@type":"Answer","text":"5-field is classic Unix cron (minute, hour, day-of-month, month, day-of-week). 6-field adds a leading seconds field and is used by Quartz, Spring and some others."}}
+  ]}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div id="site-header"></div>
+  <main id="main" class="container">
+    <article class="article">
+      <div class="crumbs"><a href="/">Home</a> · <a href="/blog/index.html">Blog</a> · Cron Expressions</div>
+      <header>
+        <span class="cat">DevOps · Scheduling</span>
+        <h1>Cron Expressions Explained, With Examples</h1>
+        <p class="lede">Cron is small, weird and easy to get wrong. Here's the field layout, the special characters, the gotchas that bite in production, and a copy-paste table of the expressions you actually need.</p>
+        <div class="meta"><span>8 min read</span><span>·</span><span>Updated May 2026</span></div>
+      </header>
+
+      <h2>The five fields</h2>
+<pre><code> ┌───────── minute        (0–59)
+ │ ┌─────── hour          (0–23)
+ │ │ ┌───── day of month  (1–31)
+ │ │ │ ┌─── month         (1–12 or JAN–DEC)
+ │ │ │ │ ┌─ day of week   (0–6 or SUN–SAT; 7 = Sunday too)
+ │ │ │ │ │
+ *  *  *  *  *   command</code></pre>
+
+      <p>Quartz/Spring add a seconds field at the start, making it six. Some implementations add a year field at the end. Always confirm which dialect your scheduler uses.</p>
+
+      <h2>The special characters</h2>
+      <ul>
+        <li><code>*</code> — any value</li>
+        <li><code>,</code> — a list: <code>1,15,30</code></li>
+        <li><code>-</code> — a range: <code>9-17</code></li>
+        <li><code>/</code> — a step: <code>*/5</code> means every 5</li>
+        <li><code>?</code> — "no specific value" (Quartz only, used in day-of-month / day-of-week)</li>
+        <li><code>L</code> — last (Quartz; e.g. <code>L</code> in day-of-month = last day)</li>
+        <li><code>#</code> — nth weekday of month (Quartz; <code>6#3</code> = third Friday)</li>
+      </ul>
+
+      <h2>The gotcha that catches everyone</h2>
+      <p>In standard Unix cron, <strong>day-of-month and day-of-week are OR'd</strong>, not AND'd. If you write:</p>
+<pre><code>0 9 1 * MON   # 9am, on the 1st of the month, OR on Monday</code></pre>
+      <p>…it fires every Monday <em>and</em> on the 1st of every month. To get "9am on the 1st only if it's a Monday", you need application-level logic — pure cron can't express it.</p>
+
+      <div class="callout warn"><strong>Pitfall</strong>Combining day-of-month and day-of-week in the same expression almost never does what you expect. Pick one, leave the other as <code>*</code>.</div>
+
+      <h2>Timezones</h2>
+      <p>Linux <code>cron</code> uses the system timezone (often UTC on servers, local time on workstations). Managed schedulers are different:</p>
+      <ul>
+        <li><strong>Kubernetes CronJob:</strong> UTC by default; <code>spec.timeZone</code> available since v1.27.</li>
+        <li><strong>AWS EventBridge:</strong> UTC. Use the <code>cron(min hour day-of-month month day-of-week year)</code> 6-field syntax.</li>
+        <li><strong>GCP Cloud Scheduler:</strong> configurable timezone per job.</li>
+      </ul>
+      <p>Always write the timezone next to the expression in code comments. "Midnight" without a timezone is a future incident.</p>
+
+      <h2>Reference table</h2>
+      <p>The expressions you actually need:</p>
+<pre><code>* * * * *          every minute
+*/5 * * * *        every 5 minutes
+0 * * * *          top of every hour
+0 */2 * * *        every 2 hours
+30 9 * * *         every day at 09:30
+0 9 * * 1-5        weekdays at 09:00
+0 9 * * MON-FRI    (same, named form)
+0 0 * * 0          every Sunday at midnight
+0 0 1 * *          1st of every month at midnight
+0 0 1 1 *          midnight on January 1st
+15 10 * * 1        Mondays at 10:15
+0 22 * * 1-5       weekdays at 22:00 (nightly job)
+0 0 * * 6,0        every Saturday and Sunday at midnight
+*/15 9-17 * * 1-5  every 15 min, business hours, weekdays</code></pre>
+
+      <h2>Common mistakes</h2>
+      <ol>
+        <li><strong>Wrong field count.</strong> Pasting a 6-field Quartz expression into Linux cron silently misinterprets the meaning.</li>
+        <li><strong>Forgotten timezone.</strong> A "daily report at 8am" runs at 3am for half the world.</li>
+        <li><strong>DST drift.</strong> An expression like <code>30 2 * * *</code> either runs twice or skips entirely on DST transitions in local-time schedulers.</li>
+        <li><strong>Overlapping runs.</strong> A job that takes 6 minutes scheduled every 5 will pile up. Use a lockfile, or a scheduler with <code>concurrencyPolicy: Forbid</code>.</li>
+        <li><strong>Step ambiguity.</strong> <code>*/7</code> in the hour field doesn't fire every 7 hours — it fires at hours 0, 7, 14, and 21, then jumps back to 0. Use explicit lists for non-divisors.</li>
+      </ol>
+
+      <div class="callout tip"><strong>Tip</strong>Always paste your expression into a generator and check the next 5–10 fire times before deploying. The <a href="/tools/cron-generator.html">Cron Generator</a> does exactly that, in your browser.</div>
+
+      <h2>FAQ</h2>
+      <div class="faq">
+        <details><summary>Why is my cron job not running at midnight on the 1st?</summary><div class="a">Day-of-month and day-of-week are OR'd, not AND'd, in standard cron. Setting both to non-<code>*</code> values fires more often than most people expect. Check your timezone too — server time may not be what you assume.</div></details>
+        <details><summary>Does cron use UTC or local time?</summary><div class="a">Linux <code>cron</code> uses the system timezone. Managed schedulers like AWS EventBridge and Kubernetes CronJob (pre-1.27) default to UTC. Always document the timezone alongside the expression.</div></details>
+        <details><summary>What's the difference between 5-field and 6-field cron?</summary><div class="a">5-field is the classic Unix layout: minute, hour, day-of-month, month, day-of-week. 6-field (Quartz, Spring, AWS EventBridge) adds a seconds field at the start or a year field at the end. Confirm which dialect your scheduler expects.</div></details>
+        <details><summary>How do I run something every 30 seconds?</summary><div class="a">Standard cron can't — the smallest unit is a minute. Use a 6-field Quartz expression like <code>*/30 * * * * ?</code>, or run a 1-minute cron that itself triggers two runs 30 seconds apart.</div></details>
+      </div>
+
+      <section class="related-tools">
+        <h2>Related developer tools</h2>
+        <div class="related">
+          <a href="/tools/cron-generator.html"><strong>Cron Generator</strong><br><span class="muted">Build and explain cron expressions.</span></a>
+          <a href="/tools/timestamp.html"><strong>Unix Timestamp</strong><br><span class="muted">Convert run times across timezones.</span></a>
+          <a href="/tools/regex.html"><strong>Regex Tester</strong><br><span class="muted">Match log lines from scheduled jobs.</span></a>
+          <a href="/tools/env-parser.html"><strong>ENV Parser</strong><br><span class="muted">Inspect job environment files.</span></a>
+        </div>
+        <p style="margin-top:18px"><a href="/blog/index.html">← Back to all articles</a></p>
+      </section>
+    </article>
+  </main>
+  <div id="site-footer"></div>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/i18n/translations.js"></script>
+  <script src="/assets/js/i18n.js"></script>
+  <script src="/assets/js/partials.js"></script>
+</body>
+</html>
