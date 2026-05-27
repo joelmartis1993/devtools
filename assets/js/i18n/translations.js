@@ -6,7 +6,7 @@ window.DTH_I18N = {
     "footer.tools":"Tools","footer.popular":"Popular","footer.legal":"Legal",
     "footer.privacy":"Privacy","footer.terms":"Terms","footer.github":"GitHub",
     "footer.copy":"© 2026 DevToolsHive. All processing happens locally in your browser.",
-    "hero.title":"Free Online Developer Tools for JSON, Regex, JWT, UUID & More",
+    "hero.title":"privacy-first browser-based developer tools",
     "hero.sub":"Fast, privacy-friendly developer utilities that run entirely in your browser. No uploads, no tracking, no signups.",
     "hero.cta.browse":"Browse tools",
     "hero.badge.fast":"Instant","hero.badge.private":"100% client-side","hero.badge.free":"Free forever",
