@@ -44,8 +44,11 @@
         <div><h4 data-i18n="footer.tools">Tools</h4><ul>${cols}</ul></div>
         <div><h4 data-i18n="footer.popular">Popular</h4><ul>${cols2}</ul></div>
         <div><h4 data-i18n="footer.legal">Legal</h4><ul>
-          <li><a href="/" data-i18n="nav.home">Home</a></li>
-          <li><a href="https://github.com/" target="_blank" rel="noopener" data-i18n="footer.github">GitHub</a></li>
+          <li><a href="/pages/about.html">About Us</a></li>
+          <li><a href="/pages/contact.html">Contact</a></li>
+          <li><a href="/pages/privacy.html">Privacy Policy</a></li>
+          <li><a href="/pages/terms.html">Terms of Service</a></li>
+          <li><a href="/pages/disclaimer.html">Disclaimer</a></li>
         </ul></div>
       </div>
       <div class="meta">
