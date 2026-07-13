@@ -26,6 +26,14 @@
     <priority>0.8</priority>
   </url>
 
+  <!-- SQL Formatter -->
+  <url>
+    <loc>https://devtoolshive.com/tools/sql-formatter.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
   <!-- User Agent Parser -->
   <url>
     <loc>https://devtoolshive.com/tools/user-agent.html</loc>
