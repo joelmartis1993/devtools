@@ -1,0 +1,945 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="google-adsense-account" content="ca-pub-2114664554162220" />
+    <title>SQL Formatter &amp; Beautifier Online | Free SQL Pretty Printer | DevToolsHive</title>
+    <meta
+      name="description"
+      content="Format SQL online instantly with DevToolsHive's free SQL Formatter. Beautify SQL queries, pretty print SQL code, improve readability, and format SQL safely in your browser. No uploads required."
+    />
+    <link rel="canonical" href="https://devtoolshive.com/tools/sql-formatter.html" />
+    <link rel="alternate" hreflang="en" href="https://devtoolshive.com/tools/sql-formatter.html?lang=en" />
+    <link rel="alternate" hreflang="es" href="https://devtoolshive.com/tools/sql-formatter.html?lang=es" />
+    <link rel="alternate" hreflang="de" href="https://devtoolshive.com/tools/sql-formatter.html?lang=de" />
+    <link rel="alternate" hreflang="fr" href="https://devtoolshive.com/tools/sql-formatter.html?lang=fr" />
+    <link rel="alternate" hreflang="ja" href="https://devtoolshive.com/tools/sql-formatter.html?lang=ja" />
+    <link rel="alternate" hreflang="x-default" href="https://devtoolshive.com/tools/sql-formatter.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="SQL Formatter &amp; Beautifier Online | Free SQL Pretty Printer | DevToolsHive" />
+    <meta property="og:description" content="Format SQL online instantly with DevToolsHive's free SQL Formatter. Beautify SQL queries, pretty print SQL code, improve readability, and format SQL safely in your browser. No uploads required." />
+    <meta property="og:url" content="https://devtoolshive.com/tools/sql-formatter.html" />
+    <meta property="og:image" content="https://devtoolshive.com/assets/img/favicon.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="SQL Formatter &amp; Beautifier Online | Free SQL Pretty Printer | DevToolsHive" />
+    <meta name="twitter:description" content="Format SQL online instantly with DevToolsHive's free SQL Formatter. Beautify SQL queries, pretty print SQL code, improve readability, and format SQL safely in your browser. No uploads required." />
+    <meta name="twitter:image" content="https://devtoolshive.com/assets/img/favicon.svg" />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0b0d12" />
+    <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg" />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <style>
+      .sql-headline { max-width: 760px; }
+      .sql-headline h1 { margin: 0 0 14px; font-size: clamp(32px, 5vw, 56px); line-height: 1.04; }
+      .sql-headline p { margin: 0; font-size: 1rem; color: var(--text-dim); max-width: 680px; }
+      .sql-badges { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+      .sql-badges .badge { padding: 8px 12px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: var(--text); font-size: 12px; }
+      .sql-layout { display: grid; grid-template-columns: minmax(0, 4fr) minmax(250px, 1fr); gap: 24px; margin-bottom: 24px; align-items: start; }
+      .sql-main { display: flex; flex-direction: column; gap: 18px; }
+      .sql-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 0; }
+      .sql-actions .btn { min-width: 0; transition: transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease; }
+      .sql-actions .btn:hover { transform: translateY(-1px); }
+      .sql-workbench { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+      .pane { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 24px; box-shadow: var(--shadow-soft); }
+      .pane:not(.output-pane) { padding: 20px; }
+      .pane-head { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+      .pane-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+      .pane .badge { margin: 0; }
+      .input-pane { min-height: 640px; display: flex; flex-direction: column; }
+      .input-pane .sql-textarea { min-height: 100%; }
+      .output-pane { display: flex; flex-direction: column; min-height: 640px; }
+      .output-pane .pane-head { padding: 20px; margin-bottom: 0; }
+      .output-frame { display: flex; flex-direction: column; border-radius: 20px; border: 1px solid var(--border); background: rgba(255,255,255,0.04); overflow: hidden; min-height: 100%; }
+      .output-frame pre { margin: 0; padding: 18px; flex: 1; min-height: 100%; white-space: pre-wrap; word-break: break-word; font-family: var(--mono); font-size: 0.95rem; line-height: 1.56; color: var(--text); }
+      .sql-code .sql-keyword { color: #8ab4f8; font-weight: 600; }
+      .sql-code .sql-string { color: #a5ffcb; }
+      .sql-code .sql-number { color: #f9c66c; }
+      .sql-code .sql-comment { color: var(--text-dim); font-style: italic; }
+      .sql-code .sql-operator { color: #ffc777; }
+      .sql-code .sql-function { color: #7dd3fc; }
+      .sql-textarea { width: 100%; border-radius: 18px; border: 1px solid var(--border); background: var(--surface); color: var(--text); resize: vertical; padding: 18px; font-family: var(--mono); font-size: 0.96rem; line-height: 1.6; outline: none; min-height: 380px; }
+      .sql-textarea:focus { border-color: var(--accent); box-shadow: inset 0 0 0 1px rgba(124,92,255,0.24); }
+      .example-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 0; }
+      .example-button { position: relative; text-align: left; border: 1px solid var(--border); border-radius: 20px; background: rgba(255,255,255,0.04); color: var(--text); padding: 18px; cursor: pointer; transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease; overflow: hidden; }
+      .example-button:hover, .example-button:focus-visible { border-color: var(--accent); transform: translateY(-1px); box-shadow: 0 18px 35px rgba(0,0,0,0.12); outline: none; }
+      .example-button strong { display: block; margin-bottom: 8px; font-size: 14px; }
+      .example-button span { font-size: 13px; color: var(--text-dim); display: block; margin-bottom: 10px; }
+      .example-preview { display: block; white-space: pre-wrap; margin: 0; color: var(--text-dim); font-size: 13px; line-height: 1.45; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 10px 12px; overflow: hidden; max-height: 5.2em; }
+      .example-button::after { content: 'Click to load →'; display: block; margin-top: 12px; font-size: 12px; color: var(--text-dim); }
+      .sql-stats { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-top: 16px; }
+      .sql-stat-card { display: flex; flex-direction: column; gap: 10px; padding: 16px 18px; border-radius: 20px; border: 1px solid var(--border); background: rgba(255,255,255,0.04); box-shadow: var(--shadow-soft); }
+      .sql-stat-card h3 { margin: 0; font-size: 0.85rem; letter-spacing: 0.02em; color: var(--text-dim); text-transform: uppercase; }
+      .sql-stat-card p { margin: 0; font-size: 1.25rem; font-weight: 700; }
+      .sql-stat-card span { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 12px; background: rgba(124,92,255,0.12); color: #c8b6ff; font-size: 0.95rem; }
+      .btn.secondary { background: rgba(255,255,255,0.05); border-color: var(--border); color: var(--text); }
+      .btn.secondary:hover, .btn.secondary:focus-visible { background: rgba(255,255,255,0.08); }
+      .btn.tertiary { background: transparent; border-color: var(--border); color: var(--text-dim); }
+      .btn.tertiary:hover, .btn.tertiary:focus-visible { background: rgba(255,255,255,0.05); color: var(--text); }
+      .options-card { padding: 22px; border-radius: 24px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); }
+      .options-card h2 { margin-top: 0; margin-bottom: 16px; font-size: 1.05rem; }
+      .options-group { margin-bottom: 20px; padding-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+      .options-group:last-child { padding-bottom: 0; border-bottom: none; margin-bottom: 0; }
+      .options-group h3 { margin: 0 0 14px; font-size: 0.95rem; color: var(--text); letter-spacing: .02em; }
+      .field { margin-bottom: 14px; }
+      .field label { display: block; margin-bottom: 8px; font-size: 12.5px; color: var(--text-dim); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+      .field select, .field input[type=range] { width: 100%; }
+      .option-row { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+      fieldset { border: 1px solid var(--border); border-radius: 18px; padding: 16px 18px 14px; margin: 0 0 16px; background: rgba(255,255,255,0.03); }
+      fieldset legend { padding: 0 6px; font-size: 0.95rem; font-weight: 600; color: var(--text); }
+      fieldset label { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 0.95rem; color: var(--text); cursor: pointer; }
+      fieldset label:last-of-type { margin-bottom: 0; }
+      .sql-section { margin-top: 42px; }
+      .sql-section h2 { margin-top: 0; }
+      .sql-section + .sql-section { padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.06); }
+      .feature-grid, .category-grid { margin-top: 18px; display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+      .feature-card { display: grid; gap: 12px; padding: 20px; border-radius: 20px; border: 1px solid var(--border); background: rgba(255,255,255,0.04); box-shadow: var(--shadow-soft); transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease; }
+      .feature-card:hover { transform: translateY(-1px); border-color: var(--accent); box-shadow: 0 14px 35px rgba(0,0,0,0.14); }
+      .feature-icon { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 14px; background: rgba(124,92,255,0.16); color: #b8a8ff; font-size: 1rem; }
+      .feature-card h3 { margin: 0; font-size: 1rem; }
+      .feature-card p { margin: 0; color: var(--text-dim); font-size: 0.95rem; line-height: 1.5; }
+      .faq .a { padding: 12px 16px 16px; }
+      .related { margin-top: 16px; }
+      .trust-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 22px 0 8px; padding: 16px 18px; border-radius: 20px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); }
+      .trust-strip .badge { padding: 10px 12px; background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.08); }
+      .related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-top: 16px; }
+      .related-card { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: flex-start; padding: 18px; border: 1px solid var(--border); border-radius: 18px; background: rgba(255,255,255,0.04); color: var(--text); text-decoration: none; transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease; }
+      .related-card:hover, .related-card:focus-visible { border-color: var(--accent); transform: translateY(-1px); background: rgba(255,255,255,0.06); box-shadow: 0 18px 35px rgba(0,0,0,0.08); outline: none; }
+      .related-card .tool-icon { display: inline-flex; width: 34px; height: 34px; align-items: center; justify-content: center; border-radius: 12px; background: rgba(124,92,255,0.16); color: #c8b6ff; font-size: 1rem; }
+      .related-card strong { display: block; font-size: 1rem; margin-bottom: 4px; }
+      .related-card span { color: var(--text-dim); font-size: 0.95rem; line-height: 1.4; }
+      .footer-separator { margin-top: 28px; padding-top: 28px; border-top: 1px solid rgba(255,255,255,0.06); }
+      @media (max-width: 980px) {
+        .sql-layout { grid-template-columns: 1fr; }
+        .sql-workbench { grid-template-columns: 1fr; }
+      }
+      @media (max-width: 720px) {
+        .sql-actions { justify-content: stretch; }
+        .sql-actions .btn { flex: 1 1 auto; }
+        .example-buttons { grid-template-columns: 1fr; }
+        .feature-grid, .category-grid, .sql-stats { grid-template-columns: 1fr; }
+      }
+    </style>
+    <script src="../assets/js/theme.js"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "SQL Formatter & Beautifier",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any (web)",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "url": "https://devtoolshive.com/tools/sql-formatter.html"
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://devtoolshive.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://devtoolshive.com/#tools" },
+          { "@type": "ListItem", "position": 3, "name": "SQL Formatter", "item": "https://devtoolshive.com/tools/sql-formatter.html" }
+        ]
+      }
+    </script>
+  </head>
+  <!-- Google tag (gtag.js) -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-SPD83QKS2J"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-SPD83QKS2J");
+  </script>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="site-header"></div>
+    <main id="main" class="container tool-page">
+      <div class="crumbs">
+        <a href="/">Home</a> · <span data-i18n="nav.tools">Tools</span> ·
+        <span>SQL Formatter &amp; Beautifier</span>
+      </div>
+      <header class="tool-head sql-headline">
+        <h1>SQL Formatter &amp; Beautifier</h1>
+        <p>Format SQL instantly. Beautify messy SQL queries into clean, readable code directly in your browser.</p>
+        <div class="sql-badges">
+          <span class="badge">Client-side Processing</span>
+          <span class="badge">No Uploads</span>
+          <span class="badge">Instant Formatting</span>
+          <span class="badge">Free Forever</span>
+        </div>
+      </header>
+
+      <div class="sql-layout">
+        <div class="sql-main">
+          <div class="sql-actions">
+            <button class="btn primary" id="format-btn" data-shortcut="run">Format SQL</button>
+            <button class="btn secondary" id="minify-btn" type="button">Minify SQL</button>
+            <button class="btn secondary" id="copy-btn" type="button" data-shortcut="copy">Copy Output</button>
+            <button class="btn secondary" id="swap-btn" type="button">Swap Input / Output</button>
+            <button class="btn tertiary" id="clear-btn" type="button" data-shortcut="clear">Clear</button>
+          </div>
+
+          <div class="sql-workbench">
+            <div class="pane input-pane">
+              <div class="pane-head">
+                <span>SQL input</span>
+                <span class="spacer"></span>
+                <span class="badge">Client-side only</span>
+              </div>
+              <textarea id="sql-input" class="sql-textarea" spellcheck="false" placeholder="Paste your SQL query here...\n\nExample:\nselect id,name,email from users where status='ACTIVE' order by created_date desc"></textarea>
+            </div>
+
+            <div class="pane output-pane">
+              <div class="pane-head">
+                <span>Output</span>
+                <span class="spacer"></span>
+                <div class="pane-actions">
+                  <button class="btn secondary" id="copy-output-btn" type="button">Copy</button>
+                  <button class="btn secondary" id="download-btn" type="button">Download SQL</button>
+                  <button class="btn secondary" id="format-again-btn" type="button">Format Again</button>
+                  <button class="btn secondary" id="minify-again-btn" type="button">Minify</button>
+                </div>
+              </div>
+              <div class="output-frame" aria-live="polite" aria-label="Formatted SQL output">
+                <pre><code id="sql-output" class="sql-code"></code></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="example-buttons" aria-label="Example SQL queries">
+            <button class="example-button" type="button" data-example="select id, name, email from users where status='ACTIVE' order by created_date desc;">
+              <strong>Messy SELECT</strong>
+              <span>Format a compact query with projection and ordering.</span>
+              <pre class="example-preview">SELECT id, name, email FROM users WHERE status='ACTIVE' ORDER BY created_date DESC;</pre>
+            </button>
+            <button class="example-button" type="button" data-example="select u.id, u.name, o.order_id, o.total from users u join orders o on u.id = o.user_id where o.status = 'shipped' order by o.placed_at desc;">
+              <strong>Complex JOIN</strong>
+              <span>Normalize a join query with alias usage.</span>
+              <pre class="example-preview">SELECT u.id, u.name, o.order_id, o.total FROM users u JOIN orders o ON u.id = o.user_id WHERE o.status = 'shipped' ORDER BY o.placed_at DESC;</pre>
+            </button>
+            <button class="example-button" type="button" data-example="select u.name, (select count(*) from orders o where o.user_id = u.id) as order_count from users u where u.active = 1;">
+              <strong>Nested Query</strong>
+              <span>Pretty print a query with a subselect.</span>
+              <pre class="example-preview">SELECT u.name, (SELECT COUNT(*) FROM orders o WHERE o.user_id = u.id) AS order_count FROM users u WHERE u.active = 1;</pre>
+            </button>
+            <button class="example-button" type="button" data-example="with recent_orders as (select * from orders where placed_at > current_date - interval '30' day) select customer_id, sum(total) as revenue from recent_orders group by customer_id order by revenue desc;">
+              <strong>CTE</strong>
+              <span>Format a common table expression cleanly.</span>
+              <pre class="example-preview">WITH recent_orders AS (SELECT * FROM orders WHERE placed_at > CURRENT_DATE - INTERVAL '30' DAY) SELECT customer_id, SUM(total) AS revenue FROM recent_orders GROUP BY customer_id ORDER BY revenue DESC;</pre>
+            </button>
+            <button class="example-button" type="button" data-example="create table users (id serial primary key, name varchar(100) not null, email varchar(255) unique not null, created_at timestamp default now());">
+              <strong>CREATE TABLE</strong>
+              <span>Beautify a table definition.</span>
+              <pre class="example-preview">CREATE TABLE users (id SERIAL PRIMARY KEY, name VARCHAR(100) NOT NULL, email VARCHAR(255) UNIQUE NOT NULL, created_at TIMESTAMP DEFAULT NOW());</pre>
+            </button>
+          </div>
+
+          <div id="sql-stats" class="sql-stats stats-grid"></div>
+        </div>
+
+        <aside class="options-card" aria-labelledby="options-title">
+          <h2 id="options-title">Formatting options</h2>
+          <div class="options-group">
+            <h3>SQL dialect</h3>
+            <div class="field">
+              <label for="dialect-select">SQL dialect</label>
+              <select id="dialect-select" aria-label="SQL dialect">
+                <option>Standard SQL</option>
+                <option>MySQL</option>
+                <option>PostgreSQL</option>
+                <option>SQL Server</option>
+                <option>Oracle</option>
+                <option>SQLite</option>
+              </select>
+            </div>
+          </div>
+          <div class="options-group">
+            <h3>Case formatting</h3>
+            <fieldset>
+              <legend>Keyword case</legend>
+              <label><input type="radio" name="keyword-case" value="uppercase" checked /> Uppercase</label>
+              <label><input type="radio" name="keyword-case" value="lowercase" /> Lowercase</label>
+              <label><input type="radio" name="keyword-case" value="preserve" /> Preserve</label>
+            </fieldset>
+            <fieldset>
+              <legend>Identifier case</legend>
+              <label><input type="radio" name="identifier-case" value="preserve" checked /> Preserve</label>
+              <label><input type="radio" name="identifier-case" value="uppercase" /> Uppercase</label>
+              <label><input type="radio" name="identifier-case" value="lowercase" /> Lowercase</label>
+            </fieldset>
+          </div>
+          <div class="options-group">
+            <h3>Formatting</h3>
+            <div class="option-row">
+              <div class="field">
+                <label for="indent-select">Indent size</label>
+                <select id="indent-select" aria-label="Indent size">
+                  <option value="2">2</option>
+                  <option value="4">4</option>
+                  <option value="8">8</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="line-width">Maximum line width <span id="line-width-value">80</span></label>
+                <input id="line-width" type="range" min="40" max="160" value="80" aria-label="Maximum line width" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="comma-style">Comma style</label>
+              <select id="comma-style" aria-label="Comma style">
+                <option value="end">End of line</option>
+                <option value="beginning">Beginning of line</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="logical-style">Logical operator style</label>
+              <select id="logical-style" aria-label="Logical operator style">
+                <option value="before">Before</option>
+                <option value="after">After</option>
+              </select>
+            </div>
+          </div>
+          <div class="options-group">
+            <h3>Advanced</h3>
+            <fieldset>
+              <legend>Advanced formatting</legend>
+              <label><input type="checkbox" id="break-and" checked /> Break before AND</label>
+              <label><input type="checkbox" id="break-or" checked /> Break before OR</label>
+              <label><input type="checkbox" id="keep-comments" checked /> Keep comments</label>
+              <label><input type="checkbox" id="align-select" /> Align SELECT columns</label>
+              <label><input type="checkbox" id="expand-nested" /> Expand nested queries</label>
+            </fieldset>
+          </div>
+        </aside>
+      </div>
+
+      <section class="content narrow sql-section">
+        <h2>What is a SQL Formatter?</h2>
+        <p>A SQL formatter is a tool that restructures SQL queries so they are easier to read and maintain without changing their meaning. Developers use a SQL formatter online when they need a quick, browser-based way to clean up queries before sharing them in code reviews, documentation, or deployment scripts.</p>
+        <p>Formatted SQL improves readability by aligning clauses, separating expressions, and spacing keywords consistently. A good SQL beautifier keeps the logical structure of SELECT, JOIN, WHERE, GROUP BY, and ORDER BY intact so the query executes the same way as before.</p>
+        <p>Using a sql formatter does not alter your query results. It only changes visual presentation: indentation, capitalization, and line breaks. That means you can paste a query, format sql cleanly, and trust that the engine will still run the same commands.</p>
+      </section>
+
+      <section class="content narrow sql-section">
+        <h2>Why Use an Online SQL Formatter?</h2>
+        <p>Online formatting saves time by letting you clean up SQL without opening an editor or installing a plugin. When a query is easy to read, debugging becomes faster, team collaboration improves, and code reviews are clearer.</p>
+        <p>Using a sql pretty printer helps you avoid syntax mistakes and produces cleaner Git diffs because formatting is consistent across your team. A lightweight SQL beautifier also makes maintenance easier: queries with properly nested subqueries and well-spaced clauses are far simpler to update later.</p>
+      </section>
+
+      <section class="content narrow sql-section">
+        <h2>Features</h2>
+        <div class="feature-grid">
+          <article class="feature-card"><span class="feature-icon">💻</span><h3>Client-side formatting</h3><p>Everything runs in your browser. No SQL is uploaded or sent to a server.</p></article>
+          <article class="feature-card"><span class="feature-icon">⚡</span><h3>Fast formatting</h3><p>Format SQL instantly with a clean editor and responsive output preview.</p></article>
+          <article class="feature-card"><span class="feature-icon">🌐</span><h3>Multiple dialects</h3><p>Works for Standard SQL, MySQL, PostgreSQL, SQL Server, Oracle, and SQLite.</p></article>
+          <article class="feature-card"><span class="feature-icon">📋</span><h3>Copy to clipboard</h3><p>One click copies formatted SQL so you can paste it into your editor or review tool.</p></article>
+          <article class="feature-card"><span class="feature-icon">🧹</span><h3>Minify SQL</h3><p>Compress queries into compact form for transport or comparison.</p></article>
+          <article class="feature-card"><span class="feature-icon">🎨</span><h3>Syntax highlighting</h3><p>Read formatted SQL more easily with keyword, string, and comment styling.</p></article>
+          <article class="feature-card"><span class="feature-icon">📱</span><h3>Responsive design</h3><p>The tool works on desktop, tablet, and mobile with clean spacing.</p></article>
+          <article class="feature-card"><span class="feature-icon">🔒</span><h3>No login required</h3><p>Use the formatter without accounts, subscriptions, or tracking.</p></article>
+        </div>
+      </section>
+
+      <section class="content narrow sql-section">
+        <h2>Supported SQL Dialects</h2>
+        <div class="category-grid">
+          <article class="category-card"><h3>Standard SQL</h3><p>Classic SQL formatting for general-purpose queries and ANSI compliance.</p></article>
+          <article class="category-card"><h3>MySQL</h3><p>Handles common MySQL syntax and formatting for queries and table definitions.</p></article>
+          <article class="category-card"><h3>PostgreSQL</h3><p>Formats PostgreSQL-specific clauses, CTEs, and window functions.</p></article>
+          <article class="category-card"><h3>SQL Server</h3><p>Supports T-SQL style queries, joins, and batch statements.</p></article>
+          <article class="category-card"><h3>Oracle</h3><p>Improves readability for Oracle SQL scripts and DDL statements.</p></article>
+          <article class="category-card"><h3>SQLite</h3><p>Keeps compact SQLite queries clean and easy to understand.</p></article>
+        </div>
+      </section>
+
+      <section class="content narrow sql-section">
+        <div class="trust-strip">
+          <span class="badge">100% Client-side</span>
+          <span class="badge">No Uploads</span>
+          <span class="badge">Instant Formatting</span>
+          <span class="badge">Privacy First</span>
+        </div>
+      </section>
+
+      <section class="content narrow sql-section">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq">
+          <details class="faq-item" open>
+            <summary>Is this SQL formatter free?</summary>
+            <div class="a">Yes. DevToolsHive provides this SQL formatter online free of charge without any account requirement.</div>
+          </details>
+          <details class="faq-item">
+            <summary>Does formatting change my SQL query?</summary>
+            <div class="a">No. Formatting only changes whitespace, indentation, and capitalization. It does not change the logic or execution of your SQL.</div>
+          </details>
+          <details class="faq-item">
+            <summary>Is my SQL uploaded?</summary>
+            <div class="a">No. All SQL formatting happens entirely in your browser. Nothing is sent to a remote server.</div>
+          </details>
+          <details class="faq-item">
+            <summary>Which SQL dialects are supported?</summary>
+            <div class="a">This tool supports Standard SQL, MySQL, PostgreSQL, SQL Server, Oracle, and SQLite syntax for formatting and beautifying.</div>
+          </details>
+          <details class="faq-item">
+            <summary>Can I format large SQL files?</summary>
+            <div class="a">Yes. The formatter is designed to work quickly in the browser for queries with many lines, while remaining responsive.</div>
+          </details>
+          <details class="faq-item">
+            <summary>Can I minify SQL?</summary>
+            <div class="a">Yes. Use the Minify SQL button to remove unnecessary line breaks and whitespace for compact output.</div>
+          </details>
+          <details class="faq-item">
+            <summary>Does this work offline?</summary>
+            <div class="a">Yes. Once the page is loaded, the SQL formatter runs entirely in the browser without network access.</div>
+          </details>
+        </div>
+      </section>
+
+      <section class="content narrow sql-section">
+        <h2>Related Developer Tools</h2>
+        <div class="related-grid">
+          <a class="related-card" href="/tools/json-formatter.html">
+            <span class="tool-icon">🧾</span>
+            <div><strong>JSON Formatter</strong><span>Pretty-print JSON instantly for easier debugging.</span></div>
+          </a>
+          <a class="related-card" href="/tools/json-diff.html">
+            <span class="tool-icon">⚖️</span>
+            <div><strong>JSON Diff</strong><span>Compare JSON payloads side by side with visual diffing.</span></div>
+          </a>
+          <a class="related-card" href="/tools/regex.html">
+            <span class="tool-icon">🔍</span>
+            <div><strong>Regex Tester</strong><span>Build and validate regular expressions in real time.</span></div>
+          </a>
+          <a class="related-card" href="/tools/base64.html">
+            <span class="tool-icon">🧬</span>
+            <div><strong>Base64 Encoder / Decoder</strong><span>Encode and decode text or binary safely in the browser.</span></div>
+          </a>
+          <a class="related-card" href="/tools/uuid.html">
+            <span class="tool-icon">🧿</span>
+            <div><strong>UUID Generator</strong><span>Generate RFC-compliant UUIDs for IDs and testing.</span></div>
+          </a>
+          <a class="related-card" href="/tools/timestamp.html">
+            <span class="tool-icon">⏱️</span>
+            <div><strong>Timestamp Converter</strong><span>Convert between Unix timestamps and human-readable dates.</span></div>
+          </a>
+          <a class="related-card" href="/tools/jwt-decoder.html">
+            <span class="tool-icon">🔐</span>
+            <div><strong>JWT Decoder</strong><span>Inspect JWT claims without sending tokens to a server.</span></div>
+          </a>
+          <a class="related-card" href="/tools/url-encoder.html">
+            <span class="tool-icon">🔗</span>
+            <div><strong>URL Encoder</strong><span>Encode and decode URL strings safely and quickly.</span></div>
+          </a>
+        </div>
+      </section>
+      <div class="footer-separator"></div>
+    </main>
+    <div id="site-footer"></div>
+    <script src="../assets/js/common.js"></script>
+    <script src="../assets/js/i18n/translations.js"></script>
+    <script src="../assets/js/i18n.js"></script>
+    <script src="../assets/js/partials.js"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          { "@type": "Question", "name": "Is this SQL formatter free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. DevToolsHive provides this SQL formatter online free of charge without any account requirement." } },
+          { "@type": "Question", "name": "Does formatting change my SQL query?", "acceptedAnswer": { "@type": "Answer", "text": "No. Formatting only changes whitespace, indentation, and capitalization. It does not change the logic or execution of your SQL." } },
+          { "@type": "Question", "name": "Is my SQL uploaded?", "acceptedAnswer": { "@type": "Answer", "text": "No. All SQL formatting happens entirely in your browser. Nothing is sent to a remote server." } },
+          { "@type": "Question", "name": "Which SQL dialects are supported?", "acceptedAnswer": { "@type": "Answer", "text": "This tool supports Standard SQL, MySQL, PostgreSQL, SQL Server, Oracle, and SQLite syntax for formatting and beautifying." } },
+          { "@type": "Question", "name": "Can I format large SQL files?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. The formatter is designed to work quickly in the browser for queries with many lines, while remaining responsive." } },
+          { "@type": "Question", "name": "Can I minify SQL?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Use the Minify SQL button to remove unnecessary line breaks and whitespace for compact output." } },
+          { "@type": "Question", "name": "Does this work offline?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Once the page is loaded, the SQL formatter runs entirely in the browser without network access." } }
+        ]
+      }
+    </script>
+    <script>
+      const D = window.DTH;
+      const $ = D.$;
+      const input = document.querySelector('#sql-input');
+      const output = document.querySelector('#sql-output');
+      const statsPanel = document.querySelector('#sql-stats');
+      const formatBtn = document.querySelector('#format-btn');
+      const minifyBtn = document.querySelector('#minify-btn');
+      const clearBtn = document.querySelector('#clear-btn');
+      const copyBtn = document.querySelector('#copy-btn');
+      const copyOutputBtn = document.querySelector('#copy-output-btn');
+      const downloadBtn = document.querySelector('#download-btn');
+      const swapBtn = document.querySelector('#swap-btn');
+      const formatAgainBtn = document.querySelector('#format-again-btn');
+      const minifyAgainBtn = document.querySelector('#minify-again-btn');
+      const exampleButtons = document.querySelectorAll('.example-button');
+      const lineWidthEl = document.querySelector('#line-width');
+      const lineWidthValue = document.querySelector('#line-width-value');
+      const options = {
+        dialect: document.querySelector('#dialect-select'),
+        keywordCase: document.querySelector('input[name="keyword-case"]:checked'),
+        identifierCase: document.querySelector('input[name="identifier-case"]:checked'),
+        indentSize: document.querySelector('#indent-select'),
+        commaStyle: document.querySelector('#comma-style'),
+        logicalStyle: document.querySelector('#logical-style'),
+        breakAnd: document.querySelector('#break-and'),
+        breakOr: document.querySelector('#break-or'),
+        keepComments: document.querySelector('#keep-comments'),
+        alignSelect: document.querySelector('#align-select'),
+        expandNested: document.querySelector('#expand-nested'),
+      };
+      const STORAGE_KEY = 'dth-sql-formatter-options';
+      let currentOutput = '';
+      const keywords = [
+        'WITH','SELECT','FROM','WHERE','GROUP BY','ORDER BY','HAVING','LIMIT','OFFSET','INSERT INTO','VALUES','UPDATE','SET','DELETE FROM','CREATE TABLE','ALTER TABLE','DROP TABLE','UNION ALL','UNION','JOIN','INNER JOIN','LEFT JOIN','RIGHT JOIN','FULL JOIN','CROSS JOIN','ON','AND','OR','CASE','WHEN','THEN','ELSE','END','AS','IN','IS','NOT','NULL','DISTINCT','ORDER','BY','TOP'
+      ];
+      const keywordSet = new Set(keywords.map(k => k.toUpperCase()));
+
+      function escapeHtml(text) {
+        return text.replace(/[&<>]/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
+      }
+
+      function loadOptions() {
+        try {
+          const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+          if (stored.dialect) options.dialect.value = stored.dialect;
+          if (stored.keywordCase) document.querySelector(`input[name="keyword-case"][value="${stored.keywordCase}"]`).checked = true;
+          if (stored.identifierCase) document.querySelector(`input[name="identifier-case"][value="${stored.identifierCase}"]`).checked = true;
+          if (stored.indentSize) options.indentSize.value = stored.indentSize;
+          if (stored.commaStyle) options.commaStyle.value = stored.commaStyle;
+          if (stored.logicalStyle) options.logicalStyle.value = stored.logicalStyle;
+          options.breakAnd.checked = stored.breakAnd !== false;
+          options.breakOr.checked = stored.breakOr !== false;
+          options.keepComments.checked = stored.keepComments !== false;
+          options.alignSelect.checked = stored.alignSelect === true;
+          options.expandNested.checked = stored.expandNested === true;
+          if (stored.lineWidth) lineWidthEl.value = stored.lineWidth;
+        } catch (error) {
+          console.warn(error);
+        }
+        lineWidthValue.textContent = lineWidthEl.value;
+      }
+
+      function saveOptions() {
+        const payload = {
+          dialect: options.dialect.value,
+          keywordCase: document.querySelector('input[name="keyword-case"]:checked').value,
+          identifierCase: document.querySelector('input[name="identifier-case"]:checked').value,
+          indentSize: options.indentSize.value,
+          commaStyle: options.commaStyle.value,
+          logicalStyle: options.logicalStyle.value,
+          breakAnd: options.breakAnd.checked,
+          breakOr: options.breakOr.checked,
+          keepComments: options.keepComments.checked,
+          alignSelect: options.alignSelect.checked,
+          expandNested: options.expandNested.checked,
+          lineWidth: lineWidthEl.value,
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+      }
+
+      function safeMatch(text, re) {
+        const m = text.match(re);
+        return m ? m.length : 0;
+      }
+
+      function computeStats(text) {
+        const clean = text.trim();
+        return {
+          characters: text.length,
+          words: clean.length ? clean.split(/\s+/).length : 0,
+          lines: clean.length ? clean.split(/\r?\n/).length : 0,
+          statements: clean.length ? Math.max(1, clean.split(/;\s*/).filter(Boolean).length) : 0,
+          select: safeMatch(text, /\bSELECT\b/gi),
+          insert: safeMatch(text, /\bINSERT\b/gi),
+          update: safeMatch(text, /\bUPDATE\b/gi),
+          delete: safeMatch(text, /\bDELETE\b/gi),
+          create: safeMatch(text, /\bCREATE\b/gi),
+          join: safeMatch(text, /\bJOIN\b/gi),
+          where: safeMatch(text, /\bWHERE\b/gi),
+          groupBy: safeMatch(text, /\bGROUP\s+BY\b/gi),
+          orderBy: safeMatch(text, /\bORDER\s+BY\b/gi),
+          nested: safeMatch(text, /\(\s*SELECT\b/gi)
+        };
+      }
+
+      function renderStats(text) {
+        const stats = computeStats(text);
+        statsPanel.innerHTML = `
+          <div class="sql-stat-card"><h3>Characters</h3><p>${stats.characters}</p></div>
+          <div class="sql-stat-card"><h3>Words</h3><p>${stats.words}</p></div>
+          <div class="sql-stat-card"><h3>Lines</h3><p>${stats.lines}</p></div>
+          <div class="sql-stat-card"><h3>Statements</h3><p>${stats.statements}</p></div>
+          <div class="sql-stat-card"><h3>SELECT</h3><p>${stats.select}</p></div>
+          <div class="sql-stat-card"><h3>JOIN</h3><p>${stats.join}</p></div>
+          <div class="sql-stat-card"><h3>WHERE</h3><p>${stats.where}</p></div>
+          <div class="sql-stat-card"><h3>Nested</h3><p>${stats.nested}</p></div>
+        `;
+      }
+
+      function replacePlaceholders(sql, placeholders) {
+        return sql.replace(/__P(\d+)__/g, (_, id) => placeholders[Number(id)] || '');
+      }
+
+      function protectFragments(sql, keepComments) {
+        const fragments = [];
+        const preserved = sql.replace(/(--[^\n]*|\/\*[\s\S]*?\*\/|'(?:''|[^'])*'|"(?:""|[^"])*")/g, (match) => {
+          const token = `__P${fragments.length}__`;
+          if (!keepComments && /^(--|\/\*)/.test(match)) {
+            fragments.push('');
+            return token;
+          }
+          fragments.push(match);
+          return token;
+        });
+        return { protectedSql: preserved, fragments };
+      }
+
+      function normalizeSql(sql) {
+        return sql.replace(/\r\n|\r/g, '\n').replace(/\t/g, ' ').replace(/ +/g, ' ').trim();
+      }
+
+      function formatSql(rawSql, options) {
+        if (!rawSql.trim()) return '';
+        const { protectedSql, fragments } = protectFragments(rawSql, options.keepComments);
+        let sql = normalizeSql(protectedSql);
+        const patterns = [
+          'UNION ALL','UNION','INTERSECT','EXCEPT','SELECT','FROM','WHERE','GROUP BY','ORDER BY','HAVING','LIMIT','OFFSET','INSERT INTO','VALUES','UPDATE','SET','DELETE FROM','CREATE TABLE','ALTER TABLE','DROP TABLE','WITH','JOIN','INNER JOIN','LEFT JOIN','RIGHT JOIN','FULL JOIN','CROSS JOIN','ON','CASE','WHEN','ELSE','THEN','END'
+        ];
+        patterns.sort((a,b)=>b.length-a.length);
+        patterns.forEach((kw) => {
+          const re = new RegExp('\\b' + kw.replace(/ /g, '\\s+') + '\\b', 'gi');
+          sql = sql.replace(re, (match) => `\n${match.toUpperCase()}`);
+        });
+        if (options.logicalStyle === 'before') {
+          sql = sql.replace(/\s+\b(AND|OR)\b\s+/gi, '\n$1 ');
+        } else {
+          sql = sql.replace(/\s+\b(AND|OR)\b\s+/gi, ' $1\n');
+        }
+        if (options.commaStyle === 'beginning') {
+          sql = sql.replace(/\s*,\s*/g, '\n, ');
+        } else {
+          sql = sql.replace(/\s*,\s*/g, ',\n');
+        }
+        if (options.expandNested) {
+          sql = sql.replace(/\(\s*/g, '(\n');
+          sql = sql.replace(/\s*\)/g, '\n)');
+        }
+        sql = sql.replace(/\s*\(\s*/g, ' (');
+        sql = sql.replace(/\s*\)\s*/g, ') ');
+        sql = sql.replace(/\n+/g, '\n').trim();
+
+        const lines = sql.split('\n').map((line) => line.trim()).filter(Boolean);
+        let level = 0;
+        let inSelect = false;
+        const formatted = lines.map((line) => {
+          const upper = line.toUpperCase();
+          if (/^\)/.test(line)) level = Math.max(0, level - 1);
+          let indent = ' '.repeat(level * options.indentSize);
+          if (/^SELECT\b/.test(upper)) { inSelect = true; }
+          if (/^FROM\b|^WHERE\b|^GROUP BY\b|^ORDER BY\b|^HAVING\b|^LIMIT\b|^OFFSET\b|^UNION\b|^INSERT INTO\b|^UPDATE\b|^DELETE FROM\b|^CREATE TABLE\b|^ALTER TABLE\b|^DROP TABLE\b|^WITH\b/.test(upper)) { indent = ' '.repeat(level * options.indentSize); }
+          if (/\($/.test(line)) { if (!/^SELECT\b/.test(upper)) level += 1; }
+          if (/^\)/.test(line) && indent) { indent = ' '.repeat(level * options.indentSize); }
+          if (options.alignSelect && inSelect && !/^FROM\b/.test(upper) && !/^SELECT\b/.test(upper)) {
+            indent = ' '.repeat((level + 1) * options.indentSize);
+          }
+          if (/^FROM\b/.test(upper)) { inSelect = false; }
+          const wrapped = wrapLine(indent + line, options.maxLineWidth, options.commaStyle);
+          return wrapped;
+        }).join('\n');
+
+        let restored = replacePlaceholders(formatted, fragments);
+        restored = applyCase(restored, options);
+        return restored.trim();
+      }
+
+      function wrapLine(line, maxWidth, commaStyle) {
+        if (line.length <= maxWidth) return line;
+        const breakAfter = commaStyle === 'end';
+        if (breakAfter) {
+          return line.replace(/,\s*/g, ',\n' + ' '.repeat(4));
+        }
+        return line;
+      }
+
+      function applyCase(sql, options) {
+        let transformed = '';
+        let token = '';
+        let inString = false;
+        let stringChar = '';
+        for (let i = 0; i < sql.length; i++) {
+          const ch = sql[i];
+          const next = sql[i + 1];
+          if (inString) {
+            transformed += escapeHtml(ch);
+            if (ch === stringChar) {
+              inString = false;
+            }
+            continue;
+          }
+          if (ch === '"' || ch === "'") {
+            inString = true;
+            stringChar = ch;
+            transformed += escapeHtml(ch);
+            continue;
+          }
+          if (/\w/.test(ch)) {
+            token += ch;
+            continue;
+          }
+          if (token) {
+            const upper = token.toUpperCase();
+            if (keywordSet.has(upper)) {
+              transformed += options.keywordCase === 'lowercase' ? upper.toLowerCase() : upper;
+            } else if (options.identifierCase !== 'preserve') {
+              transformed += options.identifierCase === 'uppercase' ? token.toUpperCase() : token.toLowerCase();
+            } else {
+              transformed += token;
+            }
+            token = '';
+          }
+          transformed += escapeHtml(ch);
+        }
+        if (token) {
+          const upper = token.toUpperCase();
+          if (keywordSet.has(upper)) {
+            transformed += options.keywordCase === 'lowercase' ? upper.toLowerCase() : upper;
+          } else if (options.identifierCase !== 'preserve') {
+            transformed += options.identifierCase === 'uppercase' ? token.toUpperCase() : token.toLowerCase();
+          } else {
+            transformed += token;
+          }
+        }
+        return transformed;
+      }
+
+      function minifySql(rawSql, keepComments) {
+        if (!rawSql.trim()) return '';
+        const { protectedSql, fragments } = protectFragments(rawSql, keepComments);
+        let sql = normalizeSql(protectedSql);
+        sql = sql.replace(/\n+/g, ' ');
+        sql = sql.replace(/\s*,\s*/g, ', ');
+        sql = sql.replace(/\s*\(\s*/g, ' (');
+        sql = sql.replace(/\s*\)\s*/g, ') ');
+        sql = sql.replace(/\s*;\s*/g, '; ');
+        sql = sql.replace(/ +/g, ' ').trim();
+        const restored = replacePlaceholders(sql, fragments);
+        return restored;
+      }
+
+      function syntaxHighlight(sql) {
+        let result = '';
+        let word = '';
+        let state = 'normal';
+        let quote = '';
+        const flushWord = (forceFunction = false) => {
+          if (!word) return;
+          const upper = word.toUpperCase();
+          if (keywordSet.has(upper)) {
+            result += `<span class="sql-keyword">${escapeHtml(word)}</span>`;
+          } else if (/^\d+$/.test(word)) {
+            result += `<span class="sql-number">${escapeHtml(word)}</span>`;
+          } else if (forceFunction) {
+            result += `<span class="sql-function">${escapeHtml(word)}</span>`;
+          } else {
+            result += escapeHtml(word);
+          }
+          word = '';
+        };
+        for (let i = 0; i < sql.length; i++) {
+          const ch = sql[i];
+          const next = sql[i + 1];
+
+          if (state === 'string') {
+            result += escapeHtml(ch);
+            if (ch === quote) {
+              result += '</span>';
+              state = 'normal';
+            }
+            continue;
+          }
+
+          if (state === 'comment-line') {
+            result += escapeHtml(ch);
+            if (ch === '\n') {
+              result += '</span>';
+              state = 'normal';
+            }
+            continue;
+          }
+
+          if (state === 'comment-block') {
+            if (ch === '*' && next === '/') {
+              result += '*/</span>';
+              i += 1;
+              state = 'normal';
+            } else {
+              result += escapeHtml(ch);
+            }
+            continue;
+          }
+
+          if ((ch === '"' || ch === "'") && state === 'normal') {
+            flushWord();
+            state = 'string';
+            quote = ch;
+            result += `<span class="sql-string">${escapeHtml(ch)}`;
+            continue;
+          }
+
+          if (ch === '-' && next === '-') {
+            flushWord();
+            state = 'comment-line';
+            result += `<span class="sql-comment">--`;
+            i += 1;
+            continue;
+          }
+
+          if (ch === '/' && next === '*') {
+            flushWord();
+            state = 'comment-block';
+            result += `<span class="sql-comment">/*`;
+            i += 1;
+            continue;
+          }
+
+          if (/\w/.test(ch)) {
+            word += ch;
+            continue;
+          }
+
+          flushWord();
+          if ('+-*/=%<>!'.includes(ch)) {
+            result += `<span class="sql-operator">${escapeHtml(ch)}</span>`;
+          } else {
+            result += escapeHtml(ch);
+          }
+        }
+        flushWord();
+        if (state === 'string') {
+          result += '</span>';
+        } else if (state === 'comment-line' || state === 'comment-block') {
+          result += '</span>';
+        }
+        return result;
+      }
+
+      function updateOutput(value) {
+        currentOutput = value;
+        if (!value) {
+          output.innerHTML = '';
+          return;
+        }
+        output.innerHTML = syntaxHighlight(value);
+      }
+
+      function processFormat() {
+        const raw = input.value;
+        const result = formatSql(raw, {
+          keywordCase: document.querySelector('input[name="keyword-case"]:checked').value,
+          identifierCase: document.querySelector('input[name="identifier-case"]:checked').value,
+          indentSize: Number(options.indentSize.value),
+          commaStyle: options.commaStyle.value,
+          logicalStyle: options.logicalStyle.value,
+          breakAnd: options.breakAnd.checked,
+          breakOr: options.breakOr.checked,
+          keepComments: options.keepComments.checked,
+          alignSelect: options.alignSelect.checked,
+          expandNested: options.expandNested.checked,
+          maxLineWidth: Number(lineWidthEl.value),
+        });
+        updateOutput(result);
+        D.toast('SQL formatted successfully', 'ok');
+        currentOutput = result;
+        renderStats(raw);
+        saveOptions();
+      }
+
+      function processMinify() {
+        const raw = input.value;
+        const result = minifySql(raw, options.keepComments.checked);
+        updateOutput(result);
+        D.toast('SQL minified successfully', 'ok');
+        currentOutput = result;
+        renderStats(raw);
+        saveOptions();
+      }
+
+      function copyOutput() {
+        if (!currentOutput) {
+          D.toast('Nothing to copy', 'warn');
+          return;
+        }
+        D.copyText(currentOutput, 'Copied');
+      }
+
+      function downloadOutput() {
+        if (!currentOutput) {
+          D.toast('Nothing to download', 'warn');
+          return;
+        }
+        D.downloadText('formatted.sql', currentOutput, 'text/sql;charset=utf-8');
+      }
+
+      function swapInputOutput() {
+        const inputText = input.value;
+        input.value = currentOutput || '';
+        updateOutput(inputText);
+        currentOutput = inputText;
+        renderStats(input.value);
+      }
+
+      function clearAll() {
+        input.value = '';
+        updateOutput('');
+        renderStats('');
+      }
+
+      function bindControls() {
+        formatBtn.addEventListener('click', processFormat);
+        minifyBtn.addEventListener('click', processMinify);
+        formatAgainBtn.addEventListener('click', processFormat);
+        minifyAgainBtn.addEventListener('click', processMinify);
+        clearBtn.addEventListener('click', clearAll);
+        copyBtn.addEventListener('click', copyOutput);
+        copyOutputBtn.addEventListener('click', copyOutput);
+        downloadBtn.addEventListener('click', downloadOutput);
+        swapBtn.addEventListener('click', swapInputOutput);
+        exampleButtons.forEach((button) => {
+          button.addEventListener('click', () => {
+            input.value = button.getAttribute('data-example') || '';
+            renderStats(input.value);
+            if (input.value.trim()) {
+              processFormat();
+            }
+          });
+        });
+        document.querySelectorAll('input, select').forEach((control) => {
+          control.addEventListener('change', saveOptions);
+        });
+        lineWidthEl.addEventListener('input', () => {
+          lineWidthValue.textContent = lineWidthEl.value;
+          saveOptions();
+        });
+        input.addEventListener('input', () => renderStats(input.value));
+        document.addEventListener('keydown', (event) => {
+          const mod = event.ctrlKey || event.metaKey;
+          if (!mod) return;
+          if (event.shiftKey && (event.key === 'M' || event.key === 'm')) {
+            event.preventDefault();
+            processMinify();
+          }
+        });
+      }
+
+      loadOptions();
+      bindControls();
+      renderStats('');
+    </script>
+  </body>
+</html>
