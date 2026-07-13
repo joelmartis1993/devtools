@@ -7,6 +7,7 @@
     {slug:'cron-generator',  k:'tool.cron', isNew:true},
     {slug:'env-parser',      k:'tool.env', isNew:true},
     {slug:'api-builder',     k:'tool.api', isNew:true},
+    {slug:'sql-formatter',   k:'tool.sql-formatter', isNew:true},
     {slug:'base64',          k:'tool.base64'},
     {slug:'url-encoder',     k:'tool.url'},
     {slug:'timestamp',       k:'tool.timestamp'},
@@ -26,6 +27,7 @@
         <a href="/" data-i18n="nav.home">Home</a>
         <a href="/#tools" data-i18n="nav.tools">Tools</a>
         <a href="/blog/index.html" data-i18n="nav.blog">Blog</a>
+        <button id="cmd-palette-btn" class="icon-btn" aria-label="Search tools" title="⌘K">⌘K</button>
         <select id="lang-switch" class="lang-select" aria-label="Language">${langOpts}</select>
         <button id="theme-toggle" class="icon-btn" aria-label="Toggle theme">☀</button>
       </nav>
@@ -41,11 +43,14 @@
           <a class="brand" href="/" style="margin-bottom:10px"><span class="brand-mark">DT</span><span>DevToolsHive</span></a>
           <p class="muted" data-i18n="footer.tagline" style="margin-top:8px;max-width:320px"></p>
         </div>
-        <div><h4 data-i18n="footer.tools">Tools</h4><ul>${cols}</ul></div>
-        <div><h4 data-i18n="footer.popular">Popular</h4><ul>${cols2}</ul></div>
-        <div><h4 data-i18n="footer.legal">Legal</h4><ul>
-          <li><a href="/pages/about.html">About Us</a></li>
+        <div><h4 data-i18n="footer.tools">Developer Tools</h4><ul>${cols}</ul></div>
+        <div><h4 data-i18n="footer.popular">More Tools</h4><ul>${cols2}</ul></div>
+        <div><h4 data-i18n="footer.resources">Resources</h4><ul>
+          <li><a href="/blog/index.html" data-i18n="nav.blog">Blog</a></li>
+          <li><a href="/pages/about.html">About</a></li>
           <li><a href="/pages/contact.html">Contact</a></li>
+        </ul></div>
+        <div><h4 data-i18n="footer.legal">Legal</h4><ul>
           <li><a href="/pages/privacy.html">Privacy Policy</a></li>
           <li><a href="/pages/terms.html">Terms of Service</a></li>
           <li><a href="/pages/disclaimer.html">Disclaimer</a></li>
