@@ -171,7 +171,7 @@
                 <span class="hp-term-key">{</span><br>
                 &nbsp;&nbsp;<span class="hp-term-key">"name"</span><span class="hp-term-key">:</span> <span class="hp-term-str">"DevToolsHive"</span>,<br>
                 &nbsp;&nbsp;<span class="hp-term-key">"version"</span><span class="hp-term-key">:</span> <span class="hp-term-str">"2.0.0"</span>,<br>
-                &nbsp;&nbsp;<span class="hp-term-key">"tools"</span><span class="hp-term-key">:</span> <span class="hp-term-num">13</span>,<br>
+                &nbsp;&nbsp;<span class="hp-term-key">"tools"</span><span class="hp-term-key">:</span> <span class="hp-term-num">14</span>,<br>
                 &nbsp;&nbsp;<span class="hp-term-key">"private"</span><span class="hp-term-key">:</span> <span class="hp-term-num">true</span>,<br>
                 &nbsp;&nbsp;<span class="hp-term-key">"uploads"</span><span class="hp-term-key">:</span> <span class="hp-term-num">false</span><br>
                 <span class="hp-term-key">}</span>
@@ -180,6 +180,23 @@
                 <span class="hp-featured-tag">JSON</span>
                 <h3 class="hp-featured-name" data-i18n="tool.json-formatter.title">JSON Formatter & Validator</h3>
                 <p class="hp-featured-desc" data-i18n="tool.json-formatter.desc">Beautify, validate and explore JSON with a tree view. Handles large payloads.</p>
+                <span class="hp-featured-cta">Open tool</span>
+              </div>
+            </a>
+
+            <!-- JSON to TypeScript -->
+            <a class="hp-featured-card" href="/tools/json-to-typescript.html">
+              <div class="hp-featured-preview">
+                <span class="hp-term-key">interface</span> <span class="hp-term-str">User</span> <span class="hp-term-key">{</span><br>
+                &nbsp;&nbsp;<span class="hp-term-key">id</span><span class="hp-term-key">:</span> <span class="hp-term-str">number</span>;<br>
+                &nbsp;&nbsp;<span class="hp-term-key">name</span><span class="hp-term-key">:</span> <span class="hp-term-str">string</span>;<br>
+                &nbsp;&nbsp;<span class="hp-term-key">active</span><span class="hp-term-key">:</span> <span class="hp-term-str">boolean</span>;<br>
+                <span class="hp-term-key">}</span>
+              </div>
+              <div class="hp-featured-info">
+                <span class="hp-featured-tag">TypeScript</span>
+                <h3 class="hp-featured-name">JSON to TypeScript</h3>
+                <p class="hp-featured-desc">Convert JSON payloads into clean interfaces instantly with nested object and array support.</p>
                 <span class="hp-featured-cta">Open tool</span>
               </div>
             </a>
@@ -278,7 +295,7 @@
         <div class="container">
           <p class="hp-section-label">Toolkit</p>
           <h2 class="hp-section-title" data-i18n="section.all">All tools</h2>
-          <p class="hp-section-sub">Thirteen focused utilities. Zero server round-trips. Pick a category or browse them all.</p>
+          <p class="hp-section-sub">Fourteen focused utilities. Zero server round-trips. Pick a category or browse them all.</p>
 
           <div class="hp-tab-bar" role="tablist" aria-label="Tool categories" id="tabBar">
             <button class="hp-tab active" role="tab" aria-selected="true" data-cat="all">All</button>
@@ -296,6 +313,15 @@
               <span class="hp-tool-row-text">
                 <p class="hp-tool-row-name" data-i18n="tool.json-formatter.title">JSON Formatter & Validator</p>
                 <p class="hp-tool-row-desc" data-i18n="tool.json-formatter.desc">Beautify, validate and explore JSON with a tree view.</p>
+              </span>
+              <span class="hp-tool-row-arrow" aria-hidden="true">→</span>
+            </a>
+            <!-- JSON to TypeScript -->
+            <a class="hp-tool-row" href="/tools/json-to-typescript.html" data-cats="data">
+              <span class="hp-tool-row-icon" aria-hidden="true">TS</span>
+              <span class="hp-tool-row-text">
+                <p class="hp-tool-row-name">JSON to TypeScript</p>
+                <p class="hp-tool-row-desc">Convert JSON payloads into clean interfaces and types instantly.</p>
               </span>
               <span class="hp-tool-row-arrow" aria-hidden="true">→</span>
             </a>
@@ -627,6 +653,7 @@
       /* ──── TOOLS DATA (for command palette) ──── */
       const TOOLS = [
         { name: "JSON Formatter & Validator", slug: "json-formatter", icon: "{ }", cat: "Data", desc: "Beautify, validate and explore JSON with a tree view.", i18nTitle: "tool.json-formatter.title", i18nDesc: "tool.json-formatter.desc" },
+        { name: "JSON to TypeScript", slug: "json-to-typescript", icon: "TS", cat: "Data", desc: "Convert JSON payloads into clean interfaces and types instantly.", i18nTitle: "tool.json-to-typescript.title", i18nDesc: "tool.json-to-typescript.desc" },
         { name: "JSON Diff", slug: "json-diff", icon: "⇄", cat: "Data", desc: "Compare two JSON documents side by side.", i18nTitle: "tool.json-diff.title", i18nDesc: "tool.json-diff.desc" },
         { name: "JWT Decoder", slug: "jwt-decoder", icon: "🔐", cat: "Security", desc: "Decode JWT header, payload and signature.", i18nTitle: "tool.jwt.title", i18nDesc: "tool.jwt.desc" },
         { name: "Cron Expression Generator", slug: "cron-generator", icon: "⏱", cat: "DevOps", desc: "Build cron expressions visually.", i18nTitle: "tool.cron.title", i18nDesc: "tool.cron.desc" },
@@ -636,6 +663,7 @@
         { name: "Unix Timestamp Converter", slug: "timestamp", icon: "🕐", cat: "DevOps", desc: "Convert between Unix timestamps and human dates.", i18nTitle: "tool.timestamp.title", i18nDesc: "tool.timestamp.desc" },
         { name: "UUID Generator", slug: "uuid", icon: "🆔", cat: "DevOps", desc: "Generate v4 UUIDs. Cryptographically secure.", i18nTitle: "tool.uuid.title", i18nDesc: "tool.uuid.desc" },
         { name: "Regex Tester", slug: "regex", icon: ".*", cat: "Text", desc: "Test regular expressions with live highlights.", i18nTitle: "tool.regex.title", i18nDesc: "tool.regex.desc" },
+        { name: "SQL Formatter & Beautifier", slug: "sql-formatter", icon: "SQL", cat: "Data", desc: "Format SQL queries with a browser-based SQL beautifier.", i18nTitle: "tool.sql-formatter.title", i18nDesc: "tool.sql-formatter.desc" },
         { name: "Text Case Converter", slug: "case-converter", icon: "Aa", cat: "Text", desc: "Convert between camelCase, snake_case, kebab-case.", i18nTitle: "tool.case.title", i18nDesc: "tool.case.desc" },
         { name: "User Agent Parser", slug: "user-agent", icon: "🌐", cat: "Text", desc: "Parse User-Agent strings into browser, OS, device.", i18nTitle: "tool.user-agent.title", i18nDesc: "tool.user-agent.desc" }
       ];

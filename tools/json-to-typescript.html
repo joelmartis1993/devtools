@@ -1,0 +1,1165 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="google-adsense-account" content="ca-pub-2114664554162220" />
+    <title>JSON to TypeScript Converter — Generate Interfaces Instantly | DevToolsHive</title>
+    <meta
+      name="description"
+      content="Convert JSON to TypeScript interfaces instantly in your browser. Generate clean TS types for nested objects, arrays, nullable values, and API payloads with zero uploads."
+    />
+    <link
+      rel="canonical"
+      href="https://devtoolshive.com/tools/json-to-typescript.html"
+    />
+    <link
+      rel="alternate"
+      hreflang="en"
+      href="https://devtoolshive.com/tools/json-to-typescript.html?lang=en"
+    />
+    <link
+      rel="alternate"
+      hreflang="es"
+      href="https://devtoolshive.com/tools/json-to-typescript.html?lang=es"
+    />
+    <link
+      rel="alternate"
+      hreflang="de"
+      href="https://devtoolshive.com/tools/json-to-typescript.html?lang=de"
+    />
+    <link
+      rel="alternate"
+      hreflang="fr"
+      href="https://devtoolshive.com/tools/json-to-typescript.html?lang=fr"
+    />
+    <link
+      rel="alternate"
+      hreflang="ja"
+      href="https://devtoolshive.com/tools/json-to-typescript.html?lang=ja"
+    />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href="https://devtoolshive.com/tools/json-to-typescript.html"
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="JSON to TypeScript Converter — Generate Interfaces Instantly | DevToolsHive"
+    />
+    <meta
+      property="og:description"
+      content="Turn JSON into production-ready TypeScript interfaces and types without leaving your browser."
+    />
+    <meta
+      property="og:url"
+      content="https://devtoolshive.com/tools/json-to-typescript.html"
+    />
+    <meta
+      property="og:image"
+      content="https://devtoolshive.com/assets/img/favicon.svg"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="JSON to TypeScript Converter — Generate Interfaces Instantly | DevToolsHive"
+    />
+    <meta
+      name="twitter:description"
+      content="Turn JSON into production-ready TypeScript interfaces and types without leaving your browser."
+    />
+    <meta
+      name="twitter:image"
+      content="https://devtoolshive.com/assets/img/favicon.svg"
+    />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0b0d12" />
+    <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg" />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <style>
+      .tool-shell {
+        display: grid;
+        grid-template-columns: minmax(320px, 1.25fr) minmax(320px, 1.1fr) minmax(280px, 0.8fr);
+        gap: 14px;
+        margin-top: 18px;
+      }
+      .pane {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        overflow: hidden;
+        min-height: 520px;
+        display: flex;
+        flex-direction: column;
+        box-shadow: var(--shadow);
+      }
+      .pane-head {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--border);
+        background: color-mix(in oklab, var(--surface-2) 72%, var(--surface));
+      }
+      .pane-title {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+      }
+      .pane-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .pane-body {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+      }
+      .editor-area {
+        flex: 1;
+        width: 100%;
+        border: 0;
+        outline: 0;
+        padding: 16px 16px 12px;
+        min-height: 300px;
+        background: transparent;
+        color: var(--text);
+        font-family: var(--mono);
+        font-size: 13.6px;
+        line-height: 1.6;
+        resize: vertical;
+      }
+      .output-area {
+        flex: 1;
+        padding: 16px;
+        overflow: auto;
+        font-family: var(--mono);
+        font-size: 13.6px;
+        line-height: 1.6;
+      }
+      .output-area pre {
+        margin: 0;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      .status-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 14px;
+        border-top: 1px solid var(--border);
+        background: color-mix(in oklab, var(--surface-2) 80%, transparent);
+        color: var(--text-dim);
+        font-size: 12px;
+      }
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border: 1px solid var(--border);
+        padding: 4px 8px;
+        border-radius: 999px;
+      }
+      .status-pill.ok {
+        color: var(--ok);
+        border-color: color-mix(in oklab, var(--ok) 35%, var(--border));
+      }
+      .status-pill.err {
+        color: var(--err);
+        border-color: color-mix(in oklab, var(--err) 35%, var(--border));
+      }
+      .status-pill.warn {
+        color: var(--warn);
+        border-color: color-mix(in oklab, var(--warn) 35%, var(--border));
+      }
+      .options-body {
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      details.option-card {
+        background: color-mix(in oklab, var(--surface-2) 88%, transparent);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 10px 12px;
+      }
+      details.option-card[open] {
+        border-color: color-mix(in oklab, var(--accent) 28%, var(--border));
+      }
+      details.option-card summary {
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 13px;
+        list-style: none;
+      }
+      details.option-card summary::-webkit-details-marker {
+        display: none;
+      }
+      .option-grid {
+        display: grid;
+        gap: 10px;
+        margin-top: 10px;
+      }
+      .option-row {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .option-row label {
+        font-size: 12px;
+        color: var(--text-dim);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .stacked {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .radio, .check {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: var(--text);
+      }
+      .radio input, .check input {
+        accent-color: var(--accent);
+      }
+      .field select, .field input[type="text"] {
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text);
+      }
+      .examples {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 8px;
+        margin-top: 16px;
+      }
+      .example-card {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 10px 12px;
+        background: var(--surface);
+        color: var(--text);
+        cursor: pointer;
+        transition: all 0.16s ease;
+      }
+      .example-card:hover {
+        border-color: var(--accent);
+        transform: translateY(-1px);
+      }
+      .example-card strong {
+        display: block;
+        font-size: 13px;
+        margin-bottom: 4px;
+      }
+      .example-card span {
+        font-size: 12px;
+        color: var(--text-dim);
+      }
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px;
+        margin: 16px 0 24px;
+      }
+      .stats-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 12px 13px;
+      }
+      .stats-card .label {
+        display: block;
+        font-size: 11px;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 4px;
+      }
+      .stats-card .value {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 10px;
+        margin-top: 10px;
+      }
+      .feature-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 14px;
+      }
+      .feature-card h3 {
+        margin: 0 0 6px;
+        font-size: 15px;
+      }
+      .feature-card p {
+        margin: 0;
+        color: var(--text-dim);
+        font-size: 13.6px;
+        line-height: 1.6;
+      }
+      .privacy-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 12px;
+        padding: 8px 10px;
+        border-radius: 999px;
+        background: color-mix(in oklab, var(--accent) 11%, var(--surface));
+        color: var(--text-dim);
+        border: 1px solid color-mix(in oklab, var(--accent) 24%, var(--border));
+        font-size: 13px;
+      }
+      .output-token-key { color: #7dd3fc; }
+      .output-token-string { color: #86efac; }
+      .output-token-number { color: #f9a8d4; }
+      .output-token-boolean { color: #fdba74; }
+      .output-token-comment { color: #94a3b8; }
+      .drop-zone.drag-over {
+        border-color: var(--accent);
+        box-shadow: inset 0 0 0 1px var(--accent);
+      }
+      @media (max-width: 1100px) {
+        .tool-shell {
+          grid-template-columns: 1fr 1fr;
+        }
+        .pane.options-pane {
+          grid-column: 1 / -1;
+        }
+      }
+      @media (max-width: 760px) {
+        .tool-shell {
+          grid-template-columns: 1fr;
+        }
+        .pane {
+          min-height: 420px;
+        }
+      }
+    </style>
+    <script src="../assets/js/theme.js"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "JSON to TypeScript Converter",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any (web)",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "url": "https://devtoolshive.com/tools/json-to-typescript.html"
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is this JSON to TypeScript converter free?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. The converter is completely free and runs in your browser with no uploads or subscriptions." }
+          },
+          {
+            "@type": "Question",
+            "name": "Is my JSON uploaded?",
+            "acceptedAnswer": { "@type": "Answer", "text": "No. Every conversion happens locally in your browser. Nothing is sent to a server." }
+          },
+          {
+            "@type": "Question",
+            "name": "Can it handle nested JSON?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. The generator understands nested objects, nested arrays, arrays of objects, and nullable values." }
+          }
+        ]
+      }
+    </script>
+  </head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SPD83QKS2J"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag("js", new Date());
+    gtag("config", "G-SPD83QKS2J");
+  </script>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="site-header"></div>
+    <main id="main" class="container tool-page">
+      <div class="crumbs">
+        <a href="/">Home</a> · <span>Tools</span> · <span>JSON to TypeScript Converter</span>
+      </div>
+      <header class="tool-head">
+        <h1>JSON to TypeScript Converter</h1>
+        <p>
+          Turn JSON payloads into clean TypeScript interfaces, type aliases, and export-ready code with zero server round-trips. The experience is fast, private, and polished for API work, front-end apps, and design systems.
+        </p>
+        <div class="privacy-pill">🔒 Everything happens in your browser. No JSON is uploaded or stored.</div>
+      </header>
+
+      <div class="examples" aria-label="Example templates">
+        <button class="example-card" type="button" data-example="simple"><strong>Simple User</strong><span>Basic properties and booleans</span></button>
+        <button class="example-card" type="button" data-example="nested"><strong>Nested Object</strong><span>Address, profile, and metadata</span></button>
+        <button class="example-card" type="button" data-example="product"><strong>Product</strong><span>Pricing, inventory, and tags</span></button>
+        <button class="example-card" type="button" data-example="order"><strong>E-commerce Order</strong><span>Line items and nested totals</span></button>
+        <button class="example-card" type="button" data-example="api"><strong>API Response</strong><span>Pagination and resource arrays</span></button>
+        <button class="example-card" type="button" data-example="github"><strong>GitHub API</strong><span>Nested users and repositories</span></button>
+      </div>
+
+      <div class="toolbar">
+        <div class="row gap-sm">
+          <button class="btn primary" id="pasteBtn" type="button">Paste</button>
+          <button class="btn" id="clearBtn" type="button">Clear</button>
+          <button class="btn" id="exampleBtn" type="button">Load Example</button>
+          <label class="btn" for="fileInput" style="cursor:pointer">Upload JSON File</label>
+          <button class="btn" id="formatBtn" type="button">Format JSON</button>
+          <button class="btn" id="validateBtn" type="button">Validate JSON</button>
+        </div>
+        <div class="spacer"></div>
+        <input id="fileInput" type="file" accept=".json,.txt" class="hide" />
+      </div>
+
+      <div class="tool-shell">
+        <section class="pane drop-zone" id="inputPane">
+          <div class="pane-head">
+            <span class="pane-title">JSON Input</span>
+            <div class="pane-toolbar">
+              <span id="inputStatus" class="status-pill warn">⏳ Waiting for input</span>
+            </div>
+          </div>
+          <div class="pane-body">
+            <textarea id="jsonInput" class="editor-area" spellcheck="false" placeholder="Paste your JSON here...&#10;&#10;Example:&#10;{&#10;  \"id\": 1,&#10;  \"name\": \"John\",&#10;  \"email\": \"john@example.com\",&#10;  \"isActive\": true,&#10;  \"roles\": [\"admin\", \"editor\"]&#10;}"></textarea>
+            <div class="status-bar">
+              <span id="validationText">Validation will appear here.</span>
+              <span id="inputMeta">0 chars · 0 lines</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="pane" id="outputPane">
+          <div class="pane-head">
+            <span class="pane-title">Generated TypeScript</span>
+            <div class="pane-toolbar">
+              <button class="btn" id="copyBtn" type="button" data-shortcut="copy">Copy</button>
+              <button class="btn" id="downloadBtn" type="button">Download .ts</button>
+              <button class="btn" id="clearOutputBtn" type="button">Clear</button>
+              <button class="btn" id="regenerateBtn" type="button">Regenerate</button>
+            </div>
+          </div>
+          <div class="pane-body">
+            <div class="output-area" id="outputView" role="region" aria-live="polite"></div>
+            <div class="status-bar">
+              <span id="outputMeta">Ready to generate.</span>
+              <span id="copyFeedback" class="muted">Ctrl+C / Copy button</span>
+            </div>
+          </div>
+        </section>
+
+        <aside class="pane options-pane">
+          <div class="pane-head">
+            <span class="pane-title">Options</span>
+            <span class="badge">Compact</span>
+          </div>
+          <div class="options-body">
+            <details class="option-card" open>
+              <summary>Root Interface Name</summary>
+              <div class="option-grid">
+                <div class="option-row">
+                  <label for="rootName">Name</label>
+                  <input id="rootName" type="text" value="RootObject" />
+                </div>
+              </div>
+            </details>
+
+            <details class="option-card" open>
+              <summary>Interface Style</summary>
+              <div class="option-grid">
+                <div class="stacked">
+                  <label class="radio"><input type="radio" name="style" value="interface" checked /> Interface</label>
+                  <label class="radio"><input type="radio" name="style" value="type" /> Type alias</label>
+                </div>
+              </div>
+            </details>
+
+            <details class="option-card" open>
+              <summary>Property Style</summary>
+              <div class="option-grid">
+                <div class="stacked">
+                  <label class="radio"><input type="radio" name="propStyle" value="required" checked /> Required</label>
+                  <label class="radio"><input type="radio" name="propStyle" value="optional" /> Optional when nullable</label>
+                </div>
+              </div>
+            </details>
+
+            <details class="option-card" open>
+              <summary>Formatting</summary>
+              <div class="option-grid">
+                <div class="option-row">
+                  <label>Quote Style</label>
+                  <div class="stacked">
+                    <label class="radio"><input type="radio" name="quoteStyle" value="single" checked /> Single</label>
+                    <label class="radio"><input type="radio" name="quoteStyle" value="double" /> Double</label>
+                  </div>
+                </div>
+                <div class="option-row">
+                  <label for="indentation">Indentation</label>
+                  <select id="indentation">
+                    <option value="2">2 Spaces</option>
+                    <option value="4">4 Spaces</option>
+                    <option value="tab">Tabs</option>
+                  </select>
+                </div>
+              </div>
+            </details>
+
+            <details class="option-card" open>
+              <summary>Export & Behavior</summary>
+              <div class="option-grid">
+                <div class="option-row">
+                  <label for="exportStyle">Export Style</label>
+                  <select id="exportStyle">
+                    <option value="named">Named export</option>
+                    <option value="default">Default export</option>
+                    <option value="none">No export</option>
+                  </select>
+                </div>
+                <div class="stacked">
+                  <label class="check"><input id="arraySeparate" type="checkbox" checked /> Separate interfaces for array objects</label>
+                </div>
+                <div class="stacked">
+                  <label class="check"><input id="readonly" type="checkbox" /> Readonly properties</label>
+                </div>
+                <div class="stacked">
+                  <label class="check"><input id="strictNull" type="checkbox" /> Strict null handling</label>
+                </div>
+                <div class="stacked">
+                  <label class="check"><input id="sortProps" type="checkbox" checked /> Alphabetically sort properties</label>
+                </div>
+                <div class="stacked">
+                  <label class="check"><input id="generateComments" type="checkbox" /> Generate comments</label>
+                </div>
+              </div>
+            </details>
+          </div>
+        </aside>
+      </div>
+
+      <div class="stats-grid" aria-label="Conversion statistics">
+        <div class="stats-card"><span class="label">Characters</span><div class="value" id="statChars">0</div></div>
+        <div class="stats-card"><span class="label">Lines</span><div class="value" id="statLines">0</div></div>
+        <div class="stats-card"><span class="label">Properties</span><div class="value" id="statProps">0</div></div>
+        <div class="stats-card"><span class="label">Interfaces</span><div class="value" id="statInterfaces">0</div></div>
+        <div class="stats-card"><span class="label">Arrays</span><div class="value" id="statArrays">0</div></div>
+        <div class="stats-card"><span class="label">Nested Objects</span><div class="value" id="statNested">0</div></div>
+        <div class="stats-card"><span class="label">Depth</span><div class="value" id="statDepth">0</div></div>
+        <div class="stats-card"><span class="label">Output Size</span><div class="value" id="statOutput">0</div></div>
+      </div>
+
+      <div class="feature-grid" aria-label="Feature highlights">
+        <div class="feature-card">
+          <h3>⚡ Instant Conversion</h3>
+          <p>Fresh output appears while you type, with a short debounce so the editor stays responsive.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🔒 Private Processing</h3>
+          <p>Everything runs locally in your browser. No uploads, no account, no data retention.</p>
+        </div>
+        <div class="feature-card">
+          <h3>📄 Interface Generation</h3>
+          <p>Create interfaces for nested objects, arrays of objects, nullable fields, and empty collections.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🧩 Array Detection</h3>
+          <p>Separate shared object shapes from arrays and keep generated types clean and readable.</p>
+        </div>
+        <div class="feature-card">
+          <h3>📱 Mobile Friendly</h3>
+          <p>The three-panel layout reshapes gracefully for tablets and phones without losing context.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🌙 Dark Mode Ready</h3>
+          <p>Every part of the tool follows the same theme system as the rest of DevToolsHive.</p>
+        </div>
+      </div>
+
+      <section class="content" aria-labelledby="seo-heading-1">
+        <h2 id="seo-heading-1">What is a JSON to TypeScript Converter?</h2>
+        <p>
+          A JSON to TypeScript converter helps developers turn raw payloads into structured TypeScript definitions in seconds. Instead of manually rewriting object shapes from a response body, you paste the JSON once and receive interfaces that are ready to use in React, Node.js, Express, Vue, or any modern TypeScript project. That makes it faster to move from API exploration to implementation without losing accuracy.
+        </p>
+        <p>
+          This tool is designed for developers who work with APIs, config files, databases, and SaaS payloads every day. When you convert JSON to TS, you preserve the meaning of complex data structures while making the code easier to maintain. The generated interfaces work especially well for form models, request/response types, SDK wrappers, and shared domain models.
+        </p>
+        <p>
+          The process is simple: paste your JSON, choose the formatting options you prefer, and copy the result. Whether you need a JSON interface generator for a quick prototype or a TypeScript interface generator for a large production app, the output is ready to drop into your codebase.
+        </p>
+
+        <h2>Why Convert JSON to TypeScript?</h2>
+        <p>
+          Type safety is one of the biggest benefits of converting JSON to TypeScript. When your front-end or API layer understands the expected shape of incoming data, you catch mismatches sooner and you reduce the risk of runtime mistakes. A JSON to TypeScript workflow also improves editor autocomplete, so your team spends less time digging through docs and more time building features.
+        </p>
+        <p>
+          It also improves long-term maintainability. If the payload shape changes, you can regenerate the interfaces and update your code with confidence. That makes it especially useful for teams that work with third-party APIs, analytics events, or large internal JSON documents. The result is fewer bugs, clearer contracts, and a more reliable development experience.
+        </p>
+
+        <h2>Features</h2>
+        <ul>
+          <li>Instant conversion with a live preview while you type</li>
+          <li>Client-side processing only, with no uploads or server requests</li>
+          <li>Support for nested objects, arrays, nullable values, mixed arrays, and empty collections</li>
+          <li>Flexible export options including named export, default export, or no export</li>
+          <li>Syntax-highlighted output that is easy to review and copy</li>
+          <li>Compact options panel for interface naming, readonly properties, strict null handling, comments, and formatting preferences</li>
+        </ul>
+
+        <h2>How to Use</h2>
+        <ol>
+          <li>Paste or upload your JSON into the left panel.</li>
+          <li>Adjust the root name, export style, quote style, indentation, and other options.</li>
+          <li>Review the generated TypeScript in the center panel and copy or download it as needed.</li>
+        </ol>
+        <p>
+          The tool is built to be practical for both quick tasks and larger refactors. You can use it to model API responses, seed data, database results, or config objects without writing each interface by hand. The output stays clean and readable so it feels like a native part of your workflow rather than a one-off helper.
+        </p>
+
+        <h2>Supported JSON Structures</h2>
+        <p>
+          The converter handles objects, arrays, nested objects, arrays of objects, nullable values, booleans, numbers, strings, mixed arrays, empty arrays, and empty objects. That means you can work with everything from a simple user object to an e-commerce order payload or a paginated API response that includes nested resources, metadata, and arrays of related entities.
+        </p>
+
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq">
+          <details>
+            <summary>Is this JSON to TypeScript converter free?</summary>
+            <div class="a">Yes. It is completely free and works without an account or backend processing.</div>
+          </details>
+          <details>
+            <summary>Is my JSON uploaded?</summary>
+            <div class="a">No. Everything runs in your browser, so your data never leaves your machine.</div>
+          </details>
+          <details>
+            <summary>Can I convert nested JSON?</summary>
+            <div class="a">Yes. Nested objects and nested arrays are supported and turned into separate interfaces when needed.</div>
+          </details>
+          <details>
+            <summary>Does it support arrays?</summary>
+            <div class="a">Yes. Arrays are detected and represented as typed arrays, including arrays of objects when the option is enabled.</div>
+          </details>
+          <details>
+            <summary>Can I export a .ts file?</summary>
+            <div class="a">Yes. The tool includes a download button that exports the output as a .ts file.</div>
+          </details>
+          <details>
+            <summary>Can I generate interfaces?</summary>
+            <div class="a">Yes. The converter generates interface declarations by default, and you can switch to type aliases when preferred.</div>
+          </details>
+          <details>
+            <summary>Does it support large JSON?</summary>
+            <div class="a">Yes. The UI stays responsive for large payloads by processing locally and avoiding unnecessary work while you type.</div>
+          </details>
+          <details>
+            <summary>Does it work offline?</summary>
+            <div class="a">Yes. After the page has loaded, the converter remains available offline because it does not depend on an external service.</div>
+          </details>
+        </div>
+      </section>
+
+      <section class="related-tools" aria-labelledby="related-tools-heading">
+        <h2 id="related-tools-heading">Related Tools</h2>
+        <div class="related">
+          <a href="/tools/json-formatter.html">JSON Formatter</a>
+          <a href="/tools/json-diff.html">JSON Compare</a>
+          <a href="/tools/base64.html">Base64 Encoder</a>
+          <a href="/tools/jwt-decoder.html">JWT Decoder</a>
+          <a href="/tools/api-builder.html">API Request Builder</a>
+          <a href="/tools/uuid.html">UUID Generator</a>
+          <a href="/tools/regex.html">Regex Tester</a>
+        </div>
+      </section>
+    </main>
+
+    <div id="site-footer"></div>
+    <script src="../assets/js/common.js"></script>
+    <script src="../assets/js/i18n.js"></script>
+    <script src="../assets/js/partials.js"></script>
+    <script>
+      (function () {
+        "use strict";
+
+        const inputEl = document.getElementById("jsonInput");
+        const outputEl = document.getElementById("outputView");
+        const inputStatusEl = document.getElementById("inputStatus");
+        const validationTextEl = document.getElementById("validationText");
+        const inputMetaEl = document.getElementById("inputMeta");
+        const outputMetaEl = document.getElementById("outputMeta");
+        const copyFeedbackEl = document.getElementById("copyFeedback");
+        const fileInputEl = document.getElementById("fileInput");
+        const rootNameEl = document.getElementById("rootName");
+        const exportStyleEl = document.getElementById("exportStyle");
+        const indentationEl = document.getElementById("indentation");
+        const arraySeparateEl = document.getElementById("arraySeparate");
+        const readonlyEl = document.getElementById("readonly");
+        const strictNullEl = document.getElementById("strictNull");
+        const sortPropsEl = document.getElementById("sortProps");
+        const generateCommentsEl = document.getElementById("generateComments");
+        const inputPaneEl = document.getElementById("inputPane");
+        const pasteBtn = document.getElementById("pasteBtn");
+        const clearBtn = document.getElementById("clearBtn");
+        const exampleBtn = document.getElementById("exampleBtn");
+        const formatBtn = document.getElementById("formatBtn");
+        const validateBtn = document.getElementById("validateBtn");
+        const copyBtn = document.getElementById("copyBtn");
+        const downloadBtn = document.getElementById("downloadBtn");
+        const clearOutputBtn = document.getElementById("clearOutputBtn");
+        const regenerateBtn = document.getElementById("regenerateBtn");
+
+        const examples = {
+          simple: '{\n  "id": 1,\n  "name": "John",\n  "email": "john@example.com",\n  "isActive": true,\n  "roles": ["admin", "editor"]\n}',
+          nested: '{\n  "id": 42,\n  "name": "Ada",\n  "profile": {\n    "city": "London",\n    "zip": 12345,\n    "active": true\n  },\n  "tags": ["engineer", "mentor"]\n}',
+          product: '{\n  "sku": "SKU-100",\n  "title": "Ergonomic Keyboard",\n  "price": 129.99,\n  "inStock": true,\n  "reviews": [\n    { "user": "Mina", "rating": 5 },\n    { "user": "Owen", "rating": 4 }\n  ]\n}',
+          order: '{\n  "orderId": "ord_1001",\n  "customer": {\n    "name": "Nina",\n    "email": "nina@example.com"\n  },\n  "items": [\n    { "sku": "A1", "quantity": 2, "price": 15.5 },\n    { "sku": "B2", "quantity": 1, "price": 30 }\n  ],\n  "totals": { "subtotal": 61, "tax": 4.88, "grandTotal": 65.88 }\n}',
+          api: '{\n  "data": [\n    { "id": 1, "name": "Alpha", "active": true },\n    { "id": 2, "name": "Beta", "active": false }\n  ],\n  "meta": { "page": 1, "perPage": 20, "hasMore": true }\n}',
+          github: '{\n  "login": "octocat",\n  "name": "The Octocat",\n  "public_repos": 2,\n  "company": null,\n  "location": "San Francisco",\n  "repos": [\n    { "name": "hello-world", "private": false, "fork": false },\n    { "name": "devtools-hive", "private": true, "fork": true }\n  ]\n}'
+        };
+
+        let lastResult = "";
+        let lastError = null;
+
+        function setStatus(kind, text) {
+          inputStatusEl.className = "status-pill " + kind;
+          validationTextEl.textContent = text;
+        }
+
+        function getIndentString() {
+          const indentMode = indentationEl.value;
+          if (indentMode === "4") return "    ";
+          if (indentMode === "tab") return "\t";
+          return "  ";
+        }
+
+        function sanitizeName(name) {
+          const value = String(name || "RootObject").trim();
+          const cleaned = value.replace(/[^A-Za-z0-9_$]/g, "");
+          if (!cleaned) return "RootObject";
+          if (!/^[$A-Z_]/i.test(cleaned)) return "_" + cleaned;
+          return cleaned;
+        }
+
+        function escapeHtml(text) {
+          return String(text)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+        }
+
+        function highlightTsCode(code) {
+          let html = escapeHtml(code);
+          html = html.replace(/('(?:\\.|[^'])*'|"(?:\\.|[^"])*")/g, '<span class="output-token-string">$1</span>');
+          html = html.replace(/\b(\d+(?:\.\d+)?)\b/g, '<span class="output-token-number">$1</span>');
+          html = html.replace(/(\/\/.*)$/gm, '<span class="output-token-comment">$1</span>');
+          html = html.replace(/\b(interface|type|export|default|readonly|extends|implements|true|false|null|unknown|number|string|boolean|Array|Record)\b/g, '<span class="output-token-key">$1</span>');
+          return html;
+        }
+
+        function getQuoteChar() {
+          return document.querySelector('input[name="quoteStyle"]:checked').value === "double" ? '"' : "'";
+        }
+
+        function formatPropertyName(key) {
+          const raw = String(key);
+          if (/^[$A-Z_][0-9A-Z_$]*$/i.test(raw)) {
+            return raw;
+          }
+          const safe = raw.replace(/[^A-Za-z0-9_$]/g, "_");
+          if (!safe) return "value";
+          if (!/^[$A-Z_]/i.test(safe)) return "_" + safe;
+          return safe;
+        }
+
+        function formatQuotedName(key) {
+          const quote = getQuoteChar();
+          const raw = String(key);
+          if (/^[$A-Z_][0-9A-Z_$]*$/i.test(raw)) return raw;
+          return quote + raw.replace(new RegExp(quote, "g"), "\\" + quote) + quote;
+        }
+
+        function isPlainObject(value) {
+          return value !== null && typeof value === "object" && !Array.isArray(value);
+        }
+
+        function sortKeys(obj) {
+          return Object.keys(obj).sort(function (a, b) { return a.localeCompare(b); });
+        }
+
+        function getPropertyType(value, contextName, declarations, options, depth, path) {
+          if (value === null) {
+            return options.strictNull ? "null" : "unknown";
+          }
+          if (typeof value === "string") return "string";
+          if (typeof value === "number") return "number";
+          if (typeof value === "boolean") return "boolean";
+          if (Array.isArray(value)) {
+            if (value.length === 0) return "unknown[]";
+            const itemTypes = [];
+            const sampleItems = [];
+            for (let i = 0; i < value.length; i++) {
+              const item = value[i];
+              if (isPlainObject(item)) {
+                sampleItems.push(item);
+              } else {
+                itemTypes.push(getPropertyType(item, contextName, declarations, options, depth + 1, path + "[]"));
+              }
+            }
+            if (sampleItems.length === value.length && options.arraySeparateInterfaces) {
+              const itemName = sanitizeName(contextName + "Item");
+              const nestedDeclaration = buildObjectDeclaration(itemName, sampleItems[0], declarations, options, depth + 1, path + "[]", true);
+              return nestedDeclaration + "[]";
+            }
+            if (sampleItems.length > 0 && !options.arraySeparateInterfaces) {
+              return "Array<Record<string, unknown>>";
+            }
+            const seen = {};
+            const uniqueTypes = [];
+            value.forEach(function (item) {
+              const type = getPropertyType(item, contextName, declarations, options, depth + 1, path + "[]");
+              if (!seen[type]) {
+                uniqueTypes.push(type);
+                seen[type] = true;
+              }
+            });
+            return uniqueTypes.length === 1 ? uniqueTypes[0] + "[]" : "Array<" + uniqueTypes.join(" | ") + ">";
+          }
+          if (isPlainObject(value)) {
+            const nestedName = sanitizeName(contextName + "Model");
+            buildObjectDeclaration(nestedName, value, declarations, options, depth + 1, path, false);
+            return nestedName;
+          }
+          return "unknown";
+        }
+
+        function buildObjectDeclaration(name, value, declarations, options, depth, path, isArrayItem) {
+          const declarationName = sanitizeName(name);
+          if (declarations[declarationName]) return declarationName;
+
+          const properties = [];
+          const keys = options.sortProps ? sortKeys(value) : Object.keys(value);
+          keys.forEach(function (key) {
+            const rawValue = value[key];
+            const propertyName = formatPropertyName(key);
+            const propertyType = getPropertyType(rawValue, declarationName + "_" + propertyName, declarations, options, depth + 1, path + "." + key);
+            const optional = (rawValue === null && options.propStyle === "optional") || (rawValue === null && options.strictNull && options.propStyle === "optional");
+            const prefix = options.readonly ? "readonly " : "";
+            const suffix = optional ? "?" : "";
+            const comment = options.generateComments ? "// " + key + "\n" : "";
+            const line = comment + "    " + prefix + propertyName + suffix + ": " + propertyType + ";";
+            properties.push(line);
+          });
+
+          const body = properties.length ? properties.join("\n") : "    [key: string]: unknown;";
+          const declaration = options.interfaceStyle === "type"
+            ? "type " + declarationName + " = {\n" + body + "\n};"
+            : "interface " + declarationName + " {\n" + body + "\n}";
+          declarations[declarationName] = declaration;
+          return declarationName;
+        }
+
+        function buildRootDeclaration(rootValue, rootName, options) {
+          const declarations = Object.create(null);
+          if (isPlainObject(rootValue)) {
+            buildObjectDeclaration(rootName, rootValue, declarations, options, 0, "root", false);
+          } else if (Array.isArray(rootValue)) {
+            declarations[rootName] = "type " + rootName + " = Array<unknown>;";
+          } else {
+            declarations[rootName] = "type " + rootName + " = " + getPropertyType(rootValue, rootName, declarations, options, 0, "root") + ";";
+          }
+          return declarations;
+        }
+
+        function renderCode(rootValue, options) {
+          const declarations = buildRootDeclaration(rootValue, sanitizeName(options.rootName || "RootObject"), options);
+          const exportPrefix = options.exportStyle === "named"
+            ? "export "
+            : options.exportStyle === "default"
+              ? "export default "
+              : "";
+          const declarationNames = Object.keys(declarations).sort();
+          const body = declarationNames.map(function (name) {
+            let declaration = declarations[name];
+            if (options.exportStyle === "named" || options.exportStyle === "default") {
+              declaration = declaration.replace(/^([a-z]+) /i, exportPrefix + "$1 ");
+            }
+            return declaration;
+          }).join("\n\n");
+          return body + "\n";
+        }
+
+        function parseInput() {
+          const text = inputEl.value.trim();
+          if (!text) {
+            setStatus("warn", "Paste or load a JSON example to begin.");
+            outputEl.innerHTML = "<pre>Choose an example or paste JSON to generate TypeScript.</pre>";
+            outputMetaEl.textContent = "Ready to generate.";
+            updateStats(0, 0, 0, 0, 0, 0, 0, 0);
+            return null;
+          }
+          try {
+            const parsed = JSON.parse(text);
+            setStatus("ok", "✅ Valid JSON");
+            validationTextEl.textContent = "Valid JSON — ready to generate.";
+            return parsed;
+          } catch (error) {
+            const message = error.message || "Failed to parse JSON.";
+            const position = Number((message.match(/position\s+(\d+)/i) || [])[1]);
+            let line = 1;
+            let col = 1;
+            if (!Number.isNaN(position) && position > 0) {
+              const prefix = text.slice(0, position);
+              const lineBreaks = prefix.match(/\n/g) || [];
+              line = lineBreaks.length + 1;
+              col = prefix.length - prefix.lastIndexOf("\n");
+            }
+            setStatus("err", "❌ Invalid JSON");
+            validationTextEl.textContent = message + " at line " + line + ", column " + col + ".";
+            outputEl.innerHTML = "<pre>Unable to generate TypeScript because the JSON input is invalid.</pre>";
+            outputMetaEl.textContent = "Generation paused.";
+            return null;
+          }
+        }
+
+        function buildOutput() {
+          const parsed = parseInput();
+          if (!parsed) return;
+          const options = {
+            rootName: rootNameEl.value || "RootObject",
+            interfaceStyle: document.querySelector('input[name="style"]:checked').value,
+            propStyle: document.querySelector('input[name="propStyle"]:checked').value,
+            quoteStyle: document.querySelector('input[name="quoteStyle"]:checked').value,
+            exportStyle: exportStyleEl.value,
+            arraySeparateInterfaces: arraySeparateEl.checked,
+            readonly: readonlyEl.checked,
+            strictNull: strictNullEl.checked,
+            sortProps: sortPropsEl.checked,
+            generateComments: generateCommentsEl.checked
+          };
+          const code = renderCode(parsed, options);
+          lastResult = code;
+          outputEl.innerHTML = "<pre>" + highlightTsCode(code) + "</pre>";
+          outputMetaEl.textContent = "Generated " + code.length + " characters";
+          updateStats(inputEl.value.length, inputEl.value.split(/\n/).length, countProperties(parsed), countInterfaces(code), countArrays(parsed), countNested(parsed), calculateDepth(parsed), code.length);
+          lastError = null;
+        }
+
+        function countProperties(value) {
+          if (Array.isArray(value)) {
+            return value.reduce(function (sum, item) { return sum + countProperties(item); }, 0);
+          }
+          if (isPlainObject(value)) {
+            let total = Object.keys(value).length;
+            Object.keys(value).forEach(function (key) { total += countProperties(value[key]); });
+            return total;
+          }
+          return 0;
+        }
+
+        function countInterfaces(code) {
+          return (code.match(/\b(interface|type)\b/g) || []).length;
+        }
+
+        function countArrays(value) {
+          if (Array.isArray(value)) return 1 + value.reduce(function (sum, item) { return sum + countArrays(item); }, 0);
+          if (isPlainObject(value)) {
+            let total = 0;
+            Object.keys(value).forEach(function (key) { total += countArrays(value[key]); });
+            return total;
+          }
+          return 0;
+        }
+
+        function countNested(value) {
+          if (!isPlainObject(value) && !Array.isArray(value)) return 0;
+          let total = 0;
+          if (Array.isArray(value)) {
+            value.forEach(function (item) { total += countNested(item); });
+            return total;
+          }
+          Object.keys(value).forEach(function (key) {
+            if (isPlainObject(value[key]) || Array.isArray(value[key])) total += 1;
+            total += countNested(value[key]);
+          });
+          return total;
+        }
+
+        function calculateDepth(value) {
+          if (!isPlainObject(value) && !Array.isArray(value)) return 0;
+          if (Array.isArray(value)) {
+            return 1 + Math.max(0, ...value.map(calculateDepth));
+          }
+          let max = 0;
+          Object.keys(value).forEach(function (key) {
+            max = Math.max(max, calculateDepth(value[key]));
+          });
+          return 1 + max;
+        }
+
+        function updateStats(chars, lines, props, interfaces, arrays, nested, depth, outputSize) {
+          document.getElementById("statChars").textContent = chars;
+          document.getElementById("statLines").textContent = lines;
+          document.getElementById("statProps").textContent = props;
+          document.getElementById("statInterfaces").textContent = interfaces;
+          document.getElementById("statArrays").textContent = arrays;
+          document.getElementById("statNested").textContent = nested;
+          document.getElementById("statDepth").textContent = depth;
+          document.getElementById("statOutput").textContent = outputSize;
+        }
+
+        function formatInput() {
+          try {
+            const parsed = JSON.parse(inputEl.value);
+            inputEl.value = JSON.stringify(parsed, null, 2);
+            setStatus("ok", "✅ JSON formatted");
+            buildOutput();
+          } catch (error) {
+            setStatus("err", "❌ Unable to format invalid JSON");
+            validationTextEl.textContent = error.message;
+          }
+        }
+
+        function clearInput() {
+          inputEl.value = "";
+          outputEl.innerHTML = "<pre>Choose an example or paste JSON to generate TypeScript.</pre>";
+          setStatus("warn", "⏳ Waiting for input");
+          validationTextEl.textContent = "Validation will appear here.";
+          inputMetaEl.textContent = "0 chars · 0 lines";
+          outputMetaEl.textContent = "Ready to generate.";
+          updateStats(0, 0, 0, 0, 0, 0, 0, 0);
+        }
+
+        function loadExample(name) {
+          if (examples[name]) {
+            inputEl.value = examples[name];
+            buildOutput();
+          }
+        }
+
+        function handleFile(file) {
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = function () {
+            inputEl.value = reader.result;
+            buildOutput();
+          };
+          reader.readAsText(file);
+        }
+
+        function copyOutput() {
+          if (!lastResult) {
+            window.DTH.toast("Nothing to copy yet", "err");
+            return;
+          }
+          window.DTH.copyText(lastResult, "Copied TypeScript");
+          copyFeedbackEl.textContent = "✓ Copied to clipboard";
+          setTimeout(function () {
+            copyFeedbackEl.textContent = "Ctrl+C / Copy button";
+          }, 1600);
+        }
+
+        function downloadOutput() {
+          if (!lastResult) {
+            window.DTH.toast("Nothing to download yet", "err");
+            return;
+          }
+          window.DTH.downloadText((rootNameEl.value || "types") + ".ts", lastResult, "text/typescript;charset=utf-8");
+        }
+
+        const debouncedBuild = window.DTH.debounce(buildOutput, 300);
+        inputEl.addEventListener("input", function () {
+          inputMetaEl.textContent = inputEl.value.length + " chars · " + inputEl.value.split(/\n/).length + " lines";
+          debouncedBuild();
+        });
+
+        document.querySelectorAll("input[name='style'], input[name='propStyle'], input[name='quoteStyle']").forEach(function (input) {
+          input.addEventListener("change", buildOutput);
+        });
+
+        [rootNameEl, exportStyleEl, indentationEl, arraySeparateEl, readonlyEl, strictNullEl, sortPropsEl, generateCommentsEl].forEach(function (input) {
+          input.addEventListener("change", buildOutput);
+          input.addEventListener("input", buildOutput);
+        });
+
+        pasteBtn.addEventListener("click", function () {
+          if (navigator.clipboard && navigator.clipboard.readText) {
+            navigator.clipboard.readText().then(function (text) {
+              inputEl.value = text;
+              buildOutput();
+            }).catch(function () {
+              window.DTH.toast("Unable to read clipboard", "err");
+            });
+          } else {
+            window.DTH.toast("Clipboard access is unavailable", "err");
+          }
+        });
+
+        clearBtn.addEventListener("click", clearInput);
+        exampleBtn.addEventListener("click", function () { loadExample("simple"); });
+        formatBtn.addEventListener("click", formatInput);
+        validateBtn.addEventListener("click", function () { parseInput(); });
+        copyBtn.addEventListener("click", copyOutput);
+        downloadBtn.addEventListener("click", downloadOutput);
+        clearOutputBtn.addEventListener("click", function () { outputEl.innerHTML = "<pre>Cleared.</pre>"; lastResult = ""; outputMetaEl.textContent = "Cleared."; });
+        regenerateBtn.addEventListener("click", buildOutput);
+        fileInputEl.addEventListener("change", function (event) { handleFile(event.target.files[0]); });
+
+        document.querySelectorAll(".example-card").forEach(function (button) {
+          button.addEventListener("click", function () {
+            loadExample(button.getAttribute("data-example"));
+          });
+        });
+
+        ["dragenter", "dragover"].forEach(function (eventName) {
+          inputPaneEl.addEventListener(eventName, function (event) {
+            event.preventDefault();
+            inputPaneEl.classList.add("drag-over");
+          });
+        });
+        ["dragleave", "drop"].forEach(function (eventName) {
+          inputPaneEl.addEventListener(eventName, function (event) {
+            event.preventDefault();
+            inputPaneEl.classList.remove("drag-over");
+          });
+        });
+        inputPaneEl.addEventListener("drop", function (event) {
+          const file = event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files[0];
+          if (file) handleFile(file);
+        });
+
+        document.addEventListener("keydown", function (event) {
+          if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+            event.preventDefault();
+            buildOutput();
+          }
+          if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "c" && document.activeElement === inputEl) {
+            copyOutput();
+          }
+        });
+
+        buildOutput();
+      })();
+    </script>
+  </body>
+</html>

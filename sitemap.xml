@@ -26,6 +26,14 @@
     <priority>0.8</priority>
   </url>
 
+  <!-- JSON to TypeScript -->
+  <url>
+    <loc>https://devtoolshive.com/tools/json-to-typescript.html</loc>
+    <lastmod>2026-07-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
   <!-- SQL Formatter -->
   <url>
     <loc>https://devtoolshive.com/tools/sql-formatter.html</loc>
