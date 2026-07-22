@@ -8,6 +8,7 @@
     {slug:'env-parser',      k:'tool.env', isNew:true},
     {slug:'api-builder',     k:'tool.api', isNew:true},
     {slug:'sql-formatter',   k:'tool.sql-formatter', isNew:true},
+    {slug:'css-formatter',   k:'tool.css-formatter', isNew:true},
     {slug:'base64',          k:'tool.base64'},
     {slug:'url-encoder',     k:'tool.url'},
     {slug:'timestamp',       k:'tool.timestamp'},

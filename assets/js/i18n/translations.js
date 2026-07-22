@@ -3,7 +3,7 @@ window.DTH_I18N = {
   en: {
     "nav.home":"Home","nav.tools":"Tools","nav.blog":"Blog","nav.about":"About",
     "footer.tagline":"Fast, private developer utilities. Everything runs in your browser.",
-    "footer.tools":"Tools","footer.popular":"Popular","footer.legal":"Legal",
+    "footer.tools":"Tools","footer.popular":"Popular","footer.legal":"Legal","footer.resources":"Resources",
     "footer.privacy":"Privacy","footer.terms":"Terms","footer.github":"GitHub",
     "footer.copy":"© 2026 DevToolsHive. All processing happens locally in your browser.",
     "hero.title":"Your browser is your toolbox.",
@@ -39,6 +39,8 @@ window.DTH_I18N = {
     "tool.user-agent.desc":"Parse User-Agent strings into browser, OS, device and bot information.",
     "tool.sql-formatter.title":"SQL Formatter & Beautifier",
     "tool.sql-formatter.desc":"Format SQL queries with a browser-based SQL beautifier. Supports common dialects and copy/download output.",
+    "tool.css-formatter.title":"CSS Formatter & Beautifier",
+    "tool.css-formatter.desc":"Format, beautify, validate, minify, and analyze CSS with color palette detection and variable inspection.",
 
     "ui.input":"Input","ui.output":"Output","ui.options":"Options",
     "ui.format":"Format","ui.minify":"Minify","ui.validate":"Validate",
@@ -78,6 +80,8 @@ window.DTH_I18N = {
     "tool.case.title":"Conversor de Mayúsculas","tool.case.desc":"Convierte entre camelCase, snake_case, kebab-case y más.",
     "tool.user-agent.title":"Analizador de User Agent","tool.user-agent.desc":"Analiza cadenas User-Agent para identificar navegador y OS.",
     "tool.sql-formatter.title":"Formateador SQL","tool.sql-formatter.desc":"Formatea consultas SQL en el navegador con soporte para dialectos comunes.",
+    "tool.css-formatter.title":"Formateador CSS",
+    "tool.css-formatter.desc":"Formatea, embellece, valida, minifica y analiza CSS con detección de paleta de colores.",
 
     "ui.input":"Entrada","ui.output":"Salida","ui.options":"Opciones",
     "ui.format":"Formatear","ui.minify":"Minificar","ui.validate":"Validar",
@@ -114,6 +118,8 @@ window.DTH_I18N = {
     "tool.case.title":"Text-Case-Konverter","tool.case.desc":"Zwischen camelCase, snake_case, kebab-case u.v.m. konvertieren.",
     "tool.user-agent.title":"User-Agent-Parser","tool.user-agent.desc":"User-Agent-Strings in Browser-, OS- und Geräteinfos zerlegen.",
     "tool.sql-formatter.title":"SQL Formatter & Beautifier","tool.sql-formatter.desc":"Formatiere SQL-Abfragen im Browser mit Unterstützung gängiger Dialekte.",
+    "tool.css-formatter.title":"CSS Formatter",
+    "tool.css-formatter.desc":"CSS formatieren, verschönern, validieren, minifizieren und analysieren mit Farbpaletten-Erkennung.",
 
     "ui.input":"Eingabe","ui.output":"Ausgabe","ui.options":"Optionen",
     "ui.format":"Formatieren","ui.minify":"Minifizieren","ui.validate":"Validieren",
@@ -150,6 +156,8 @@ window.DTH_I18N = {
     "tool.case.title":"Convertisseur de casse","tool.case.desc":"Convertir entre camelCase, snake_case, kebab-case et plus.",
     "tool.user-agent.title":"Analyseur de User Agent","tool.user-agent.desc":"Analyser les chaînes User-Agent en navigateur, OS et appareil.",
     "tool.sql-formatter.title":"Formateur SQL","tool.sql-formatter.desc":"Formatez les requêtes SQL dans le navigateur avec prise en charge des dialectes courants.",
+    "tool.css-formatter.title":"Formateur CSS",
+    "tool.css-formatter.desc":"Formatez, embellissez, validez, minifiez et analysez le CSS avec détection de palette de couleurs.",
 
     "ui.input":"Entrée","ui.output":"Sortie","ui.options":"Options",
     "ui.format":"Formater","ui.minify":"Minifier","ui.validate":"Valider",
@@ -186,6 +194,8 @@ window.DTH_I18N = {
     "tool.case.title":"テキストケース変換","tool.case.desc":"camelCase、snake_case、kebab-caseなどを相互変換。",
     "tool.user-agent.title":"User-Agent解析","tool.user-agent.desc":"User-Agent文字列をブラウザ・OS・デバイス情報に分解。",
     "tool.sql-formatter.title":"SQLフォーマッタ","tool.sql-formatter.desc":"一般的なSQL方言に対応し、ブラウザ内でSQLクエリを整形します。",
+    "tool.css-formatter.title":"CSSフォーマッタ",
+    "tool.css-formatter.desc":"CSSの整形、検証、圧縮、分析。カラーパレット検出と変数検査機能付き。",
 
     "ui.input":"入力","ui.output":"出力","ui.options":"オプション",
     "ui.format":"整形","ui.minify":"圧縮","ui.validate":"検証",
