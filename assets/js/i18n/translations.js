@@ -3,7 +3,7 @@ window.DTH_I18N = {
   en: {
     "nav.home":"Home","nav.tools":"Tools","nav.blog":"Blog","nav.about":"About",
     "footer.tagline":"Fast, private developer utilities. Everything runs in your browser.",
-    "footer.tools":"Tools","footer.popular":"Popular","footer.legal":"Legal",
+    "footer.tools":"Tools","footer.popular":"Popular","footer.legal":"Legal","footer.resources":"Resources",
     "footer.privacy":"Privacy","footer.terms":"Terms","footer.github":"GitHub",
     "footer.copy":"© 2026 DevToolsHive. All processing happens locally in your browser.",
     "hero.title":"Your browser is your toolbox.",
