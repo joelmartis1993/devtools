@@ -42,6 +42,14 @@
     <priority>0.7</priority>
   </url>
 
+  <!-- CSS Formatter -->
+  <url>
+    <loc>https://devtoolshive.com/tools/css-formatter.html</loc>
+    <lastmod>2026-07-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
   <!-- User Agent Parser -->
   <url>
     <loc>https://devtoolshive.com/tools/user-agent.html</loc>
@@ -69,14 +77,6 @@
   <!-- UUID Generator -->
   <url>
     <loc>https://devtoolshive.com/tools/uuid.html</loc>
-    <lastmod>2026-05-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- ULID Generator -->
-  <url>
-    <loc>https://devtoolshive.com/tools/ulid.html</loc>
     <lastmod>2026-05-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

@@ -440,7 +440,7 @@
           <div class="pane-head">
             <span class="pane-title">JSON Input</span>
             <div class="pane-toolbar">
-              <span id="inputStatus" class="status-pill warn">⏳ Waiting for input</span>
+              <span id="inputStatus" class="status-pill warn">⏳ Input</span>
             </div>
           </div>
           <div class="pane-body">
@@ -1043,7 +1043,7 @@
         function clearInput() {
           inputEl.value = "";
           outputEl.innerHTML = "<pre>Choose an example or paste JSON to generate TypeScript.</pre>";
-          setStatus("warn", "⏳ Waiting for input");
+          setStatus("warn", "⏳ Input");
           validationTextEl.textContent = "Validation will appear here.";
           inputMetaEl.textContent = "0 chars · 0 lines";
           outputMetaEl.textContent = "Ready to generate.";

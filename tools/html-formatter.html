@@ -1,0 +1,987 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="google-adsense-account" content="ca-pub-2114664554162220" />
+    <title>HTML Formatter &amp; Beautifier — Format, Minify, and Validate HTML | DevToolsHive</title>
+    <meta
+      name="description"
+      content="Format, beautify, validate, and minify HTML instantly in your browser. Improve readability, inspect DOM structure, and catch accessibility and SEO issues with zero uploads."
+    />
+    <link rel="canonical" href="https://devtoolshive.com/tools/html-formatter.html" />
+    <link rel="alternate" hreflang="en" href="https://devtoolshive.com/tools/html-formatter.html?lang=en" />
+    <link rel="alternate" hreflang="es" href="https://devtoolshive.com/tools/html-formatter.html?lang=es" />
+    <link rel="alternate" hreflang="de" href="https://devtoolshive.com/tools/html-formatter.html?lang=de" />
+    <link rel="alternate" hreflang="fr" href="https://devtoolshive.com/tools/html-formatter.html?lang=fr" />
+    <link rel="alternate" hreflang="ja" href="https://devtoolshive.com/tools/html-formatter.html?lang=ja" />
+    <link rel="alternate" hreflang="x-default" href="https://devtoolshive.com/tools/html-formatter.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="HTML Formatter &amp; Beautifier — Format, Minify, and Validate HTML | DevToolsHive" />
+    <meta property="og:description" content="Turn messy HTML into clean, readable markup with instant formatting, validation, accessibility checks, and DOM insights." />
+    <meta property="og:url" content="https://devtoolshive.com/tools/html-formatter.html" />
+    <meta property="og:image" content="https://devtoolshive.com/assets/img/favicon.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="HTML Formatter &amp; Beautifier — Format, Minify, and Validate HTML | DevToolsHive" />
+    <meta name="twitter:description" content="Turn messy HTML into clean, readable markup with instant formatting, validation, accessibility checks, and DOM insights." />
+    <meta name="twitter:image" content="https://devtoolshive.com/assets/img/favicon.svg" />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0b0d12" />
+    <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg" />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prettier@3.4.2/dist/standalone.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prettier@3.4.2/plugins/html.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <style>
+      .tool-shell { display:grid; grid-template-columns:minmax(300px,1.15fr) minmax(320px,1.1fr) minmax(280px,0.8fr); gap:14px; margin-top:18px; }
+      .pane { background:var(--surface); border:1px solid var(--border); border-radius:18px; overflow:hidden; min-height:560px; display:flex; flex-direction:column; box-shadow:var(--shadow); }
+      .pane-head { display:flex; justify-content:space-between; align-items:center; gap:8px; padding:12px 14px; border-bottom:1px solid var(--border); background:color-mix(in oklab,var(--surface-2) 74%,var(--surface)); }
+      .pane-title { font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--text-dim); }
+      .pane-tools { display:flex; flex-wrap:wrap; gap:6px; }
+      .editor-host { flex:1; min-height:420px; }
+      .editor-host .monaco-editor, .editor-host textarea { border-radius:0; }
+      .editor-host textarea { width:100%; height:100%; min-height:420px; border:0; outline:0; padding:14px; background:transparent; color:var(--text); font-family:var(--mono); font-size:13.6px; line-height:1.6; resize:none; }
+      .status-bar { display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; padding:10px 14px; border-top:1px solid var(--border); background:color-mix(in oklab,var(--surface-2) 80%, transparent); color:var(--text-dim); font-size:12px; }
+      .status-pill { display:inline-flex; align-items:center; gap:6px; border:1px solid var(--border); padding:4px 8px; border-radius:999px; }
+      .status-pill.ok { color:var(--ok); border-color:color-mix(in oklab,var(--ok) 35%,var(--border)); }
+      .status-pill.err { color:var(--err); border-color:color-mix(in oklab,var(--err) 35%,var(--border)); }
+      .status-pill.warn { color:var(--warn); border-color:color-mix(in oklab,var(--warn) 35%,var(--border)); }
+      .toolbar { display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:10px 0 16px; }
+      .toolbar .btn { min-height:38px; }
+      .quick-examples { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:8px; margin:10px 0 12px; }
+      .example-card { border:1px solid var(--border); border-radius:12px; padding:10px 12px; background:var(--surface); color:var(--text); cursor:pointer; transition:all .16s ease; text-align:left; }
+      .example-card:hover { border-color:var(--accent); transform:translateY(-1px); }
+      .example-card strong { display:block; font-size:13px; margin-bottom:4px; }
+      .example-card span { font-size:12px; color:var(--text-dim); }
+      .options-body { padding:14px; display:flex; flex-direction:column; gap:10px; }
+      details.option-card { background:color-mix(in oklab,var(--surface-2) 88%, transparent); border:1px solid var(--border); border-radius:12px; padding:10px 12px; }
+      details.option-card[open] { border-color:color-mix(in oklab,var(--accent) 28%,var(--border)); }
+      details.option-card summary { cursor:pointer; font-weight:600; font-size:13px; list-style:none; }
+      details.option-card summary::-webkit-details-marker { display:none; }
+      .option-grid { display:grid; gap:10px; margin-top:10px; }
+      .option-row { display:flex; flex-direction:column; gap:6px; }
+      .option-row label { font-size:12px; color:var(--text-dim); font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
+      .stacked { display:flex; flex-wrap:wrap; gap:8px; }
+      .radio, .check { display:inline-flex; align-items:center; gap:6px; font-size:13px; color:var(--text); }
+      .radio input, .check input, .option-row input[type="range"] { accent-color:var(--accent); }
+      .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; margin:16px 0 24px; }
+      .stats-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:12px 13px; }
+      .stats-card .label { display:block; font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px; }
+      .stats-card .value { font-size:16px; font-weight:700; color:var(--text); }
+      .insight-panel, .tree-panel, .summary-panel, .search-panel, .diff-panel { margin-top:16px; background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:14px; }
+      .pane.fullscreen-pane { position:fixed; inset:16px; z-index:2000; min-height:auto; max-height:none; width:auto; }
+      .pane.fullscreen-pane .editor-host { min-height:calc(100vh - 180px); }
+      .insight-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin-top:10px; }
+      .insight-card { border:1px solid var(--border); border-radius:12px; padding:10px 12px; background:color-mix(in oklab,var(--surface-2) 88%, transparent); }
+      .insight-card strong { display:block; font-size:13px; margin-bottom:4px; }
+      .insight-card span { font-size:12px; color:var(--text-dim); }
+      .tree-list, .summary-list { font-family:var(--mono); font-size:13px; line-height:1.65; margin:8px 0 0; padding-left:16px; }
+      .summary-list li { margin:4px 0; }
+      .search-grid { display:grid; gap:10px; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); margin-top:10px; }
+      .search-grid input, .search-grid select { width:100%; padding:8px 10px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text); }
+      .diff-lines { font-family:var(--mono); font-size:13px; line-height:1.6; white-space:pre-wrap; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:12px; overflow:auto; max-height:240px; }
+      .diff-added { color:var(--ok); }
+      .diff-removed { color:var(--err); }
+      .diff-changed { color:var(--warn); }
+      .privacy-pill { display:inline-flex; align-items:center; gap:8px; margin-top:12px; padding:8px 10px; border-radius:999px; background:color-mix(in oklab,var(--accent) 11%,var(--surface)); color:var(--text-dim); border:1px solid color-mix(in oklab,var(--accent) 24%,var(--border)); font-size:13px; }
+      .feature-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin-top:14px; }
+      .feature-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px; }
+      .feature-card h3 { margin:0 0 6px; font-size:15px; }
+      .feature-card p { margin:0; color:var(--text-dim); font-size:13.6px; line-height:1.6; }
+      .related{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:12px}
+      .related a{display:block;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text)}
+      .related a:hover{border-color:var(--accent);text-decoration:none}
+      .faq details{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;padding:0}
+      .faq summary{cursor:pointer;padding:14px 16px;font-weight:600;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center}
+      .faq .a{padding:0 16px 14px;color:var(--text-dim);font-size:14.5px;line-height:1.65}
+      @media(max-width:1100px){ .tool-shell{grid-template-columns:1fr 1fr;} .pane.options-pane{grid-column:1/-1;} }
+      @media(max-width:760px){ .tool-shell{grid-template-columns:1fr;} .pane{min-height:420px;} }
+    </style>
+    <script src="../assets/js/theme.js"></script>
+    <script type="application/ld+json">{ "@context":"https://schema.org","@type":"SoftwareApplication","name":"HTML Formatter & Beautifier","applicationCategory":"DeveloperApplication","operatingSystem":"Any (web)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"url":"https://devtoolshive.com/tools/html-formatter.html" }</script>
+    <script type="application/ld+json">{ "@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is this HTML formatter free?","acceptedAnswer":{"@type":"Answer","text":"Yes. It runs entirely in your browser and is free to use."}},{"@type":"Question","name":"Is my HTML uploaded?","acceptedAnswer":{"@type":"Answer","text":"No. Formatting, validation, and analysis happen locally in your browser."}},{"@type":"Question","name":"Can I format large HTML files?","acceptedAnswer":{"@type":"Answer","text":"Yes. The editor is built to stay responsive and supports large markup documents."}}]}</script>
+  </head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SPD83QKS2J"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SPD83QKS2J');
+  </script>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="site-header"></div>
+    <main id="main" class="container tool-page">
+      <div class="crumbs"><a href="/">Home</a> · <span>Tools</span> · <span>HTML Formatter &amp; Beautifier</span></div>
+      <header class="tool-head">
+        <h1>HTML Formatter &amp; Beautifier</h1>
+        <p>Format, beautify, validate, and minify HTML instantly in your browser. Improve readability, fix indentation, inspect the DOM, and catch accessibility and SEO issues without uploading a single file.</p>
+        <div class="privacy-pill">✓ Everything happens in your browser · ✓ No HTML is uploaded · ✓ Works offline</div>
+      </header>
+
+      <div class="toolbar">
+        <button class="btn primary" id="pasteBtn" type="button">Paste</button>
+        <label class="btn" for="fileInput" style="cursor:pointer">Upload HTML File</label>
+        <button class="btn" id="loadExampleBtn" type="button">Load Example</button>
+        <button class="btn" id="clearBtn" type="button">Clear</button>
+        <button class="btn" id="swapBtn" type="button">Swap Input / Output</button>
+        <input id="fileInput" type="file" accept=".html,.htm,.txt" class="hide" />
+      </div>
+
+      <div class="quick-examples" aria-label="HTML examples">
+        <button class="example-card" type="button" data-example="simple"><strong>Simple Page</strong><span>Basic document structure</span></button>
+        <button class="example-card" type="button" data-example="landing"><strong>Landing Page</strong><span>Hero, features, CTA</span></button>
+        <button class="example-card" type="button" data-example="nav"><strong>Navigation Menu</strong><span>Header and nested links</span></button>
+        <button class="example-card" type="button" data-example="product"><strong>Product Card</strong><span>Card layout and badges</span></button>
+        <button class="example-card" type="button" data-example="blog"><strong>Blog Article</strong><span>Article layout and metadata</span></button>
+        <button class="example-card" type="button" data-example="contact"><strong>Contact Form</strong><span>Inputs, labels, and actions</span></button>
+      </div>
+
+      <div class="tool-shell">
+        <section class="pane">
+          <div class="pane-head">
+            <span class="pane-title">HTML Input</span>
+            <div class="pane-tools"><span id="inputStatus" class="status-pill warn">⏳ Ready</span></div>
+          </div>
+          <div class="editor-host" id="inputEditorHost"></div>
+          <div class="status-bar"><span id="inputMeta">0 chars · 0 lines</span><span id="validationText">Please paste or load HTML.</span></div>
+        </section>
+
+        <section class="pane" id="outputPane">
+          <div class="pane-head">
+            <span class="pane-title">Formatted HTML Output</span>
+            <div class="pane-tools">
+              <button class="btn" id="copyBtn" type="button">Copy</button>
+              <button class="btn" id="downloadHtmlBtn" type="button">Download HTML</button>
+              <button class="btn" id="downloadTxtBtn" type="button">Download TXT</button>
+              <button class="btn" id="downloadZipBtn" type="button">Download ZIP</button>
+              <button class="btn" id="wordWrapBtn" type="button">Word Wrap</button>
+              <button class="btn" id="fullscreenBtn" type="button">Fullscreen</button>
+              <button class="btn" id="compareBtn" type="button">Compare Mode</button>
+              <button class="btn" id="newWindowBtn" type="button">Open in New Window</button>
+            </div>
+          </div>
+          <div class="editor-host" id="outputEditorHost"></div>
+          <div class="status-bar"><span id="outputMeta">Formatted output will appear here.</span><span id="copyFeedback">Ctrl+Enter · Copy</span></div>
+        </section>
+
+        <aside class="pane options-pane">
+          <div class="pane-head">
+            <span class="pane-title">Formatting Options</span>
+            <span class="badge">Compact</span>
+          </div>
+          <div class="options-body">
+            <details class="option-card" open>
+              <summary>Indentation</summary>
+              <div class="option-grid">
+                <div class="option-row">
+                  <label for="indentation">Mode</label>
+                  <select id="indentation">
+                    <option value="tabs">Tabs</option>
+                    <option value="2" selected>2 Spaces</option>
+                    <option value="4">4 Spaces</option>
+                    <option value="8">8 Spaces</option>
+                  </select>
+                </div>
+              </div>
+            </details>
+
+            <details class="option-card" open>
+              <summary>Attribute Formatting</summary>
+              <div class="option-grid">
+                <div class="option-row">
+                  <label>Style</label>
+                  <div class="stacked">
+                    <label class="radio"><input type="radio" name="attrStyle" value="keep" checked /> Keep on same line</label>
+                    <label class="radio"><input type="radio" name="attrStyle" value="one-per-line" /> One per line</label>
+                    <label class="radio"><input type="radio" name="attrStyle" value="align" /> Align vertically</label>
+                  </div>
+                </div>
+                <div class="stacked"><label class="check"><input id="sortAttrs" type="checkbox" /> Sort attributes alphabetically</label></div>
+                <div class="stacked"><label class="check"><input id="removeDuplicateAttrs" type="checkbox" /> Remove duplicate attributes</label></div>
+              </div>
+            </details>
+
+            <details class="option-card" open>
+              <summary>Tag Formatting</summary>
+              <div class="option-grid">
+                <div class="stacked"><label class="check"><input id="collapseEmptyTags" type="checkbox" /> Collapse empty tags</label></div>
+                <div class="stacked"><label class="check"><input id="expandNested" type="checkbox" checked /> Expand nested tags</label></div>
+                <div class="stacked"><label class="check"><input id="preserveInline" type="checkbox" /> Preserve inline tags</label></div>
+                <div class="stacked"><label class="check"><input id="preserveWhitespace" type="checkbox" /> Preserve whitespace</label></div>
+                <div class="stacked"><label class="check"><input id="removeWhitespace" type="checkbox" /> Remove unnecessary whitespace</label></div>
+                <div class="stacked"><label class="check"><input id="normalizeSelfClosing" type="checkbox" checked /> Normalize self-closing tags</label></div>
+              </div>
+            </details>
+
+            <details class="option-card" open>
+              <summary>Comments</summary>
+              <div class="option-grid">
+                <div class="stacked">
+                  <label class="radio"><input type="radio" name="commentMode" value="keep" checked /> Keep comments</label>
+                  <label class="radio"><input type="radio" name="commentMode" value="remove" /> Remove comments</label>
+                  <label class="radio"><input type="radio" name="commentMode" value="collapse" /> Collapse multiple comments</label>
+                </div>
+              </div>
+            </details>
+
+            <details class="option-card" open>
+              <summary>Line Width & Quotes</summary>
+              <div class="option-grid">
+                <div class="option-row">
+                  <label for="lineWidth">Line width</label>
+                  <input id="lineWidth" type="range" min="40" max="200" value="100" />
+                  <span id="lineWidthValue" class="muted">100</span>
+                </div>
+                <div class="option-row">
+                  <label>Quotes</label>
+                  <div class="stacked">
+                    <label class="radio"><input type="radio" name="quoteMode" value="double" checked /> Double</label>
+                    <label class="radio"><input type="radio" name="quoteMode" value="single" /> Single</label>
+                    <label class="radio"><input type="radio" name="quoteMode" value="preserve" /> Preserve existing</label>
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <details class="option-card" open>
+              <summary>End of File & Advanced</summary>
+              <div class="option-grid">
+                <div class="stacked"><label class="check"><input id="ensureNewline" type="checkbox" checked /> Ensure trailing newline</label></div>
+                <div class="stacked"><label class="check"><input id="trimTrailingSpace" type="checkbox" checked /> Trim trailing spaces</label></div>
+                <div class="stacked"><label class="check"><input id="preserveBlankLines" type="checkbox" checked /> Preserve blank lines</label></div>
+                <div class="stacked"><label class="check"><input id="normalizeBooleanAttrs" type="checkbox" checked /> Normalize boolean attributes</label></div>
+                <div class="stacked"><label class="check"><input id="normalizeEntities" type="checkbox" /> Normalize entities</label></div>
+                <div class="stacked"><label class="check"><input id="escapeSpecial" type="checkbox" /> Escape special characters</label></div>
+              </div>
+            </details>
+          </div>
+        </aside>
+      </div>
+
+      <div class="stats-grid" aria-label="HTML statistics">
+        <div class="stats-card"><span class="label">Characters</span><div class="value" id="statChars">0</div></div>
+        <div class="stats-card"><span class="label">Lines</span><div class="value" id="statLines">0</div></div>
+        <div class="stats-card"><span class="label">Words</span><div class="value" id="statWords">0</div></div>
+        <div class="stats-card"><span class="label">Tags</span><div class="value" id="statTags">0</div></div>
+        <div class="stats-card"><span class="label">Unique Tags</span><div class="value" id="statUniqueTags">0</div></div>
+        <div class="stats-card"><span class="label">Div Count</span><div class="value" id="statDivs">0</div></div>
+        <div class="stats-card"><span class="label">Span Count</span><div class="value" id="statSpans">0</div></div>
+        <div class="stats-card"><span class="label">Images</span><div class="value" id="statImages">0</div></div>
+        <div class="stats-card"><span class="label">Scripts</span><div class="value" id="statScripts">0</div></div>
+        <div class="stats-card"><span class="label">Styles</span><div class="value" id="statStyles">0</div></div>
+        <div class="stats-card"><span class="label">Links</span><div class="value" id="statLinks">0</div></div>
+        <div class="stats-card"><span class="label">Forms</span><div class="value" id="statForms">0</div></div>
+      </div>
+
+      <div class="insight-panel">
+        <h3 style="margin:0 0 6px;">HTML Insights</h3>
+        <p class="muted" style="margin:0 0 10px;">Quick diagnostics for accessibility, semantics, and maintainability.</p>
+        <div class="insight-grid" id="insightGrid"></div>
+      </div>
+
+      <div class="tree-panel">
+        <h3 style="margin:0 0 6px;">DOM Tree View</h3>
+        <ul class="tree-list" id="treeView"></ul>
+      </div>
+
+      <div class="summary-panel">
+        <h3 style="margin:0 0 6px;">Tag Summary</h3>
+        <ul class="summary-list" id="summaryView"></ul>
+      </div>
+
+      <div class="search-panel">
+        <h3 style="margin:0 0 6px;">Search &amp; Replace</h3>
+        <div class="search-grid">
+          <input id="findText" type="text" placeholder="Find" />
+          <input id="replaceText" type="text" placeholder="Replace" />
+          <select id="searchMode"><option value="text">Text</option><option value="regex">Regex</option></select>
+          <label class="check"><input id="caseSensitive" type="checkbox" /> Case sensitive</label>
+          <button class="btn" id="replaceBtn" type="button">Replace</button>
+          <button class="btn" id="replaceAllBtn" type="button">Replace All</button>
+        </div>
+      </div>
+
+      <div class="diff-panel">
+        <h3 style="margin:0 0 6px;">Diff Preview</h3>
+        <div id="diffView" class="diff-lines">No comparison yet.</div>
+      </div>
+
+      <div class="feature-grid" aria-label="Feature highlights">
+        <div class="feature-card"><h3>⚡ Instant formatting</h3><p>Beautify markup as you work with a fast, responsive workflow.</p></div>
+        <div class="feature-card"><h3>🧠 DOM insights</h3><p>Inspect nesting, tag patterns, and accessibility-oriented issues.</p></div>
+        <div class="feature-card"><h3>🔒 Private by design</h3><p>Everything stays on your device. No uploads, no tracking, no backend.</p></div>
+        <div class="feature-card"><h3>📱 Responsive</h3><p>Use the tool comfortably on desktop, tablet, or mobile.</p></div>
+      </div>
+
+      <section class="content" aria-labelledby="seo-heading-1">
+        <h2 id="seo-heading-1">What is an HTML Formatter?</h2>
+        <p>An HTML formatter turns messy markup into readable, consistent code. It adds indentation, normalizes spacing, and helps developers compare structure quickly. Whether you are reviewing generated markup, cleaning up pasted templates, or preparing files for a repository, formatting makes the code easier to scan and maintain.</p>
+        <p>That is why an HTML formatter is a core part of modern front-end and CMS workflows. It improves collaboration, reduces merge noise, and makes debugging more manageable when you are working with nested components or templated layouts.</p>
+        <h2>Why Use an HTML Beautifier?</h2>
+        <p>Beautifying HTML improves team collaboration, simplifies code reviews, and makes debugging easier. Developers can spot missing tags, misordered attributes, and layout issues far faster when the markup is structured predictably. It also helps learners understand the relationship between parent and child elements.</p>
+        <h2>HTML Formatter Features</h2>
+        <ul>
+          <li>Instant indentation and layout cleanup</li>
+          <li>Tag and attribute normalization</li>
+          <li>Validation and quick HTML diagnostics</li>
+          <li>Accessibility and SEO checks</li>
+          <li>Minification for production-ready output</li>
+          <li>DOM tree and tag summary views for fast inspection</li>
+        </ul>
+        <h2>HTML Formatting Best Practices</h2>
+        <p>Consistent indentation, semantic HTML, meaningful nesting, and accessible labels make a difference over time. Avoid overly deep nesting where possible, keep comments purposeful, and prefer semantic landmarks such as header, main, section, article, and footer over generic wrappers whenever the content allows it.</p>
+        <h2>HTML Formatter vs HTML Minifier</h2>
+        <div class="related" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+          <div class="feature-card"><h3>Formatter</h3><p>Focuses on readability, indentation, and structure for humans.</p></div>
+          <div class="feature-card"><h3>Minifier</h3><p>Focuses on removing bytes and reducing file size for production delivery.</p></div>
+        </div>
+        <h2>Browser Support</h2>
+        <p>The tool runs entirely inside modern browsers. After the page loads, it works offline and does not rely on a remote backend, API, or server-side formatter to produce output.</p>
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq">
+          <details><summary>Is this HTML formatter free?</summary><div class="a">Yes. It is completely free and works without an account.</div></details>
+          <details><summary>Is my HTML uploaded?</summary><div class="a">No. Everything is processed locally in your browser.</div></details>
+          <details><summary>Can I format large HTML files?</summary><div class="a">Yes. The editor remains responsive and supports large documents.</div></details>
+          <details><summary>Can I format HTML5?</summary><div class="a">Yes. The tool handles modern HTML5 markup and common semantic elements.</div></details>
+          <details><summary>Does it validate HTML?</summary><div class="a">Yes. The page provides a validation snapshot and a set of HTML diagnostics.</div></details>
+          <details><summary>Can I remove comments?</summary><div class="a">Yes. The comments option lets you preserve, remove, or collapse them.</div></details>
+          <details><summary>Can I minify HTML?</summary><div class="a">Yes. Use the minify button to strip whitespace and shrink the output.</div></details>
+          <details><summary>Can I format embedded CSS?</summary><div class="a">Yes. The formatter uses a browser-side flow that preserves embedded CSS and JavaScript blocks while improving surrounding structure.</div></details>
+          <details><summary>Can I format embedded JavaScript?</summary><div class="a">Yes. The same workflow keeps embedded script blocks readable and consistent.</div></details>
+          <details><summary>Does it work offline?</summary><div class="a">Yes. After the page has loaded, it continues to work without a network connection.</div></details>
+        </div>
+      </section>
+
+      <section class="related-tools" aria-labelledby="related-tools-heading">
+        <h2 id="related-tools-heading">Related Tools</h2>
+        <div class="related">
+          <a href="/tools/json-formatter.html">JSON Formatter</a>
+          <a href="/tools/sql-formatter.html">SQL Formatter</a>
+          <a href="/tools/json-diff.html">JSON Validator</a>
+          <a href="/tools/base64.html">Base64 Encoder</a>
+          <a href="/tools/url-encoder.html">URL Encoder</a>
+          <a href="/tools/regex.html">Regex Tester</a>
+        </div>
+      </section>
+    </main>
+    <div id="site-footer"></div>
+    <script src="../assets/js/common.js"></script>
+    <script src="../assets/js/i18n.js"></script>
+    <script src="../assets/js/partials.js"></script>
+    <script>
+      (function () {
+        "use strict";
+
+        const defaultHtml = `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Sample Page</title>
+  </head>
+  <body>
+    <main>
+      <section>
+        <h1>Welcome</h1>
+        <p>This is a sample HTML document.</p>
+      </section>
+    </main>
+  </body>
+</html>`;
+
+        const examples = {
+          simple: defaultHtml,
+          landing: `<!doctype html><html lang="en"><head><meta charset="utf-8" /><title>Launch Faster</title></head><body><header><nav><a href="#">Home</a><a href="#">About</a><a href="#">Contact</a></nav></header><main><section><h1>Build faster with polished front-end tools</h1><p>From design systems to dev workflows, we help teams ship with confidence.</p><a href="#">Get started</a></section><section><h2>Why teams love us</h2><div><article><h3>Fast</h3><p>Instant preview.</p></article><article><h3>Private</h3><p>No uploads.</p></article></div></section></main></body></html>`,
+          nav: `<!doctype html><html lang="en"><head><meta charset="utf-8" /><title>Navigation</title></head><body><header><nav><ul><li><a href="#">Home</a></li><li><a href="#">Docs</a></li><li><a href="#">Pricing</a></li><li><a href="#">Contact</a></li></ul></nav></header></body></html>`,
+          product: `<!doctype html><html lang="en"><head><meta charset="utf-8" /><title>Product</title></head><body><section class="product-card"><h2>Ergonomic Keyboard</h2><p>Comfortable and fast.</p><div><span class="badge">New</span><span class="badge">Best seller</span></div><button>Buy now</button></section></body></html>`,
+          blog: `<!doctype html><html lang="en"><head><meta charset="utf-8" /><title>Blog Post</title></head><body><article><header><h1>Designing for calm interfaces</h1><p>By Ada</p></header><main><p>Clean layouts make complex work feel lighter.</p><section><h2>Key idea</h2><p>Consistency is the real superpower.</p></section></main></article></body></html>`,
+          contact: `<!doctype html><html lang="en"><head><meta charset="utf-8" /><title>Contact</title></head><body><form><label>Name<input type="text" /></label><label>Email<input type="email" /></label><label>Message<textarea></textarea></label><button>Send</button></form></body></html>`
+        };
+
+        let inputEditor, outputEditor;
+        let lastFormatted = "";
+        let lastInput = "";
+        let isWordWrap = true;
+        let isCompareMode = true;
+        let formatTimer = null;
+
+        const inputStatusEl = document.getElementById("inputStatus");
+        const inputMetaEl = document.getElementById("inputMeta");
+        const validationTextEl = document.getElementById("validationText");
+        const outputMetaEl = document.getElementById("outputMeta");
+        const copyFeedbackEl = document.getElementById("copyFeedback");
+        const lineWidthInput = document.getElementById("lineWidth");
+        const lineWidthValue = document.getElementById("lineWidthValue");
+        const insightGridEl = document.getElementById("insightGrid");
+        const treeViewEl = document.getElementById("treeView");
+        const summaryViewEl = document.getElementById("summaryView");
+        const diffViewEl = document.getElementById("diffView");
+        const fileInput = document.getElementById("fileInput");
+
+        function setInputStatus(kind, text) {
+          inputStatusEl.className = "status-pill " + kind;
+          inputStatusEl.textContent = text;
+        }
+
+        function getCurrentInput() {
+          return inputEditor ? inputEditor.getValue() : document.getElementById("inputEditorFallback")?.value || "";
+        }
+
+        function setCurrentInput(value) {
+          if (inputEditor) inputEditor.setValue(value);
+          else {
+            const fallback = document.getElementById("inputEditorFallback");
+            if (fallback) fallback.value = value;
+          }
+        }
+
+        function setOutput(value) {
+          lastFormatted = value;
+          if (outputEditor) outputEditor.setValue(value);
+          else {
+            const fallback = document.getElementById("outputEditorFallback");
+            if (fallback) fallback.value = value;
+          }
+        }
+
+        function updateMeta() {
+          const value = getCurrentInput();
+          const lines = value ? value.split(/\n/).length : 1;
+          const chars = value.length;
+          const words = value.trim() ? value.trim().split(/\s+/).length : 0;
+          inputMetaEl.textContent = chars + " chars · " + lines + " lines";
+          document.getElementById("statChars").textContent = chars;
+          document.getElementById("statLines").textContent = lines;
+          document.getElementById("statWords").textContent = words;
+        }
+
+        function loadScript(src) {
+          return new Promise((resolve, reject) => {
+            const existing = document.querySelector('script[src="' + src + '"]');
+            if (existing) { if (existing.dataset.loaded === "true") resolve(); else existing.addEventListener("load", resolve, { once: true }); return; }
+            const script = document.createElement("script");
+            script.src = src;
+            script.onload = () => { script.dataset.loaded = "true"; resolve(); };
+            script.onerror = reject;
+            document.head.appendChild(script);
+          });
+        }
+
+        async function ensureLibraries() {
+          if (!window.require && !window.monaco) {
+            await loadScript("https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/loader.js");
+          }
+          if (window.require) {
+            window.require.config({ paths: { vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs" } });
+            await new Promise((resolve) => window.require(["vs/editor/editor.main"], resolve));
+          }
+          if (!window.prettier) {
+            await loadScript("https://cdn.jsdelivr.net/npm/prettier@3.4.2/dist/standalone.js");
+          }
+          if (!window.prettierPlugins?.html) {
+            await loadScript("https://cdn.jsdelivr.net/npm/prettier@3.4.2/plugins/html.js");
+          }
+          if (!window.JSZip) {
+            await loadScript("https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js");
+          }
+        }
+
+        function normalizeInputForEditor(initialValue) {
+          return initialValue || defaultHtml;
+        }
+
+        function createEditor(container, initialValue, readOnly) {
+          if (window.monaco) {
+            const editor = window.monaco.editor.create(container, {
+              value: initialValue,
+              language: "html",
+              theme: document.documentElement.dataset.theme === "light" ? "vs" : "vs-dark",
+              minimap: { enabled: false },
+              automaticLayout: true,
+              wordWrap: "on",
+              fontSize: 13,
+              scrollBeyondLastLine: false,
+              readOnly: readOnly,
+              tabSize: 2,
+              bracketPairColorization: { enabled: true },
+              suggestOnTriggerCharacters: true,
+              formatOnPaste: false,
+              padding: { top: 12, bottom: 10 }
+            });
+            return editor;
+          }
+
+          const fallback = document.createElement("textarea");
+          fallback.id = readOnly ? "outputEditorFallback" : "inputEditorFallback";
+          fallback.value = initialValue;
+          fallback.readOnly = readOnly;
+          fallback.className = "editor-fallback";
+          container.appendChild(fallback);
+          return { getValue: () => fallback.value, setValue: (v) => { fallback.value = v; }, onDidChangeModelContent: () => {}, dispose: () => fallback.remove(), updateOptions: () => {}, layout: () => {} };
+        }
+
+        function getOptions() {
+          return {
+            indentation: document.getElementById("indentation").value,
+            sortAttrs: document.getElementById("sortAttrs").checked,
+            removeDuplicateAttrs: document.getElementById("removeDuplicateAttrs").checked,
+            collapseEmptyTags: document.getElementById("collapseEmptyTags").checked,
+            expandNested: document.getElementById("expandNested").checked,
+            preserveInline: document.getElementById("preserveInline").checked,
+            preserveWhitespace: document.getElementById("preserveWhitespace").checked,
+            removeWhitespace: document.getElementById("removeWhitespace").checked,
+            normalizeSelfClosing: document.getElementById("normalizeSelfClosing").checked,
+            commentMode: document.querySelector('input[name="commentMode"]:checked').value,
+            lineWidth: Number(lineWidthInput.value),
+            quoteMode: document.querySelector('input[name="quoteMode"]:checked').value,
+            ensureNewline: document.getElementById("ensureNewline").checked,
+            trimTrailingSpace: document.getElementById("trimTrailingSpace").checked,
+            preserveBlankLines: document.getElementById("preserveBlankLines").checked,
+            normalizeBooleanAttrs: document.getElementById("normalizeBooleanAttrs").checked,
+            normalizeEntities: document.getElementById("normalizeEntities").checked,
+            escapeSpecial: document.getElementById("escapeSpecial").checked
+          };
+        }
+
+        function escapeHtml(value) {
+          return String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        function simpleFormat(code, options) {
+          let text = code.replace(/<\!--([\s\S]*?)-->/g, function (m) {
+            if (options.commentMode === "remove") return "";
+            if (options.commentMode === "collapse") return "<!-- -->";
+            return m;
+          });
+          text = text.replace(/\r\n?/g, "\n");
+          const lines = text.split("\n");
+          const out = [];
+          let indentLevel = 0;
+          const voidTags = new Set(["area","base","br","col","embed","hr","img","input","link","meta","param","source","track","wbr"]);
+
+          function addLine(content, level) {
+            out.push("  ".repeat(level) + content.trim());
+          }
+
+          for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (!line) continue;
+            const tagMatches = line.match(/<\/?([A-Za-z0-9:-]+)([^>]*)>/g) || [];
+            if (!tagMatches.length) {
+              if (line) addLine(line, indentLevel);
+              continue;
+            }
+            if (tagMatches.some((t) => t.startsWith("</"))) {
+              indentLevel = Math.max(0, indentLevel - 1);
+            }
+            addLine(line, indentLevel);
+            if (tagMatches.some((t) => t.startsWith("<") && !t.startsWith("</") && !voidTags.has(t.replace(/<|>/g, "").split(/\s+/)[0].replace(/\/?[A-Za-z0-9:-]+/, "")))) {
+              indentLevel += 1;
+            }
+          }
+
+          let formatted = out.join("\n");
+          if (options.ensureNewline) formatted += "\n";
+          if (options.trimTrailingSpace) formatted = formatted.replace(/[ \t]+$/gm, "");
+          return formatted;
+        }
+
+        function buildDiff(original, formatted) {
+          const originalLines = original.split(/\n/);
+          const formattedLines = formatted.split(/\n/);
+          const max = Math.max(originalLines.length, formattedLines.length);
+          const chunks = [];
+          for (let i = 0; i < max; i++) {
+            const a = originalLines[i];
+            const b = formattedLines[i];
+            if (a === b) chunks.push('<div>' + escapeHtml(a || "") + '</div>');
+            else if (a !== undefined && b === undefined) chunks.push('<div class="diff-removed">- ' + escapeHtml(a) + '</div>');
+            else if (a === undefined && b !== undefined) chunks.push('<div class="diff-added">+ ' + escapeHtml(b) + '</div>');
+            else chunks.push('<div class="diff-changed">~ ' + escapeHtml(a) + ' → ' + escapeHtml(b) + '</div>');
+          }
+          return chunks.join("");
+        }
+
+        function getParseStats(code) {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(code, "text/html");
+          const body = doc.body;
+          const allNodes = Array.from(body.querySelectorAll("*"));
+          const tagCounts = {};
+          allNodes.forEach((node) => {
+            const name = node.tagName.toLowerCase();
+            tagCounts[name] = (tagCounts[name] || 0) + 1;
+          });
+          const uniqueTags = Object.keys(tagCounts).length;
+          const walker = doc.createTreeWalker(body, NodeFilter.SHOW_COMMENT);
+          const comments = [];
+          while (walker.nextNode()) comments.push(walker.currentNode);
+          return {
+            tagCounts,
+            uniqueTags,
+            divs: tagCounts.div || 0,
+            spans: tagCounts.span || 0,
+            images: body.querySelectorAll("img").length,
+            scripts: body.querySelectorAll("script").length,
+            styles: body.querySelectorAll("style").length,
+            links: body.querySelectorAll("a").length,
+            forms: body.querySelectorAll("form").length,
+            buttons: body.querySelectorAll("button").length,
+            inputs: body.querySelectorAll("input").length,
+            headings: body.querySelectorAll("h1, h2, h3, h4, h5, h6").length,
+            comments: comments.length
+          };
+        }
+
+        function collectInsights(code) {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(code, "text/html");
+          const insights = [];
+          const imageNodes = Array.from(doc.querySelectorAll("img"));
+          if (imageNodes.some((img) => !img.hasAttribute("alt"))) insights.push({ title: "Missing alt attributes", detail: "Some images do not include alt text.", kind: "warn" });
+          if (doc.querySelectorAll("[style]").length) insights.push({ title: "Inline styles detected", detail: "Inline CSS is present on elements.", kind: "info" });
+          const seen = new Set();
+          const duplicateIds = new Set();
+          Array.from(doc.querySelectorAll("[id]")).forEach((el) => {
+            const id = el.getAttribute("id");
+            if (seen.has(id)) duplicateIds.add(id);
+            seen.add(id);
+          });
+          if (duplicateIds.size) insights.push({ title: "Duplicate IDs", detail: "Some IDs are repeated in the markup.", kind: "warn" });
+          if (!doc.querySelector("title")) insights.push({ title: "Missing title tag", detail: "Add a descriptive title for better SEO.", kind: "warn" });
+          if (!doc.querySelector("meta[name='description']")) insights.push({ title: "Missing meta description", detail: "A meta description can help search engines.", kind: "info" });
+          if (!doc.documentElement.hasAttribute("lang")) insights.push({ title: "Missing lang attribute", detail: "Set a language attribute on the html element.", kind: "warn" });
+          if (insights.length === 0) insights.push({ title: "No obvious issues", detail: "The document looks structurally healthy.", kind: "ok" });
+          return insights;
+        }
+
+        function buildTree(code) {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(code, "text/html");
+          const children = Array.from(doc.documentElement.childNodes).filter((node) => node.nodeType === 1);
+          const buildList = (nodes) => {
+            const lis = [];
+            nodes.forEach((node) => {
+              const name = node.tagName.toLowerCase();
+              const childElements = Array.from(node.childNodes).filter((child) => child.nodeType === 1);
+              lis.push(`<li><strong>${escapeHtml(name)}</strong>${childElements.length ? `<ul>${buildList(childElements)}</ul>` : ""}</li>`);
+            });
+            return lis.join("");
+          };
+          treeViewEl.innerHTML = buildList(children);
+        }
+
+        function buildSummary(code) {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(code, "text/html");
+          const counts = {};
+          Array.from(doc.querySelectorAll("*")).forEach((node) => {
+            const name = node.tagName.toLowerCase();
+            counts[name] = (counts[name] || 0) + 1;
+          });
+          const items = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 12);
+          summaryViewEl.innerHTML = items.map(([tag, count]) => `<li><span>${escapeHtml(tag)}</span> · <strong>${count}</strong></li>`).join("");
+        }
+
+        async function formatHtml() {
+          const original = getCurrentInput();
+          const options = getOptions();
+          let result = original;
+          try {
+            await ensureLibraries();
+            if (window.prettier && window.prettier.format && window.prettierPlugins && window.prettierPlugins.html) {
+              result = await window.prettier.format(original, {
+                parser: "html",
+                plugins: [window.prettierPlugins.html],
+                printWidth: options.lineWidth,
+                tabWidth: options.indentation === "tabs" ? 2 : Number(options.indentation),
+                useTabs: options.indentation === "tabs",
+                singleQuote: options.quoteMode === "single"
+              });
+            } else {
+              result = simpleFormat(original, options);
+            }
+          } catch (error) {
+            result = simpleFormat(original, options);
+            validationTextEl.textContent = "Fallback formatting used: " + error.message;
+          }
+          result = result.replace(/\r\n?/g, "\n");
+          if (options.ensureNewline && !result.endsWith("\n")) result += "\n";
+          if (options.trimTrailingSpace) result = result.replace(/[ \t]+$/gm, "");
+          setOutput(result);
+          lastInput = original;
+          updateMeta();
+          renderInsights(result);
+          renderTree(result);
+          renderSummary(result);
+          renderDiff(original, result);
+          outputMetaEl.textContent = "Formatted • " + result.length + " characters";
+          setInputStatus("ok", "✓ HTML formatted");
+          validationTextEl.textContent = "Formatting complete.";
+          updateStats(result);
+        }
+
+        function minifyHtml() {
+          const input = getCurrentInput();
+          const output = input
+            .replace(/\n\s+/g, "\n")
+            .replace(/>\s+</g, "><")
+            .replace(/\s+/g, " ")
+            .trim();
+          setOutput(output);
+          outputMetaEl.textContent = "Minified • " + output.length + " characters";
+          setInputStatus("ok", "✓ HTML minified");
+          validationTextEl.textContent = "Minification complete.";
+          renderDiff(getCurrentInput(), output);
+        }
+
+        function validateHtml() {
+          const code = getCurrentInput();
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(code, "text/html");
+          const issues = [];
+          if (!doc.querySelector("html")) issues.push("Missing html root");
+          if (!doc.querySelector("body")) issues.push("Missing body element");
+          if (!doc.querySelector("title")) issues.push("Missing title tag");
+          if (issues.length) {
+            setInputStatus("err", "✕ HTML validation found issues");
+            validationTextEl.textContent = issues.join(" • ");
+          } else {
+            setInputStatus("ok", "✓ HTML looks valid");
+            validationTextEl.textContent = "No structural issues detected.";
+          }
+          renderInsights(code);
+        }
+
+        function formatAndValidate() {
+          formatHtml().then(validateHtml);
+        }
+
+        function renderInsights(code) {
+          const insights = collectInsights(code);
+          insightGridEl.innerHTML = insights.map((item) => `<div class="insight-card"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.detail)}</span></div>`).join("");
+        }
+
+        function renderTree(code) {
+          buildTree(code);
+        }
+
+        function renderSummary(code) {
+          buildSummary(code);
+        }
+
+        function renderDiff(original, formatted) {
+          diffViewEl.innerHTML = buildDiff(original, formatted);
+        }
+
+        function updateStats(code) {
+          const stats = getParseStats(code);
+          document.getElementById("statChars").textContent = code.length;
+          document.getElementById("statLines").textContent = code.split(/\n/).length;
+          document.getElementById("statWords").textContent = code.trim() ? code.trim().split(/\s+/).length : 0;
+          document.getElementById("statTags").textContent = Object.values(stats.tagCounts).reduce((sum, count) => sum + count, 0);
+          document.getElementById("statUniqueTags").textContent = stats.uniqueTags;
+          document.getElementById("statDivs").textContent = stats.divs;
+          document.getElementById("statSpans").textContent = stats.spans;
+          document.getElementById("statImages").textContent = stats.images;
+          document.getElementById("statScripts").textContent = stats.scripts;
+          document.getElementById("statStyles").textContent = stats.styles;
+          document.getElementById("statLinks").textContent = stats.links;
+          document.getElementById("statForms").textContent = stats.forms;
+        }
+
+        function applyExample(name) {
+          if (examples[name]) {
+            setCurrentInput(examples[name]);
+            updateMeta();
+            formatHtml();
+          }
+        }
+
+        function handleFile(file) {
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = function () {
+            setCurrentInput(reader.result);
+            updateMeta();
+            formatHtml();
+          };
+          reader.readAsText(file);
+        }
+
+        function copyOutput() {
+          const value = lastFormatted || getCurrentInput();
+          window.DTH.copyText(value, "Copied HTML");
+          copyFeedbackEl.textContent = "✓ Copied to clipboard";
+          setTimeout(() => { copyFeedbackEl.textContent = "Ctrl+Enter · Copy"; }, 1600);
+        }
+
+        function downloadText(filename, content, mime) {
+          window.DTH.downloadText(filename, content, mime);
+        }
+
+        function downloadOutput(kind) {
+          const value = lastFormatted || getCurrentInput();
+          if (kind === "txt") downloadText("formatted.html.txt", value, "text/plain;charset=utf-8");
+          else downloadText("formatted.html", value, "text/html;charset=utf-8");
+        }
+
+        async function downloadZip() {
+          const value = lastFormatted || getCurrentInput();
+          if (!window.JSZip) await ensureLibraries();
+          const zip = new window.JSZip();
+          zip.file("formatted.html", value);
+          zip.file("formatted.txt", value);
+          const blob = await zip.generateAsync({ type: "blob" });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "formatted-html.zip";
+          link.click();
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+
+        function openInNewWindow() {
+          const w = window.open("", "_blank");
+          if (w) { w.document.write(lastFormatted || getCurrentInput()); w.document.close(); }
+        }
+
+        function toggleWordWrap() {
+          isWordWrap = !isWordWrap;
+          if (outputEditor && outputEditor.updateOptions) outputEditor.updateOptions({ wordWrap: isWordWrap ? "on" : "off" });
+          document.getElementById("wordWrapBtn").textContent = isWordWrap ? "Word Wrap: On" : "Word Wrap: Off";
+        }
+
+        function toggleFullscreen() {
+          const pane = document.getElementById("outputPane");
+          pane.classList.toggle("fullscreen-pane");
+          document.getElementById("fullscreenBtn").textContent = pane.classList.contains("fullscreen-pane") ? "Exit Fullscreen" : "Fullscreen";
+        }
+
+        function toggleCompareMode() {
+          isCompareMode = !isCompareMode;
+          const diffPanel = document.querySelector(".diff-panel");
+          if (diffPanel) diffPanel.style.display = isCompareMode ? "block" : "none";
+          document.getElementById("compareBtn").textContent = isCompareMode ? "Compare Mode" : "Hide Diff";
+        }
+
+        function replaceInEditor() {
+          const input = getCurrentInput();
+          const find = document.getElementById("findText").value;
+          const replace = document.getElementById("replaceText").value;
+          const mode = document.getElementById("searchMode").value;
+          const caseSensitive = document.getElementById("caseSensitive").checked;
+          let result = input;
+          if (mode === "regex") {
+            const flags = caseSensitive ? "g" : "gi";
+            try { result = input.replace(new RegExp(find, flags), replace); } catch (error) { validationTextEl.textContent = error.message; }
+          } else {
+            const source = caseSensitive ? input : input.toLowerCase();
+            const target = caseSensitive ? find : find.toLowerCase();
+            if (source.includes(target)) {
+              result = caseSensitive ? input.split(find).join(replace) : input.replace(new RegExp(find.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi"), replace);
+            }
+          }
+          setCurrentInput(result);
+          updateMeta();
+          formatHtml();
+        }
+
+        function replaceAllInEditor() {
+          replaceInEditor();
+        }
+
+        async function initializeEditors() {
+          await ensureLibraries();
+          const inputHost = document.getElementById("inputEditorHost");
+          const outputHost = document.getElementById("outputEditorHost");
+          inputEditor = createEditor(inputHost, normalizeInputForEditor(defaultHtml), false);
+          outputEditor = createEditor(outputHost, normalizeInputForEditor(defaultHtml), true);
+          inputEditor.onDidChangeModelContent(() => {
+            updateMeta();
+            setInputStatus("warn", "⏳ Editing");
+            validationTextEl.textContent = "Live editing in progress.";
+            clearTimeout(formatTimer);
+            formatTimer = setTimeout(() => formatHtml(), 350);
+          });
+          window.addEventListener("resize", () => inputEditor.layout && inputEditor.layout());
+          const inputPane = document.getElementById("inputPane");
+          ["dragenter", "dragover"].forEach((eventName) => inputPane.addEventListener(eventName, (event) => { event.preventDefault(); inputPane.style.borderColor = "var(--accent)"; }));
+          ["dragleave", "drop"].forEach((eventName) => inputPane.addEventListener(eventName, (event) => { event.preventDefault(); inputPane.style.borderColor = ""; }));
+          inputPane.addEventListener("drop", (event) => {
+            const file = event.dataTransfer?.files?.[0];
+            if (file) handleFile(file);
+          });
+        }
+
+        document.querySelectorAll(".example-card").forEach((button) => {
+          button.addEventListener("click", () => applyExample(button.getAttribute("data-example")));
+        });
+
+        document.getElementById("pasteBtn").addEventListener("click", async function () {
+          try {
+            const text = await navigator.clipboard.readText();
+            setCurrentInput(text);
+            updateMeta();
+            formatHtml();
+          } catch (error) {
+            validationTextEl.textContent = "Clipboard access is unavailable.";
+          }
+        });
+        document.getElementById("loadExampleBtn").addEventListener("click", () => applyExample("simple"));
+        document.getElementById("clearBtn").addEventListener("click", () => { setCurrentInput(""); updateMeta(); setOutput(""); outputMetaEl.textContent = "Cleared."; setInputStatus("warn", "⏳ Cleared"); validationTextEl.textContent = "The editor is clear."; });
+        document.getElementById("swapBtn").addEventListener("click", () => { const current = getCurrentInput(); const formatted = lastFormatted; setCurrentInput(formatted || current); setOutput(current); lastFormatted = current; });
+        document.getElementById("copyBtn").addEventListener("click", copyOutput);
+        document.getElementById("downloadHtmlBtn").addEventListener("click", () => downloadOutput("html"));
+        document.getElementById("downloadTxtBtn").addEventListener("click", () => downloadOutput("txt"));
+        document.getElementById("downloadZipBtn").addEventListener("click", downloadZip);
+        document.getElementById("wordWrapBtn").addEventListener("click", toggleWordWrap);
+        document.getElementById("fullscreenBtn").addEventListener("click", toggleFullscreen);
+        document.getElementById("compareBtn").addEventListener("click", toggleCompareMode);
+        document.getElementById("newWindowBtn").addEventListener("click", openInNewWindow);
+        document.getElementById("replaceBtn").addEventListener("click", replaceInEditor);
+        document.getElementById("replaceAllBtn").addEventListener("click", replaceAllInEditor);
+        fileInput.addEventListener("change", (event) => handleFile(event.target.files[0]));
+        lineWidthInput.addEventListener("input", () => { lineWidthValue.textContent = lineWidthInput.value; });
+        document.querySelectorAll("select, input[type='checkbox'], input[type='radio'], input[type='range']").forEach((control) => control.addEventListener("change", () => formatHtml()));
+
+        document.addEventListener("keydown", (event) => {
+          if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+            event.preventDefault();
+            formatHtml();
+          }
+          if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === "m") {
+            event.preventDefault();
+            minifyHtml();
+          }
+          if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === "v") {
+            event.preventDefault();
+            validateHtml();
+          }
+          if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === "c") {
+            event.preventDefault();
+            copyOutput();
+          }
+        });
+
+        const actionBar = document.createElement("div");
+        actionBar.className = "toolbar";
+        actionBar.innerHTML = '<button class="btn primary" id="formatBtn" type="button">Format HTML</button><button class="btn" id="minifyBtn" type="button">Minify HTML</button><button class="btn" id="validateBtn" type="button">Validate HTML</button><button class="btn" id="formatValidateBtn" type="button">Format & Validate</button>';
+        document.querySelector(".toolbar").insertAdjacentElement("afterend", actionBar);
+        document.getElementById("formatBtn").addEventListener("click", formatHtml);
+        document.getElementById("minifyBtn").addEventListener("click", minifyHtml);
+        document.getElementById("validateBtn").addEventListener("click", validateHtml);
+        document.getElementById("formatValidateBtn").addEventListener("click", formatAndValidate);
+
+        initializeEditors();
+        updateMeta();
+        renderInsights(defaultHtml);
+        renderTree(defaultHtml);
+        renderSummary(defaultHtml);
+        renderDiff("", defaultHtml);
+        setOutput(defaultHtml);
+      })();
+    </script>
+  </body>
+</html>

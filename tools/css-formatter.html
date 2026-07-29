@@ -1,0 +1,1533 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="google-adsense-account" content="ca-pub-2114664554162220" />
+    <title>CSS Formatter &amp; Beautifier — Format, Minify, and Beautify CSS Online | DevToolsHive</title>
+    <meta
+      name="description"
+      content="Format, beautify, minify, and analyze CSS instantly in your browser. Improve readability, extract color palettes, inspect variables, and optimize stylesheets with zero uploads."
+    />
+    <meta name="keywords" content="css formatter, format css, css beautifier, css formatter online, css pretty print, beautify css, css minifier, css beautify, css formatter tool" />
+    <link rel="canonical" href="https://devtoolshive.com/tools/css-formatter.html" />
+    <link rel="alternate" hreflang="en" href="https://devtoolshive.com/tools/css-formatter.html?lang=en" />
+    <link rel="alternate" hreflang="es" href="https://devtoolshive.com/tools/css-formatter.html?lang=es" />
+    <link rel="alternate" hreflang="de" href="https://devtoolshive.com/tools/css-formatter.html?lang=de" />
+    <link rel="alternate" hreflang="fr" href="https://devtoolshive.com/tools/css-formatter.html?lang=fr" />
+    <link rel="alternate" hreflang="ja" href="https://devtoolshive.com/tools/css-formatter.html?lang=ja" />
+    <link rel="alternate" hreflang="x-default" href="https://devtoolshive.com/tools/css-formatter.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="CSS Formatter &amp; Beautifier — Format, Minify, and Beautify CSS Online | DevToolsHive" />
+    <meta property="og:description" content="Turn messy CSS into clean, readable stylesheets with instant formatting, color palette extraction, variable inspection, and media query analysis." />
+    <meta property="og:url" content="https://devtoolshive.com/tools/css-formatter.html" />
+    <meta property="og:image" content="https://devtoolshive.com/assets/img/favicon.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CSS Formatter &amp; Beautifier — Format, Minify, and Beautify CSS Online | DevToolsHive" />
+    <meta name="twitter:description" content="Turn messy CSS into clean, readable stylesheets with instant formatting, color palette extraction, variable inspection, and media query analysis." />
+    <meta name="twitter:image" content="https://devtoolshive.com/assets/img/favicon.svg" />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0b0d12" />
+    <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg" />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prettier@3.4.2/dist/standalone.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prettier@3.4.2/plugins/postcss.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <style>
+      .tool-shell { display:grid; grid-template-columns:minmax(300px,1.15fr) minmax(320px,1.1fr) minmax(280px,0.8fr); gap:14px; margin-top:18px; }
+      .pane { background:var(--surface); border:1px solid var(--border); border-radius:18px; overflow:hidden; min-height:560px; display:flex; flex-direction:column; box-shadow:var(--shadow); }
+      .pane-head { display:flex; justify-content:space-between; align-items:center; gap:8px; padding:12px 14px; border-bottom:1px solid var(--border); background:color-mix(in oklab,var(--surface-2) 74%,var(--surface)); }
+      .pane-title { font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--text-dim); }
+      .pane-tools { display:flex; flex-wrap:wrap; gap:6px; }
+      .editor-host { flex:1; min-height:420px; }
+      .editor-host .monaco-editor, .editor-host textarea { border-radius:0; }
+      .editor-host textarea { width:100%; height:100%; min-height:420px; border:0; outline:0; padding:14px; background:transparent; color:var(--text); font-family:var(--mono); font-size:13.6px; line-height:1.6; resize:none; }
+      .status-bar { display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; padding:10px 14px; border-top:1px solid var(--border); background:color-mix(in oklab,var(--surface-2) 80%, transparent); color:var(--text-dim); font-size:12px; }
+      .status-pill { display:inline-flex; align-items:center; gap:6px; border:1px solid var(--border); padding:4px 8px; border-radius:999px; }
+      .status-pill.ok { color:var(--ok); border-color:color-mix(in oklab,var(--ok) 35%,var(--border)); }
+      .status-pill.err { color:var(--err); border-color:color-mix(in oklab,var(--err) 35%,var(--border)); }
+      .status-pill.warn { color:var(--warn); border-color:color-mix(in oklab,var(--warn) 35%,var(--border)); }
+      .toolbar { display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:10px 0 16px; }
+      .toolbar .btn { min-height:38px; }
+      .quick-examples { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:8px; margin:10px 0 12px; }
+      .example-card { border:1px solid var(--border); border-radius:12px; padding:10px 12px; background:var(--surface); color:var(--text); cursor:pointer; transition:all .16s ease; text-align:left; }
+      .example-card:hover { border-color:var(--accent); transform:translateY(-1px); }
+      .example-card strong { display:block; font-size:13px; margin-bottom:4px; }
+      .example-card span { font-size:12px; color:var(--text-dim); }
+      .options-body { padding:14px; display:flex; flex-direction:column; gap:10px; overflow-y:auto; max-height:calc(100vh - 120px); }
+      details.option-card { background:color-mix(in oklab,var(--surface-2) 88%, transparent); border:1px solid var(--border); border-radius:12px; padding:10px 12px; }
+      details.option-card[open] { border-color:color-mix(in oklab,var(--accent) 28%,var(--border)); }
+      details.option-card summary { cursor:pointer; font-weight:600; font-size:13px; list-style:none; }
+      details.option-card summary::-webkit-details-marker { display:none; }
+      .option-grid { display:grid; gap:10px; margin-top:10px; }
+      .option-row { display:flex; flex-direction:column; gap:6px; }
+      .option-row label { font-size:12px; color:var(--text-dim); font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
+      .stacked { display:flex; flex-wrap:wrap; gap:8px; }
+      .radio, .check { display:inline-flex; align-items:center; gap:6px; font-size:13px; color:var(--text); }
+      .radio input, .check input, .option-row input[type="range"] { accent-color:var(--accent); }
+      .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; margin:16px 0 24px; }
+      .stats-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:12px 13px; }
+      .stats-card .label { display:block; font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px; }
+      .stats-card .value { font-size:16px; font-weight:700; color:var(--text); }
+      .insight-panel, .tree-panel, .summary-panel, .search-panel, .diff-panel, .palette-panel, .vars-panel, .media-panel, .selector-panel { margin-top:16px; background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:14px; }
+      .pane.fullscreen-pane { position:fixed; inset:16px; z-index:2000; min-height:auto; max-height:none; width:auto; }
+      .pane.fullscreen-pane .editor-host { min-height:calc(100vh - 180px); }
+      .insight-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin-top:10px; }
+      .insight-card { border:1px solid var(--border); border-radius:12px; padding:10px 12px; background:color-mix(in oklab,var(--surface-2) 88%, transparent); }
+      .insight-card strong { display:block; font-size:13px; margin-bottom:4px; }
+      .insight-card span { font-size:12px; color:var(--text-dim); }
+      .tree-list, .summary-list { font-family:var(--mono); font-size:13px; line-height:1.65; margin:8px 0 0; padding-left:16px; }
+      .summary-list li { margin:4px 0; }
+      .search-grid { display:grid; gap:10px; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); margin-top:10px; }
+      .search-grid input, .search-grid select { width:100%; padding:8px 10px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text); }
+      .diff-lines { font-family:var(--mono); font-size:13px; line-height:1.6; white-space:pre-wrap; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:12px; overflow:auto; max-height:240px; }
+      .diff-added { color:var(--ok); }
+      .diff-removed { color:var(--err); }
+      .diff-changed { color:var(--warn); }
+      .privacy-pill { display:inline-flex; align-items:center; gap:8px; margin-top:12px; padding:8px 10px; border-radius:999px; background:color-mix(in oklab,var(--accent) 11%,var(--surface)); color:var(--text-dim); border:1px solid color-mix(in oklab,var(--accent) 24%,var(--border)); font-size:13px; }
+      .feature-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin-top:14px; }
+      .feature-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px; }
+      .feature-card h3 { margin:0 0 6px; font-size:15px; }
+      .feature-card p { margin:0; color:var(--text-dim); font-size:13.6px; line-height:1.6; }
+      .related{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:12px}
+      .related a{display:block;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text)}
+      .related a:hover{border-color:var(--accent);text-decoration:none}
+      .faq details{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;padding:0}
+      .faq summary{cursor:pointer;padding:14px 16px;font-weight:600;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center}
+      .faq .a{padding:0 16px 14px;color:var(--text-dim);font-size:14.5px;line-height:1.65}
+      .color-swatches { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+      .color-swatch { display:flex; align-items:center; gap:8px; border:1px solid var(--border); border-radius:10px; padding:6px 10px; background:color-mix(in oklab,var(--surface-2) 88%, transparent); cursor:pointer; transition:border-color .16s; }
+      .color-swatch:hover { border-color:var(--accent); }
+      .color-swatch .swatch-preview { width:28px; height:28px; border-radius:6px; border:1px solid var(--border); flex-shrink:0; }
+      .color-swatch .swatch-label { font-family:var(--mono); font-size:12px; color:var(--text); }
+      .vars-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:8px; margin-top:10px; }
+      .var-item { display:flex; align-items:center; gap:8px; border:1px solid var(--border); border-radius:10px; padding:8px 10px; background:color-mix(in oklab,var(--surface-2) 88%, transparent); cursor:pointer; transition:border-color .16s; }
+      .var-item:hover { border-color:var(--accent); }
+      .var-item .var-color { width:20px; height:20px; border-radius:5px; border:1px solid var(--border); flex-shrink:0; }
+      .var-item .var-name { font-family:var(--mono); font-size:12px; color:var(--accent); font-weight:600; }
+      .var-item .var-value { font-family:var(--mono); font-size:12px; color:var(--text-dim); }
+      .media-list { display:grid; gap:8px; margin-top:10px; }
+      .media-item { display:flex; justify-content:space-between; align-items:center; border:1px solid var(--border); border-radius:10px; padding:8px 12px; background:color-mix(in oklab,var(--surface-2) 88%, transparent); }
+      .media-item .media-query { font-family:var(--mono); font-size:12px; color:var(--text); }
+      .media-item .media-count { font-size:12px; color:var(--text-dim); font-weight:600; }
+      .selector-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:8px; margin-top:10px; }
+      .selector-stat { border:1px solid var(--border); border-radius:10px; padding:10px 12px; background:color-mix(in oklab,var(--surface-2) 88%, transparent); text-align:center; }
+      .selector-stat .sel-label { font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.04em; display:block; margin-bottom:4px; }
+      .selector-stat .sel-value { font-size:18px; font-weight:700; color:var(--text); }
+      @media(max-width:1100px){ .tool-shell{grid-template-columns:1fr 1fr;} .pane.options-pane{grid-column:1/-1;} }
+      @media(max-width:760px){ .tool-shell{grid-template-columns:1fr;} .pane{min-height:420px;} }
+    </style>
+    <script src="../assets/js/theme.js"></script>
+    <script type="application/ld+json">{ "@context":"https://schema.org","@type":"SoftwareApplication","name":"CSS Formatter & Beautifier","applicationCategory":"DeveloperApplication","operatingSystem":"Any (web)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"url":"https://devtoolshive.com/tools/css-formatter.html" }</script>
+    <script type="application/ld+json">{ "@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is this CSS formatter free?","acceptedAnswer":{"@type":"Answer","text":"Yes. It runs entirely in your browser and is free to use with no account required."}},{"@type":"Question","name":"Is my CSS uploaded to a server?","acceptedAnswer":{"@type":"Answer","text":"No. All formatting, analysis, and processing happen locally in your browser. Your code never leaves your device."}},{"@type":"Question","name":"Can I format large CSS files?","acceptedAnswer":{"@type":"Answer","text":"Yes. The editor is built to stay responsive and supports large stylesheets efficiently."}}]}</script>
+  </head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SPD83QKS2J"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SPD83QKS2J');
+  </script>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="site-header"></div>
+    <main id="main" class="container tool-page">
+      <div class="crumbs"><a href="/">Home</a> · <span>Tools</span> · <span>CSS Formatter &amp; Beautifier</span></div>
+      <header class="tool-head">
+        <h1>CSS Formatter &amp; Beautifier</h1>
+        <p>Format, beautify, minify, and analyze CSS instantly in your browser. Improve readability, fix indentation, extract color palettes, inspect CSS variables, and optimize your stylesheets without uploading a single file.</p>
+        <div class="privacy-pill">✓ Everything runs locally · ✓ No CSS is uploaded · ✓ Works offline</div>
+      </header>
+
+      <div class="toolbar">
+        <button class="btn primary" id="pasteBtn" type="button">Paste</button>
+        <label class="btn" for="fileInput" style="cursor:pointer">Upload CSS File</label>
+        <button class="btn" id="loadExampleBtn" type="button">Load Example</button>
+        <button class="btn" id="clearBtn" type="button">Clear</button>
+        <button class="btn" id="swapBtn" type="button">Swap Input / Output</button>
+        <input id="fileInput" type="file" accept=".css,.txt" class="hide" />
+      </div>
+
+      <div class="quick-examples" aria-label="CSS examples">
+        <button class="example-card" type="button" data-example="basic"><strong>Basic Stylesheet</strong><span>Body, headings, paragraphs, links</span></button>
+        <button class="example-card" type="button" data-example="landing"><strong>Landing Page</strong><span>Hero, features, CTA buttons</span></button>
+        <button class="example-card" type="button" data-example="navbar"><strong>Navigation Bar</strong><span>Navbar, links, responsive</span></button>
+        <button class="example-card" type="button" data-example="flexbox"><strong>Flexbox Layout</strong><span>Flex containers, items, gaps</span></button>
+        <button class="example-card" type="button" data-example="grid"><strong>Grid Layout</strong><span>Grid template, areas, responsive</span></button>
+        <button class="example-card" type="button" data-example="buttons"><strong>Button Library</strong><span>Primary, secondary, states</span></button>
+        <button class="example-card" type="button" data-example="animation"><strong>Animation</strong><span>@keyframes, transitions</span></button>
+        <button class="example-card" type="button" data-example="darktheme"><strong>Dark Theme</strong><span>CSS variables, dark mode</span></button>
+        <button class="example-card" type="button" data-example="dashboard"><strong>Dashboard UI</strong><span>Sidebar, cards, stats</span></button>
+        <button class="example-card" type="button" data-example="responsive"><strong>Responsive Design</strong><span>Media queries, mobile-first</span></button>
+      </div>
+
+      <div class="tool-shell">
+        <section class="pane" id="inputPane">
+          <div class="pane-head">
+            <span class="pane-title">CSS Input</span>
+            <div class="pane-tools"><span id="inputStatus" class="status-pill warn">⏳ Ready</span></div>
+          </div>
+          <div class="editor-host" id="inputEditorHost"></div>
+          <div class="status-bar"><span id="inputMeta">0 chars · 0 lines</span><span id="validationText">Please paste or load CSS.</span></div>
+        </section>
+
+        <section class="pane" id="outputPane">
+          <div class="pane-head">
+            <span class="pane-title">Formatted CSS Output</span>
+            <div class="pane-tools">
+              <button class="btn" id="copyBtn" type="button">Copy</button>
+              <button class="btn" id="downloadCssBtn" type="button">Download CSS</button>
+              <button class="btn" id="downloadTxtBtn" type="button">Download TXT</button>
+              <button class="btn" id="downloadZipBtn" type="button">Download ZIP</button>
+              <button class="btn" id="wordWrapBtn" type="button">Word Wrap</button>
+              <button class="btn" id="fullscreenBtn" type="button">Fullscreen</button>
+              <button class="btn" id="compareBtn" type="button">Compare Mode</button>
+              <button class="btn" id="newWindowBtn" type="button">Open in New Window</button>
+            </div>
+          </div>
+          <div class="editor-host" id="outputEditorHost"></div>
+          <div class="status-bar"><span id="outputMeta">Formatted output will appear here.</span><span id="copyFeedback">Ctrl+Enter · Copy</span></div>
+        </section>
+
+        <aside class="pane options-pane">
+          <div class="pane-head">
+            <span class="pane-title">Formatting Options</span>
+            <span class="badge">Compact</span>
+          </div>
+          <div class="options-body">
+            <details class="option-card" open>
+              <summary>Indentation</summary>
+              <div class="option-grid">
+                <div class="option-row">
+                  <label for="indentation">Mode</label>
+                  <select id="indentation">
+                    <option value="tabs">Tabs</option>
+                    <option value="2" selected>2 Spaces</option>
+                    <option value="4">4 Spaces</option>
+                    <option value="8">8 Spaces</option>
+                  </select>
+                </div>
+              </div>
+            </details>
+
+            <details class="option-card" open>
+              <summary>Braces</summary>
+              <div class="option-grid">
+                <div class="option-row">
+                  <label>Opening Brace</label>
+                  <div class="stacked">
+                    <label class="radio"><input type="radio" name="braceStyle" value="same-line" checked /> Same line</label>
+                    <label class="radio"><input type="radio" name="braceStyle" value="new-line" /> New line</label>
+                  </div>
+                </div>
+                <div class="stacked"><label class="check"><input id="alignClosingBrace" type="checkbox" /> Align closing brace</label></div>
+              </div>
+            </details>
+
+            <details class="option-card" open>
+              <summary>Property Formatting</summary>
+              <div class="option-grid">
+                <div class="option-row">
+                  <label>Layout</label>
+                  <div class="stacked">
+                    <label class="radio"><input type="radio" name="propLayout" value="one-per-line" checked /> One property per line</label>
+                    <label class="radio"><input type="radio" name="propLayout" value="preserve" /> Preserve existing</label>
+                  </div>
+                </div>
+                <div class="stacked"><label class="check"><input id="sortProperties" type="checkbox" /> Sort properties alphabetically</label></div>
+                <div class="stacked"><label class="check"><input id="alignValues" type="checkbox" /> Align property values</label></div>
+                <div class="stacked"><label class="check"><input id="groupProperties" type="checkbox" /> Group related properties</label></div>
+              </div>
+            </details>
+
+            <details class="option-card" open>
+              <summary>Selector Formatting</summary>
+              <div class="option-grid">
+                <div class="option-row">
+                  <label>Layout</label>
+                  <div class="stacked">
+                    <label class="radio"><input type="radio" name="selectorLayout" value="one-per-line" checked /> One selector per line</label>
+                    <label class="radio"><input type="radio" name="selectorLayout" value="inline" /> Keep inline selectors</label>
+                  </div>
+                </div>
+                <div class="stacked"><label class="check"><input id="expandSelectors" type="checkbox" /> Expand long selector lists</label></div>
+              </div>
+            </details>
+
+            <details class="option-card" open>
+              <summary>Comments</summary>
+              <div class="option-grid">
+                <div class="stacked">
+                  <label class="radio"><input type="radio" name="commentMode" value="keep" checked /> Keep comments</label>
+                  <label class="radio"><input type="radio" name="commentMode" value="remove" /> Remove comments</label>
+                  <label class="radio"><input type="radio" name="commentMode" value="collapse" /> Collapse multiple</label>
+                </div>
+              </div>
+            </details>
+
+            <details class="option-card" open>
+              <summary>Whitespace</summary>
+              <div class="option-grid">
+                <div class="stacked"><label class="check"><input id="removeTrailingSpaces" type="checkbox" checked /> Remove trailing spaces</label></div>
+                <div class="stacked"><label class="check"><input id="trimBlankLines" type="checkbox" /> Trim blank lines</label></div>
+                <div class="option-row">
+                  <label for="maxBlankLines">Maximum blank lines</label>
+                  <input id="maxBlankLines" type="range" min="0" max="5" value="1" />
+                  <span id="maxBlankLinesValue" class="muted">1</span>
+                </div>
+                <div class="stacked"><label class="check"><input id="normalizeSpacing" type="checkbox" checked /> Normalize spacing</label></div>
+              </div>
+            </details>
+
+            <details class="option-card">
+              <summary>Quotes</summary>
+              <div class="option-grid">
+                <div class="stacked">
+                  <label class="radio"><input type="radio" name="quoteMode" value="double" checked /> Double</label>
+                  <label class="radio"><input type="radio" name="quoteMode" value="single" /> Single</label>
+                  <label class="radio"><input type="radio" name="quoteMode" value="preserve" /> Preserve</label>
+                </div>
+              </div>
+            </details>
+
+            <details class="option-card">
+              <summary>Colors</summary>
+              <div class="option-grid">
+                <div class="option-row">
+                  <label>HEX Format</label>
+                  <div class="stacked">
+                    <label class="radio"><input type="radio" name="colorFormat" value="preserve" checked /> Preserve format</label>
+                    <label class="radio"><input type="radio" name="colorFormat" value="lowercase" /> Lowercase HEX</label>
+                    <label class="radio"><input type="radio" name="colorFormat" value="uppercase" /> Uppercase HEX</label>
+                  </div>
+                </div>
+                <div class="stacked"><label class="check"><input id="shortenHex" type="checkbox" /> Shorten HEX when possible (#ffffff → #fff)</label></div>
+              </div>
+            </details>
+
+            <details class="option-card">
+              <summary>Units</summary>
+              <div class="option-grid">
+                <div class="stacked"><label class="check"><input id="removeUnnecessaryZeros" type="checkbox" /> Remove unnecessary zeros (0.5 → .5)</label></div>
+                <div class="stacked"><label class="check"><input id="convertZeroPx" type="checkbox" /> Convert 0px → 0</label></div>
+              </div>
+            </details>
+
+            <details class="option-card">
+              <summary>Line Width</summary>
+              <div class="option-grid">
+                <div class="option-row">
+                  <label for="lineWidth">Print width</label>
+                  <input id="lineWidth" type="range" min="40" max="200" value="80" />
+                  <span id="lineWidthValue" class="muted">80</span>
+                </div>
+              </div>
+            </details>
+
+            <details class="option-card">
+              <summary>Advanced</summary>
+              <div class="option-grid">
+                <div class="stacked"><label class="check"><input id="sortMediaQueries" type="checkbox" /> Sort media queries</label></div>
+                <div class="stacked"><label class="check"><input id="mergeDuplicateSelectors" type="checkbox" /> Merge duplicate selectors</label></div>
+                <div class="stacked"><label class="check"><input id="removeDuplicateProperties" type="checkbox" /> Remove duplicate properties</label></div>
+                <div class="stacked"><label class="check"><input id="preserveVariables" type="checkbox" checked /> Preserve CSS variables</label></div>
+                <div class="stacked"><label class="check"><input id="ensureNewline" type="checkbox" checked /> Ensure trailing newline</label></div>
+              </div>
+            </details>
+          </div>
+        </aside>
+      </div>
+
+      <div class="stats-grid" aria-label="CSS statistics">
+        <div class="stats-card"><span class="label">Characters</span><div class="value" id="statChars">0</div></div>
+        <div class="stats-card"><span class="label">Lines</span><div class="value" id="statLines">0</div></div>
+        <div class="stats-card"><span class="label">Rules</span><div class="value" id="statRules">0</div></div>
+        <div class="stats-card"><span class="label">Selectors</span><div class="value" id="statSelectors">0</div></div>
+        <div class="stats-card"><span class="label">Properties</span><div class="value" id="statProperties">0</div></div>
+        <div class="stats-card"><span class="label">Media Queries</span><div class="value" id="statMediaQueries">0</div></div>
+        <div class="stats-card"><span class="label">Keyframes</span><div class="value" id="statKeyframes">0</div></div>
+        <div class="stats-card"><span class="label">Variables</span><div class="value" id="statVariables">0</div></div>
+        <div class="stats-card"><span class="label">Imports</span><div class="value" id="statImports">0</div></div>
+        <div class="stats-card"><span class="label">Comments</span><div class="value" id="statComments">0</div></div>
+        <div class="stats-card"><span class="label">Colors</span><div class="value" id="statColors">0</div></div>
+        <div class="stats-card"><span class="label">Font Families</span><div class="value" id="statFonts">0</div></div>
+        <div class="stats-card"><span class="label">File Size</span><div class="value" id="statFileSize">0 B</div></div>
+      </div>
+
+      <div class="insight-panel">
+        <h3 style="margin:0 0 6px;">CSS Analysis</h3>
+        <p class="muted" style="margin:0 0 10px;">Quick diagnostics for performance, maintainability, and best practices.</p>
+        <div class="insight-grid" id="insightGrid"></div>
+      </div>
+
+      <div class="palette-panel">
+        <h3 style="margin:0 0 6px;">Color Palette</h3>
+        <p class="muted" style="margin:0 0 10px;">All colors extracted from your stylesheet. Click to copy.</p>
+        <div class="color-swatches" id="colorSwatches"></div>
+      </div>
+
+      <div class="vars-panel">
+        <h3 style="margin:0 0 6px;">CSS Variables</h3>
+        <p class="muted" style="margin:0 0 10px;">Custom properties defined in your stylesheet. Click to copy.</p>
+        <div class="vars-list" id="varsList"></div>
+      </div>
+
+      <div class="media-panel">
+        <h3 style="margin:0 0 6px;">Media Query Summary</h3>
+        <p class="muted" style="margin:0 0 10px;">All @media rules and their breakpoints.</p>
+        <div class="media-list" id="mediaList"></div>
+      </div>
+
+      <div class="selector-panel">
+        <h3 style="margin:0 0 6px;">Selector Statistics</h3>
+        <p class="muted" style="margin:0 0 10px;">Breakdown of selector types used in your stylesheet.</p>
+        <div class="selector-stats" id="selectorStats"></div>
+      </div>
+
+      <div class="search-panel">
+        <h3 style="margin:0 0 6px;">Search &amp; Replace</h3>
+        <div class="search-grid">
+          <input id="findText" type="text" placeholder="Find" />
+          <input id="replaceText" type="text" placeholder="Replace" />
+          <select id="searchMode"><option value="text">Text</option><option value="regex">Regex</option></select>
+          <label class="check"><input id="caseSensitive" type="checkbox" /> Case sensitive</label>
+          <button class="btn" id="replaceBtn" type="button">Replace</button>
+          <button class="btn" id="replaceAllBtn" type="button">Replace All</button>
+        </div>
+      </div>
+
+      <div class="diff-panel">
+        <h3 style="margin:0 0 6px;">Diff Preview</h3>
+        <div id="diffView" class="diff-lines">No comparison yet.</div>
+      </div>
+
+      <div class="feature-grid" aria-label="Feature highlights">
+        <div class="feature-card"><h3>⚡ Instant Formatting</h3><p>Beautify CSS as you type with a fast, responsive, live-formatting workflow.</p></div>
+        <div class="feature-card"><h3>🎨 Color Palette Detection</h3><p>Automatically extract and preview every color used in your stylesheet.</p></div>
+        <div class="feature-card"><h3>🔒 Private by Design</h3><p>Everything stays on your device. No uploads, no tracking, no backend.</p></div>
+        <div class="feature-card"><h3>📱 Responsive</h3><p>Use the tool comfortably on desktop, tablet, or mobile.</p></div>
+      </div>
+
+      <section class="content" aria-labelledby="seo-heading-1">
+        <h2 id="seo-heading-1">What is a CSS Formatter?</h2>
+        <p>A CSS formatter transforms messy, minified, or inconsistently indented stylesheets into clean, readable code. It adds proper indentation, normalizes brace placement, ensures one property per line, and organizes selectors so developers can scan and understand the structure quickly. Whether you are debugging layout issues, reviewing a third-party stylesheet, or preparing code for a pull request, formatting makes your CSS dramatically easier to work with.</p>
+        <p>Consistent formatting is especially important in team environments where multiple developers contribute to the same codebase. A well-formatted stylesheet reduces merge conflicts, makes code reviews faster, and helps everyone follow the same conventions without manual effort. CSS formatters also help beginners learn proper syntax structure by showing how properties, selectors, and at-rules should be organized.</p>
+
+        <h2>Why Use an Online CSS Beautifier?</h2>
+        <p>An online CSS beautifier gives you instant formatting without installing extensions, configuring build tools, or setting up a local development environment. Simply paste your CSS, choose your formatting preferences, and get clean output in milliseconds. This is invaluable for quick debugging sessions, reviewing minified production CSS, or formatting code snippets for documentation and tutorials.</p>
+        <p>Beyond basic formatting, a quality CSS beautifier provides analysis tools that help you understand your stylesheet better. Features like color palette extraction, CSS variable inspection, media query summaries, and selector statistics give you a comprehensive view of your CSS architecture. Since everything runs in your browser, your proprietary styles never leave your device, making it safe to use with confidential projects.</p>
+
+        <h2>CSS Formatter Features</h2>
+        <ul>
+          <li>Instant indentation and property alignment</li>
+          <li>Selector normalization and grouping</li>
+          <li>CSS validation and analysis with actionable insights</li>
+          <li>Color palette extraction with visual swatches</li>
+          <li>CSS variable inspection and usage tracking</li>
+          <li>Media query summary with breakpoint overview</li>
+          <li>Minification for production-ready output</li>
+          <li>Compare view between original and formatted CSS</li>
+        </ul>
+
+        <h2>CSS Formatting Best Practices</h2>
+        <p>Consistent indentation is the foundation of readable CSS. Choose either two spaces or four spaces and stick with it throughout your project. Place one property per line, group related properties together (such as positioning, then box model, then typography), and keep selectors on separate lines when you have multiple selectors for the same rule. This makes your stylesheet scannable and reduces cognitive load during code reviews.</p>
+        <p>Beyond indentation, use CSS custom properties (variables) to centralize repeated values like colors, spacing, and font sizes. Avoid excessive nesting to keep specificity manageable, write meaningful comments for complex sections, and organize your stylesheet by component or feature. When working with responsive layouts, use a consistent mobile-first approach with media queries ordered from smallest to largest breakpoint.</p>
+
+        <h2>CSS Formatter vs CSS Minifier</h2>
+        <div class="related" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+          <div class="feature-card"><h3>Formatter</h3><p>Focuses on readability, indentation, and structure for humans. Adds whitespace, line breaks, and consistent formatting to make code easy to scan and maintain.</p></div>
+          <div class="feature-card"><h3>Minifier</h3><p>Focuses on removing bytes and reducing file size for production delivery. Strips comments, whitespace, and shortens values to create the smallest possible output.</p></div>
+        </div>
+
+        <h2>Browser Compatibility</h2>
+        <p>The tool runs entirely inside modern browsers including Chrome, Firefox, Safari, and Edge. After the page loads, it works offline and does not rely on a remote backend, API, or server-side formatter to produce output. All CSS parsing, formatting, analysis, and color extraction happen locally using JavaScript.</p>
+
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq">
+          <details><summary>Is this CSS formatter free?</summary><div class="a">Yes. It is completely free and works without an account or subscription. Use it as often as you need.</div></details>
+          <details><summary>Is my CSS uploaded to a server?</summary><div class="a">No. All formatting, analysis, and processing happen entirely in your browser. Your code never leaves your device.</div></details>
+          <details><summary>Can I format SCSS or LESS?</summary><div class="a">This tool is optimized for standard CSS. SCSS and LESS files may partially work, but dedicated preprocessor formatters would handle their specific syntax features better.</div></details>
+          <details><summary>Can I remove comments from CSS?</summary><div class="a">Yes. Use the Comments option in the formatting panel to keep, remove, or collapse multiple comments into single placeholders.</div></details>
+          <details><summary>Can I minify CSS?</summary><div class="a">Yes. Use the Minify CSS button or press Ctrl+Shift+M to strip all unnecessary whitespace and comments from your stylesheet.</div></details>
+          <details><summary>Can I optimize CSS?</summary><div class="a">Yes. The tool can detect duplicate selectors, duplicate properties, empty rules, and excessive !important usage. Use the advanced options to clean up your styles.</div></details>
+          <details><summary>Does it support CSS variables?</summary><div class="a">Yes. CSS custom properties are fully supported. The tool also extracts and displays all variables defined in your stylesheet with their values.</div></details>
+          <details><summary>Can I format large CSS files?</summary><div class="a">Yes. The Monaco-based editor remains responsive and supports large stylesheets efficiently.</div></details>
+          <details><summary>Does it work offline?</summary><div class="a">Yes. After the page has loaded, it continues to work without a network connection. All processing is done locally.</div></details>
+          <details><summary>Can I sort CSS properties alphabetically?</summary><div class="a">Yes. Enable the "Sort properties alphabetically" checkbox in the Property Formatting options to automatically reorder properties within each rule.</div></details>
+        </div>
+      </section>
+
+      <section class="related-tools" aria-labelledby="related-tools-heading">
+        <h2 id="related-tools-heading">Related Tools</h2>
+        <div class="related">
+          <a href="/tools/html-formatter.html">HTML Formatter</a>
+          <a href="/tools/json-formatter.html">JSON Formatter</a>
+          <a href="/tools/sql-formatter.html">SQL Formatter</a>
+          <a href="/tools/json-diff.html">JSON Diff</a>
+          <a href="/tools/base64.html">Base64 Encoder</a>
+          <a href="/tools/url-encoder.html">URL Encoder</a>
+          <a href="/tools/regex.html">Regex Tester</a>
+          <a href="/tools/jwt.html">JWT Decoder</a>
+        </div>
+      </section>
+    </main>
+    <div id="site-footer"></div>
+    <script src="../assets/js/common.js"></script>
+    <script src="../assets/js/i18n.js"></script>
+    <script src="../assets/js/partials.js"></script>
+    <script>
+      (function () {
+        "use strict";
+
+        const defaultCss = `/* Base Styles */\n:root {\n  --primary: #3b82f6;\n  --bg: #0f172a;\n  --text: #e2e8f0;\n}\n\nbody {\n  margin: 0;\n  font-family: system-ui, sans-serif;\n  background: var(--bg);\n  color: var(--text);\n}\n\nh1 {\n  font-size: 2rem;\n  line-height: 1.3;\n}\n\na {\n  color: var(--primary);\n  text-decoration: none;\n}\n\na:hover {\n  text-decoration: underline;\n}\n`;
+
+        const examples = {
+          basic: `:root{--primary:#3b82f6;--secondary:#10b981;--bg:#0f172a;--surface:#1e293b;--text:#e2e8f0;--text-dim:#94a3b8;--radius:8px;--shadow:0 4px 6px -1px rgba(0,0,0,.1)}*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}h1,h2,h3,h4,h5,h6{line-height:1.3;font-weight:700}h1{font-size:2.5rem}h2{font-size:2rem}h3{font-size:1.5rem}p{margin-bottom:1rem;color:var(--text-dim)}a{color:var(--primary);text-decoration:none;transition:color .2s ease}a:hover{text-decoration:underline;color:#60a5fa}img{max-width:100%;height:auto;display:block}ul,ol{padding-left:1.5rem}code{font-family:'Fira Code',monospace;background:var(--surface);padding:2px 6px;border-radius:4px;font-size:.9em}`,
+          landing: `:root{--hero-bg:linear-gradient(135deg,#667eea 0%,#764ba2 100%);--cta-bg:#f59e0b;--cta-hover:#d97706;--section-gap:80px;--max-width:1200px}.hero{background:var(--hero-bg);padding:120px 24px 100px;text-align:center;color:#fff;position:relative;overflow:hidden}.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(transparent,#0f172a)}.hero h1{font-size:3.5rem;margin-bottom:1rem;letter-spacing:-.02em}.hero p{font-size:1.25rem;opacity:.9;max-width:600px;margin:0 auto 2rem}.cta-btn{display:inline-block;background:var(--cta-bg);color:#fff;padding:14px 32px;border-radius:999px;font-weight:700;font-size:1.1rem;transition:all .3s ease;border:none;cursor:pointer;text-decoration:none}.cta-btn:hover{background:var(--cta-hover);transform:translateY(-2px);box-shadow:0 8px 25px rgba(245,158,11,.3)}.features{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;max-width:var(--max-width);margin:0 auto;padding:var(--section-gap) 24px}.feature-card{background:#1e293b;border-radius:16px;padding:32px 24px;text-align:center;border:1px solid #334155;transition:transform .2s ease}.feature-card:hover{transform:translateY(-4px)}.feature-card h3{margin:16px 0 8px;font-size:1.25rem}.feature-card p{color:#94a3b8;font-size:.95rem}@media(max-width:768px){.hero h1{font-size:2rem}.features{grid-template-columns:1fr;gap:20px}}`,
+          navbar: `.navbar{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:64px;background:#1e293b;border-bottom:1px solid #334155;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}.navbar-brand{font-size:1.25rem;font-weight:800;color:#f8fafc;text-decoration:none;display:flex;align-items:center;gap:8px}.navbar-brand svg{width:28px;height:28px}.navbar-links{display:flex;align-items:center;gap:4px;list-style:none;margin:0;padding:0}.navbar-links a{color:#94a3b8;text-decoration:none;padding:8px 14px;border-radius:8px;font-size:.9rem;font-weight:500;transition:all .2s ease}.navbar-links a:hover,.navbar-links a.active{color:#f8fafc;background:rgba(255,255,255,.08)}.navbar-actions{display:flex;align-items:center;gap:12px}.navbar-actions .btn-login{color:#e2e8f0;background:transparent;border:1px solid #475569;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:.875rem;transition:border-color .2s}.navbar-actions .btn-login:hover{border-color:#3b82f6}.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none}.hamburger span{width:24px;height:2px;background:#e2e8f0;border-radius:2px;transition:transform .3s ease}@media(max-width:768px){.navbar-links{display:none;position:absolute;top:64px;left:0;right:0;flex-direction:column;background:#1e293b;border-bottom:1px solid #334155;padding:16px}.navbar-links.open{display:flex}.hamburger{display:flex}}`,
+          flexbox: `.flex-container{display:flex;flex-wrap:wrap;gap:24px;padding:24px;max-width:1200px;margin:0 auto}.flex-item{flex:1 1 300px;background:#1e293b;border-radius:12px;padding:24px;border:1px solid #334155}.flex-row{display:flex;align-items:center;gap:16px;margin-bottom:16px}.flex-col{display:flex;flex-direction:column;gap:12px}.flex-center{display:flex;align-items:center;justify-content:center;min-height:200px}.flex-between{display:flex;justify-content:space-between;align-items:center}.flex-grow{flex-grow:1}.flex-shrink-0{flex-shrink:0}.gap-sm{gap:8px}.gap-md{gap:16px}.gap-lg{gap:32px}.order-first{order:-1}.order-last{order:999}.flex-basis-half{flex-basis:50%}.flex-basis-third{flex-basis:33.333%}.flex-basis-quarter{flex-basis:25%}@media(max-width:768px){.flex-container{flex-direction:column;gap:16px;padding:16px}.flex-item{flex:1 1 100%}.flex-row{flex-direction:column;align-items:stretch}.flex-basis-half,.flex-basis-third,.flex-basis-quarter{flex-basis:100%}}`,
+          grid: `.grid-layout{display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:auto 1fr auto;grid-template-areas:'header header header header header header header header header header header header' 'sidebar sidebar main main main main main main main main main main' 'footer footer footer footer footer footer footer footer footer footer footer footer';gap:16px;min-height:100vh;padding:16px}.grid-header{grid-area:header;background:#1e293b;border-radius:12px;padding:16px 24px;border:1px solid #334155}.grid-sidebar{grid-area:sidebar;background:#1e293b;border-radius:12px;padding:20px;border:1px solid #334155}.grid-main{grid-area:main;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;align-content:start}.grid-footer{grid-area:footer;background:#1e293b;border-radius:12px;padding:16px 24px;border:1px solid #334155;text-align:center}.grid-card{background:#1e293b;border-radius:12px;padding:24px;border:1px solid #334155;transition:transform .2s ease}.grid-card:hover{transform:translateY(-2px);border-color:#3b82f6}@media(max-width:1024px){.grid-layout{grid-template-columns:1fr;grid-template-areas:'header' 'main' 'sidebar' 'footer'}.grid-sidebar{order:2}}@media(max-width:640px){.grid-main{grid-template-columns:1fr}.grid-layout{padding:8px;gap:8px}}`,
+          buttons: `:root{--btn-radius:10px;--btn-font:600 .9rem/1 system-ui,sans-serif;--btn-transition:all .2s ease}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;border-radius:var(--btn-radius);font:var(--btn-font);cursor:pointer;border:2px solid transparent;transition:var(--btn-transition);text-decoration:none;white-space:nowrap}.btn:focus-visible{outline:2px solid #3b82f6;outline-offset:2px}.btn-primary{background:#3b82f6;color:#fff;border-color:#3b82f6}.btn-primary:hover{background:#2563eb;border-color:#2563eb;transform:translateY(-1px);box-shadow:0 4px 12px rgba(59,130,246,.4)}.btn-primary:active{transform:translateY(0);box-shadow:none}.btn-secondary{background:transparent;color:#e2e8f0;border-color:#475569}.btn-secondary:hover{border-color:#3b82f6;color:#3b82f6;background:rgba(59,130,246,.1)}.btn-danger{background:#ef4444;color:#fff;border-color:#ef4444}.btn-danger:hover{background:#dc2626;border-color:#dc2626;box-shadow:0 4px 12px rgba(239,68,68,.4)}.btn-ghost{background:transparent;color:#94a3b8;border-color:transparent}.btn-ghost:hover{color:#e2e8f0;background:rgba(255,255,255,.06)}.btn-sm{padding:6px 12px;font-size:.8rem}.btn-lg{padding:14px 28px;font-size:1rem}.btn-icon{padding:10px;border-radius:50%}.btn:disabled,.btn[aria-disabled="true"]{opacity:.5;cursor:not-allowed;pointer-events:none}.btn-group{display:inline-flex}.btn-group .btn{border-radius:0}.btn-group .btn:first-child{border-radius:var(--btn-radius) 0 0 var(--btn-radius)}.btn-group .btn:last-child{border-radius:0 var(--btn-radius) var(--btn-radius) 0}`,
+          animation: `@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}@keyframes slideInLeft{0%{transform:translateX(-100%);opacity:0}100%{transform:translateX(0);opacity:1}}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}.fade-in{animation:fadeIn .6s ease-out forwards}.slide-in{animation:slideInLeft .5s cubic-bezier(.25,.46,.45,.94) forwards}.pulse-hover:hover{animation:pulse .8s ease-in-out infinite}.spinner{width:40px;height:40px;border:3px solid #334155;border-top-color:#3b82f6;border-radius:50%;animation:spin .8s linear infinite}.skeleton{background:linear-gradient(90deg,#1e293b 25%,#334155 50%,#1e293b 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px;height:20px}.transition-all{transition:all .3s cubic-bezier(.4,0,.2,1)}.transition-transform{transition:transform .2s ease}.hover-lift:hover{transform:translateY(-4px);box-shadow:0 12px 24px rgba(0,0,0,.2)}.hover-glow:hover{box-shadow:0 0 20px rgba(59,130,246,.3)}.stagger-1{animation-delay:.1s}.stagger-2{animation-delay:.2s}.stagger-3{animation-delay:.3s}.stagger-4{animation-delay:.4s}`,
+          darktheme: `:root{--color-bg:#ffffff;--color-surface:#f8fafc;--color-surface-2:#f1f5f9;--color-border:#e2e8f0;--color-text:#0f172a;--color-text-dim:#64748b;--color-primary:#3b82f6;--color-primary-hover:#2563eb;--color-success:#10b981;--color-warning:#f59e0b;--color-danger:#ef4444;--color-shadow:rgba(0,0,0,.08);--radius-sm:6px;--radius-md:12px;--radius-lg:20px;--space-xs:4px;--space-sm:8px;--space-md:16px;--space-lg:24px;--space-xl:48px}[data-theme="dark"]{--color-bg:#0f172a;--color-surface:#1e293b;--color-surface-2:#334155;--color-border:#475569;--color-text:#f8fafc;--color-text-dim:#94a3b8;--color-primary:#60a5fa;--color-primary-hover:#3b82f6;--color-shadow:rgba(0,0,0,.3)}body{background:var(--color-bg);color:var(--color-text);transition:background .3s ease,color .3s ease}.card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:var(--space-lg);box-shadow:0 1px 3px var(--color-shadow)}.badge{display:inline-flex;padding:var(--space-xs) var(--space-sm);border-radius:var(--radius-sm);font-size:.75rem;font-weight:600}.badge-success{background:color-mix(in oklab,var(--color-success) 15%,transparent);color:var(--color-success)}.badge-warning{background:color-mix(in oklab,var(--color-warning) 15%,transparent);color:var(--color-warning)}.badge-danger{background:color-mix(in oklab,var(--color-danger) 15%,transparent);color:var(--color-danger)}.input{background:var(--color-surface);border:1px solid var(--color-border);color:var(--color-text);padding:var(--space-sm) var(--space-md);border-radius:var(--radius-sm);transition:border-color .2s}.input:focus{border-color:var(--color-primary);outline:none;box-shadow:0 0 0 3px color-mix(in oklab,var(--color-primary) 20%,transparent)}`,
+          dashboard: `.dashboard{display:grid;grid-template-columns:260px 1fr;grid-template-rows:64px 1fr;min-height:100vh;background:#0f172a}.sidebar{grid-row:1/-1;background:#1e293b;border-right:1px solid #334155;padding:20px 0;display:flex;flex-direction:column}.sidebar-logo{padding:0 20px 24px;font-size:1.25rem;font-weight:800;color:#f8fafc;border-bottom:1px solid #334155;margin-bottom:16px}.sidebar-nav{list-style:none;padding:0 12px;margin:0;flex:1}.sidebar-nav li a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;color:#94a3b8;text-decoration:none;font-size:.9rem;transition:all .2s}.sidebar-nav li a:hover,.sidebar-nav li a.active{color:#f8fafc;background:rgba(59,130,246,.12)}.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:#1e293b;border-bottom:1px solid #334155}.content-area{padding:24px;overflow-y:auto}.stat-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}.stat-card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px}.stat-card .stat-value{font-size:2rem;font-weight:800;color:#f8fafc}.stat-card .stat-label{font-size:.8rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-top:4px}.chart-area{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;min-height:300px}@media(max-width:1024px){.dashboard{grid-template-columns:1fr}.sidebar{display:none}.stat-cards{grid-template-columns:repeat(2,1fr)}}@media(max-width:640px){.stat-cards{grid-template-columns:1fr}}`,
+          responsive: `.container{width:100%;max-width:1280px;margin:0 auto;padding:0 16px}.row{display:flex;flex-wrap:wrap;margin:0 -8px}.col{padding:0 8px;flex:1}.col-12{flex:0 0 100%;max-width:100%}.col-6{flex:0 0 50%;max-width:50%}.col-4{flex:0 0 33.333%;max-width:33.333%}.col-3{flex:0 0 25%;max-width:25%}.hide-mobile{display:block}.show-mobile{display:none}.text-center{text-align:center}.stack-sm{display:flex;flex-direction:column;gap:8px}.stack-md{display:flex;flex-direction:column;gap:16px}@media(min-width:640px){.container{padding:0 24px}.sm\\:col-6{flex:0 0 50%;max-width:50%}.sm\\:col-4{flex:0 0 33.333%;max-width:33.333%}}@media(min-width:768px){.container{padding:0 32px}.md\\:col-6{flex:0 0 50%;max-width:50%}.md\\:col-4{flex:0 0 33.333%;max-width:33.333%}.md\\:col-3{flex:0 0 25%;max-width:25%}.md\\:flex-row{flex-direction:row}}@media(min-width:1024px){.lg\\:col-3{flex:0 0 25%;max-width:25%}.lg\\:col-4{flex:0 0 33.333%;max-width:33.333%}.lg\\:col-8{flex:0 0 66.667%;max-width:66.667%}}@media(max-width:639px){.col-6,.col-4,.col-3{flex:0 0 100%;max-width:100%}.hide-mobile{display:none}.show-mobile{display:block}.row{margin:0}.col{padding:0}}`
+        };
+
+        let inputEditor, outputEditor;
+        let lastFormatted = "";
+        let lastInput = "";
+        let isWordWrap = true;
+        let isCompareMode = true;
+        let formatTimer = null;
+
+        const inputStatusEl = document.getElementById("inputStatus");
+        const inputMetaEl = document.getElementById("inputMeta");
+        const validationTextEl = document.getElementById("validationText");
+        const outputMetaEl = document.getElementById("outputMeta");
+        const copyFeedbackEl = document.getElementById("copyFeedback");
+        const lineWidthInput = document.getElementById("lineWidth");
+        const lineWidthValue = document.getElementById("lineWidthValue");
+        const maxBlankLinesInput = document.getElementById("maxBlankLines");
+        const maxBlankLinesValue = document.getElementById("maxBlankLinesValue");
+        const insightGridEl = document.getElementById("insightGrid");
+        const colorSwatchesEl = document.getElementById("colorSwatches");
+        const varsListEl = document.getElementById("varsList");
+        const mediaListEl = document.getElementById("mediaList");
+        const selectorStatsEl = document.getElementById("selectorStats");
+        const diffViewEl = document.getElementById("diffView");
+        const fileInput = document.getElementById("fileInput");
+
+        function setInputStatus(kind, text) {
+          inputStatusEl.className = "status-pill " + kind;
+          inputStatusEl.textContent = text;
+        }
+
+        function getCurrentInput() {
+          return inputEditor ? inputEditor.getValue() : document.getElementById("inputEditorFallback")?.value || "";
+        }
+
+        function setCurrentInput(value) {
+          if (inputEditor) inputEditor.setValue(value);
+          else {
+            const fallback = document.getElementById("inputEditorFallback");
+            if (fallback) fallback.value = value;
+          }
+        }
+
+        function setOutput(value) {
+          lastFormatted = value;
+          if (outputEditor) outputEditor.setValue(value);
+          else {
+            const fallback = document.getElementById("outputEditorFallback");
+            if (fallback) fallback.value = value;
+          }
+        }
+
+        function updateMeta() {
+          const value = getCurrentInput();
+          const lines = value ? value.split(/\n/).length : 1;
+          const chars = value.length;
+          inputMetaEl.textContent = chars + " chars · " + lines + " lines";
+        }
+
+        function loadScript(src) {
+          return new Promise((resolve, reject) => {
+            const existing = document.querySelector('script[src="' + src + '"]');
+            if (existing) { if (existing.dataset.loaded === "true") resolve(); else existing.addEventListener("load", resolve, { once: true }); return; }
+            const script = document.createElement("script");
+            script.src = src;
+            script.onload = () => { script.dataset.loaded = "true"; resolve(); };
+            script.onerror = reject;
+            document.head.appendChild(script);
+          });
+        }
+
+        async function ensureLibraries() {
+          if (!window.require && !window.monaco) {
+            await loadScript("https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/loader.js");
+          }
+          if (window.require) {
+            window.require.config({ paths: { vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs" } });
+            await new Promise((resolve) => window.require(["vs/editor/editor.main"], resolve));
+          }
+          if (!window.prettier) {
+            await loadScript("https://cdn.jsdelivr.net/npm/prettier@3.4.2/dist/standalone.js");
+          }
+          if (!window.prettierPlugins?.postcss) {
+            await loadScript("https://cdn.jsdelivr.net/npm/prettier@3.4.2/plugins/postcss.js");
+          }
+          if (!window.JSZip) {
+            await loadScript("https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js");
+          }
+        }
+
+        function normalizeInputForEditor(initialValue) {
+          return initialValue || defaultCss;
+        }
+
+        function createEditor(container, initialValue, readOnly) {
+          if (window.monaco) {
+            const editor = window.monaco.editor.create(container, {
+              value: initialValue,
+              language: "css",
+              theme: document.documentElement.dataset.theme === "light" ? "vs" : "vs-dark",
+              minimap: { enabled: false },
+              automaticLayout: true,
+              wordWrap: "on",
+              fontSize: 13,
+              scrollBeyondLastLine: false,
+              readOnly: readOnly,
+              tabSize: 2,
+              bracketPairColorization: { enabled: true },
+              suggestOnTriggerCharacters: true,
+              formatOnPaste: false,
+              padding: { top: 12, bottom: 10 }
+            });
+            return editor;
+          }
+
+          const fallback = document.createElement("textarea");
+          fallback.id = readOnly ? "outputEditorFallback" : "inputEditorFallback";
+          fallback.value = initialValue;
+          fallback.readOnly = readOnly;
+          fallback.className = "editor-fallback";
+          container.appendChild(fallback);
+          return { getValue: () => fallback.value, setValue: (v) => { fallback.value = v; }, onDidChangeModelContent: () => {}, dispose: () => fallback.remove(), updateOptions: () => {}, layout: () => {} };
+        }
+
+        function getOptions() {
+          return {
+            indentation: document.getElementById("indentation").value,
+            braceStyle: document.querySelector('input[name="braceStyle"]:checked').value,
+            alignClosingBrace: document.getElementById("alignClosingBrace").checked,
+            propLayout: document.querySelector('input[name="propLayout"]:checked').value,
+            sortProperties: document.getElementById("sortProperties").checked,
+            alignValues: document.getElementById("alignValues").checked,
+            groupProperties: document.getElementById("groupProperties").checked,
+            selectorLayout: document.querySelector('input[name="selectorLayout"]:checked').value,
+            expandSelectors: document.getElementById("expandSelectors").checked,
+            commentMode: document.querySelector('input[name="commentMode"]:checked').value,
+            removeTrailingSpaces: document.getElementById("removeTrailingSpaces").checked,
+            trimBlankLines: document.getElementById("trimBlankLines").checked,
+            maxBlankLines: Number(maxBlankLinesInput.value),
+            normalizeSpacing: document.getElementById("normalizeSpacing").checked,
+            quoteMode: document.querySelector('input[name="quoteMode"]:checked').value,
+            colorFormat: document.querySelector('input[name="colorFormat"]:checked').value,
+            shortenHex: document.getElementById("shortenHex").checked,
+            removeUnnecessaryZeros: document.getElementById("removeUnnecessaryZeros").checked,
+            convertZeroPx: document.getElementById("convertZeroPx").checked,
+            lineWidth: Number(lineWidthInput.value),
+            sortMediaQueries: document.getElementById("sortMediaQueries").checked,
+            mergeDuplicateSelectors: document.getElementById("mergeDuplicateSelectors").checked,
+            removeDuplicateProperties: document.getElementById("removeDuplicateProperties").checked,
+            preserveVariables: document.getElementById("preserveVariables").checked,
+            ensureNewline: document.getElementById("ensureNewline").checked
+          };
+        }
+
+        function escapeHtml(value) {
+          return String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        function getIndentStr(options) {
+          if (options.indentation === "tabs") return "\t";
+          return " ".repeat(Number(options.indentation));
+        }
+
+        function simpleFormat(code, options) {
+          const indent = getIndentStr(options);
+          let text = code.replace(/\r\n?/g, "\n");
+
+          if (options.commentMode === "remove") {
+            text = text.replace(/\/\*[\s\S]*?\*\//g, "");
+          } else if (options.commentMode === "collapse") {
+            let first = true;
+            text = text.replace(/\/\*[\s\S]*?\*\//g, function () {
+              if (first) { first = false; return "/* ... */"; }
+              return "";
+            });
+          }
+
+          text = text.replace(/\s+/g, " ").trim();
+
+          const out = [];
+          let level = 0;
+          let i = 0;
+          let current = "";
+
+          function pushLine(content, lvl) {
+            const trimmed = content.trim();
+            if (trimmed) out.push(indent.repeat(lvl) + trimmed);
+          }
+
+          while (i < text.length) {
+            const ch = text[i];
+
+            if (ch === "/" && text[i + 1] === "*") {
+              const end = text.indexOf("*/", i + 2);
+              const comment = end >= 0 ? text.substring(i, end + 2) : text.substring(i);
+              if (current.trim()) pushLine(current, level);
+              current = "";
+              pushLine(comment, level);
+              i = end >= 0 ? end + 2 : text.length;
+              continue;
+            }
+
+            if (ch === "{") {
+              const selector = current.trim();
+              if (options.selectorLayout === "one-per-line" && selector.includes(",")) {
+                const parts = selector.split(",").map(s => s.trim()).filter(Boolean);
+                parts.forEach((part, idx) => {
+                  if (idx < parts.length - 1) {
+                    pushLine(part + ",", level);
+                  } else {
+                    if (options.braceStyle === "new-line") {
+                      pushLine(part, level);
+                      pushLine("{", level);
+                    } else {
+                      pushLine(part + " {", level);
+                    }
+                  }
+                });
+              } else {
+                if (options.braceStyle === "new-line" && selector) {
+                  pushLine(selector, level);
+                  pushLine("{", level);
+                } else {
+                  pushLine(selector + (selector ? " " : "") + "{", level);
+                }
+              }
+              current = "";
+              level++;
+              i++;
+              continue;
+            }
+
+            if (ch === "}") {
+              if (current.trim()) pushLine(current, level);
+              current = "";
+              level = Math.max(0, level - 1);
+              pushLine("}", level);
+              out.push("");
+              i++;
+              continue;
+            }
+
+            if (ch === ";") {
+              current += ";";
+              if (options.propLayout === "one-per-line") {
+                pushLine(current, level);
+                current = "";
+              }
+              i++;
+              continue;
+            }
+
+            current += ch;
+            i++;
+          }
+
+          if (current.trim()) pushLine(current, level);
+
+          let result = out.join("\n");
+
+          if (options.trimBlankLines) {
+            const max = options.maxBlankLines;
+            const re = new RegExp("(\\n\\s*){" + (max + 2) + ",}", "g");
+            result = result.replace(re, "\n".repeat(max + 1));
+          }
+
+          if (options.removeTrailingSpaces) result = result.replace(/[ \t]+$/gm, "");
+          if (options.ensureNewline && !result.endsWith("\n")) result += "\n";
+          return result;
+        }
+
+        function postProcessCss(code, options) {
+          let result = code;
+
+          if (options.colorFormat === "lowercase") {
+            result = result.replace(/#[0-9a-fA-F]{3,8}\b/g, m => m.toLowerCase());
+          } else if (options.colorFormat === "uppercase") {
+            result = result.replace(/#[0-9a-fA-F]{3,8}\b/g, m => m.toUpperCase());
+          }
+
+          if (options.shortenHex) {
+            result = result.replace(/#([0-9a-fA-F])\1([0-9a-fA-F])\2([0-9a-fA-F])\3\b/g, "#$1$2$3");
+          }
+
+          if (options.removeUnnecessaryZeros) {
+            result = result.replace(/\b0+(\.\d+)/g, "$1");
+          }
+
+          if (options.convertZeroPx) {
+            result = result.replace(/\b0(px|em|rem|%|vh|vw|vmin|vmax|ch|ex|cm|mm|in|pt|pc)\b/g, "0");
+          }
+
+          if (options.quoteMode === "single") {
+            result = result.replace(/"/g, "'");
+          } else if (options.quoteMode === "double") {
+            result = result.replace(/'/g, '"');
+          }
+
+          if (options.sortProperties) {
+            result = sortPropertiesInRules(result);
+          }
+
+          if (options.removeDuplicateProperties) {
+            result = removeDupProperties(result);
+          }
+
+          if (options.mergeDuplicateSelectors) {
+            result = mergeDupSelectors(result);
+          }
+
+          return result;
+        }
+
+        function sortPropertiesInRules(css) {
+          return css.replace(/\{([^{}]*)\}/g, function (match, inner) {
+            const lines = inner.split("\n").map(l => l.trim()).filter(Boolean);
+            const props = [];
+            const others = [];
+            lines.forEach(line => {
+              if (line.includes(":") && !line.startsWith("/*") && !line.startsWith("//")) {
+                props.push(line);
+              } else {
+                others.push(line);
+              }
+            });
+            props.sort((a, b) => {
+              const nameA = a.split(":")[0].trim().replace(/^-/, "");
+              const nameB = b.split(":")[0].trim().replace(/^-/, "");
+              return nameA.localeCompare(nameB);
+            });
+            const sorted = [...others, ...props].join("\n  ");
+            return "{\n  " + sorted + "\n}";
+          });
+        }
+
+        function removeDupProperties(css) {
+          return css.replace(/\{([^{}]*)\}/g, function (match, inner) {
+            const lines = inner.split("\n").map(l => l.trim()).filter(Boolean);
+            const seen = new Map();
+            const result = [];
+            lines.forEach(line => {
+              const colonIdx = line.indexOf(":");
+              if (colonIdx > 0 && !line.startsWith("/*")) {
+                const prop = line.substring(0, colonIdx).trim();
+                if (seen.has(prop)) {
+                  result[seen.get(prop)] = null;
+                }
+                seen.set(prop, result.length);
+              }
+              result.push(line);
+            });
+            return "{\n  " + result.filter(Boolean).join("\n  ") + "\n}";
+          });
+        }
+
+        function mergeDupSelectors(css) {
+          const ruleMap = new Map();
+          const order = [];
+          const lines = css.split("\n");
+          let current = "";
+          let depth = 0;
+
+          for (const line of lines) {
+            current += line + "\n";
+            depth += (line.match(/{/g) || []).length;
+            depth -= (line.match(/}/g) || []).length;
+            if (depth === 0 && current.trim()) {
+              const m = current.match(/^([^{]+)\{([\s\S]*)\}\s*$/);
+              if (m) {
+                const selector = m[1].trim();
+                const body = m[2].trim();
+                if (ruleMap.has(selector)) {
+                  ruleMap.set(selector, ruleMap.get(selector) + "\n  " + body);
+                } else {
+                  ruleMap.set(selector, body);
+                  order.push(selector);
+                }
+              } else {
+                order.push(current.trim());
+                ruleMap.set(current.trim(), null);
+              }
+              current = "";
+            }
+          }
+
+          return order.map(sel => {
+            const body = ruleMap.get(sel);
+            if (body === null) return sel;
+            return sel + " {\n  " + body + "\n}\n";
+          }).join("\n");
+        }
+
+        function minifyCss(code) {
+          let output = code;
+          output = output.replace(/\/\*[\s\S]*?\*\//g, "");
+          output = output.replace(/\s+/g, " ");
+          output = output.replace(/\s*([{};:,>~+])\s*/g, "$1");
+          output = output.replace(/;}/g, "}");
+          output = output.replace(/\s*!important/g, "!important");
+          output = output.trim();
+          return output;
+        }
+
+        function validateCss(code) {
+          const issues = [];
+          const opens = (code.match(/{/g) || []).length;
+          const closes = (code.match(/}/g) || []).length;
+          if (opens !== closes) issues.push("Unbalanced braces: " + opens + " opening vs " + closes + " closing");
+
+          const lines = code.split("\n");
+          lines.forEach((line, idx) => {
+            const trimmed = line.trim();
+            if (trimmed && !trimmed.startsWith("/*") && !trimmed.startsWith("*") && !trimmed.startsWith("//") &&
+                !trimmed.endsWith("{") && !trimmed.endsWith("}") && !trimmed.endsWith(",") && !trimmed.endsWith(";") &&
+                !trimmed.endsWith("*/") && trimmed.includes(":") && !trimmed.startsWith("@") &&
+                !trimmed.match(/^\s*\/\*/) && !trimmed.match(/^\s*\*\//) && trimmed.length > 2) {
+              if (!trimmed.endsWith(";") && !trimmed.endsWith("{") && !trimmed.endsWith("}") && !trimmed.endsWith(",") && !trimmed.endsWith("*/")) {
+                // Possible missing semicolon - but only flag if it looks like a property declaration
+                if (trimmed.match(/^[\w-]+\s*:/) && !trimmed.endsWith(";")) {
+                  issues.push("Line " + (idx + 1) + ": possibly missing semicolon");
+                }
+              }
+            }
+          });
+
+          return issues;
+        }
+
+        function getParseStats(code) {
+          const noComments = code.replace(/\/\*[\s\S]*?\*\//g, "");
+          const rules = (noComments.match(/{/g) || []).length;
+          const selectors = (noComments.match(/[^@{}]+(?=\s*\{)/g) || [])
+            .flatMap(s => s.split(","))
+            .map(s => s.trim())
+            .filter(s => s && !s.startsWith("@")).length;
+          const properties = (noComments.match(/[\w-]+\s*:/g) || []).length;
+          const mediaQueries = (code.match(/@media\b/g) || []).length;
+          const keyframes = (code.match(/@keyframes\b/g) || []).length;
+          const variables = (code.match(/--[\w-]+\s*:/g) || []).length;
+          const imports = (code.match(/@import\b/g) || []).length;
+          const comments = (code.match(/\/\*[\s\S]*?\*\//g) || []).length;
+          const colorMatches = extractColors(code);
+          const fontMatches = code.match(/font-family\s*:[^;}{]+/g) || [];
+          const fonts = new Set();
+          fontMatches.forEach(m => {
+            m.replace(/font-family\s*:\s*/, "").split(",").forEach(f => {
+              const name = f.trim().replace(/['";]/g, "");
+              if (name) fonts.add(name);
+            });
+          });
+          const bytes = new Blob([code]).size;
+          let fileSize;
+          if (bytes < 1024) fileSize = bytes + " B";
+          else if (bytes < 1048576) fileSize = (bytes / 1024).toFixed(1) + " KB";
+          else fileSize = (bytes / 1048576).toFixed(2) + " MB";
+
+          return { rules, selectors, properties, mediaQueries, keyframes, variables, imports, comments, colors: colorMatches.length, fonts: fonts.size, fileSize, bytes };
+        }
+
+        function extractColors(code) {
+          const noComments = code.replace(/\/\*[\s\S]*?\*\//g, "");
+          const hexPattern = /#(?:[0-9a-fA-F]{3,4}){1,2}\b/g;
+          const rgbPattern = /rgba?\(\s*[\d.]+%?\s*[,\s]+\s*[\d.]+%?\s*[,\s]+\s*[\d.]+%?(?:\s*[,/]\s*[\d.]+%?)?\s*\)/g;
+          const hslPattern = /hsla?\(\s*[\d.]+(?:deg|rad|turn|grad)?\s*[,\s]+\s*[\d.]+%?\s*[,\s]+\s*[\d.]+%?(?:\s*[,/]\s*[\d.]+%?)?\s*\)/g;
+          const colors = new Set();
+          let m;
+          while ((m = hexPattern.exec(noComments)) !== null) colors.add(m[0].toLowerCase());
+          while ((m = rgbPattern.exec(noComments)) !== null) colors.add(m[0].replace(/\s+/g, " ").trim());
+          while ((m = hslPattern.exec(noComments)) !== null) colors.add(m[0].replace(/\s+/g, " ").trim());
+          return Array.from(colors);
+        }
+
+        function extractVariables(code) {
+          const vars = [];
+          const seen = new Set();
+          const regex = /(--[\w-]+)\s*:\s*([^;}{]+)/g;
+          let m;
+          while ((m = regex.exec(code)) !== null) {
+            const name = m[1].trim();
+            const value = m[2].trim();
+            if (!seen.has(name)) {
+              seen.add(name);
+              vars.push({ name, value });
+            }
+          }
+          // count usages
+          vars.forEach(v => {
+            const usageRegex = new RegExp("var\\(\\s*" + v.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b", "g");
+            v.usages = (code.match(usageRegex) || []).length;
+          });
+          return vars;
+        }
+
+        function extractMediaQueries(code) {
+          const queries = {};
+          const regex = /@media\s*([^{]+)/g;
+          let m;
+          while ((m = regex.exec(code)) !== null) {
+            const query = m[1].trim();
+            queries[query] = (queries[query] || 0) + 1;
+          }
+          return Object.entries(queries).map(([query, count]) => ({ query, count }));
+        }
+
+        function computeSelectorStats(code) {
+          const noComments = code.replace(/\/\*[\s\S]*?\*\//g, "");
+          const selectorBlocks = (noComments.match(/[^@{}]+(?=\s*\{)/g) || [])
+            .filter(s => !s.trim().startsWith("@"));
+          const allSelectors = selectorBlocks.flatMap(s => s.split(",")).map(s => s.trim()).filter(Boolean);
+
+          let classSelectors = 0, idSelectors = 0, elementSelectors = 0,
+              pseudoClasses = 0, pseudoElements = 0, attributeSelectors = 0;
+
+          allSelectors.forEach(sel => {
+            classSelectors += (sel.match(/\./g) || []).length;
+            idSelectors += (sel.match(/#(?![0-9a-fA-F]{3,8}\b)/g) || []).length;
+            pseudoClasses += (sel.match(/:(?!:)[a-zA-Z-]+/g) || []).length;
+            pseudoElements += (sel.match(/::[a-zA-Z-]+/g) || []).length;
+            attributeSelectors += (sel.match(/\[/g) || []).length;
+            // element selectors: words not preceded by . # : or [
+            const cleaned = sel.replace(/\.[a-zA-Z_][\w-]*/g, "").replace(/#[a-zA-Z_][\w-]*/g, "")
+              .replace(/::?[a-zA-Z-]+(\([^)]*\))?/g, "").replace(/\[[^\]]*\]/g, "").trim();
+            const elems = cleaned.split(/[\s>~+]+/).map(s => s.trim()).filter(s => /^[a-zA-Z][\w-]*$/.test(s));
+            elementSelectors += elems.length;
+          });
+
+          return { classSelectors, idSelectors, elementSelectors, pseudoClasses, pseudoElements, attributeSelectors };
+        }
+
+        function collectInsights(code) {
+          const insights = [];
+          const noComments = code.replace(/\/\*[\s\S]*?\*\//g, "");
+
+          // Duplicate selectors
+          const selectorBlocks = (noComments.match(/[^@{}]+(?=\s*\{)/g) || []).map(s => s.trim()).filter(s => s && !s.startsWith("@"));
+          const selectorCounts = {};
+          selectorBlocks.forEach(s => { selectorCounts[s] = (selectorCounts[s] || 0) + 1; });
+          const duplicateSelectors = Object.entries(selectorCounts).filter(([, c]) => c > 1);
+          if (duplicateSelectors.length) {
+            insights.push({ title: "Duplicate selectors", detail: duplicateSelectors.length + " selector(s) appear more than once.", kind: "warn" });
+          }
+
+          // !important count
+          const importantCount = (noComments.match(/!important/g) || []).length;
+          if (importantCount > 0) {
+            insights.push({ title: "!important declarations", detail: importantCount + " use(s) of !important found. Consider refactoring specificity.", kind: importantCount > 5 ? "warn" : "info" });
+          }
+
+          // Vendor prefixes
+          const vendorPrefixes = (noComments.match(/-(webkit|moz|ms|o)-/g) || []).length;
+          if (vendorPrefixes > 0) {
+            insights.push({ title: "Vendor prefixes", detail: vendorPrefixes + " vendor prefix(es) detected. Consider using autoprefixer.", kind: "info" });
+          }
+
+          // Deep/complex selectors
+          const allSelectors = selectorBlocks.flatMap(s => s.split(",")).map(s => s.trim()).filter(Boolean);
+          const deepSelectors = allSelectors.filter(s => s.split(/[\s>~+]+/).length > 3);
+          if (deepSelectors.length) {
+            insights.push({ title: "Complex selectors", detail: deepSelectors.length + " selector(s) have high specificity (>3 parts).", kind: "warn" });
+          }
+
+          // Empty rules
+          const emptyRules = (noComments.match(/\{[\s]*\}/g) || []).length;
+          if (emptyRules > 0) {
+            insights.push({ title: "Empty rules", detail: emptyRules + " empty rule(s) found. Consider removing them.", kind: "warn" });
+          }
+
+          // Large file warning
+          const bytes = new Blob([code]).size;
+          if (bytes > 102400) {
+            insights.push({ title: "Large file", detail: "File is over 100KB (" + (bytes / 1024).toFixed(1) + "KB). Consider splitting.", kind: "warn" });
+          }
+
+          // Color summary
+          const colors = extractColors(code);
+          if (colors.length > 0) {
+            insights.push({ title: "Colors used", detail: colors.length + " unique color value(s) detected.", kind: "info" });
+          }
+
+          // CSS variable summary
+          const vars = extractVariables(code);
+          if (vars.length > 0) {
+            insights.push({ title: "CSS variables", detail: vars.length + " custom property/properties defined.", kind: "info" });
+          }
+
+          // Duplicate properties within same rule
+          let dupProps = 0;
+          noComments.replace(/\{([^{}]*)\}/g, function (_, inner) {
+            const props = {};
+            (inner.match(/[\w-]+\s*:/g) || []).forEach(p => {
+              const name = p.replace(/\s*:/, "").trim();
+              props[name] = (props[name] || 0) + 1;
+            });
+            Object.values(props).forEach(c => { if (c > 1) dupProps += c - 1; });
+            return "";
+          });
+          if (dupProps > 0) {
+            insights.push({ title: "Duplicate properties", detail: dupProps + " duplicate property/properties within the same rule.", kind: "warn" });
+          }
+
+          if (insights.length === 0) {
+            insights.push({ title: "No obvious issues", detail: "The stylesheet looks structurally healthy.", kind: "ok" });
+          }
+
+          return insights;
+        }
+
+        function isColorValue(value) {
+          return /^#[0-9a-fA-F]{3,8}$/.test(value) ||
+                 /^rgba?\(/.test(value) ||
+                 /^hsla?\(/.test(value) ||
+                 /^(red|blue|green|orange|yellow|purple|pink|white|black|gray|grey|cyan|magenta|aqua|navy|teal|maroon|olive|lime|fuchsia|silver|transparent|currentcolor)$/i.test(value);
+        }
+
+        function buildDiff(original, formatted) {
+          const originalLines = original.split(/\n/);
+          const formattedLines = formatted.split(/\n/);
+          const max = Math.max(originalLines.length, formattedLines.length);
+          const chunks = [];
+          for (let i = 0; i < max; i++) {
+            const a = originalLines[i];
+            const b = formattedLines[i];
+            if (a === b) chunks.push('<div>' + escapeHtml(a || "") + '</div>');
+            else if (a !== undefined && b === undefined) chunks.push('<div class="diff-removed">- ' + escapeHtml(a) + '</div>');
+            else if (a === undefined && b !== undefined) chunks.push('<div class="diff-added">+ ' + escapeHtml(b) + '</div>');
+            else chunks.push('<div class="diff-changed">~ ' + escapeHtml(a) + ' → ' + escapeHtml(b) + '</div>');
+          }
+          return chunks.join("");
+        }
+
+        async function formatCss() {
+          const original = getCurrentInput();
+          const options = getOptions();
+          let result = original;
+          try {
+            await ensureLibraries();
+            if (window.prettier && window.prettier.format && window.prettierPlugins && window.prettierPlugins.postcss) {
+              result = await window.prettier.format(original, {
+                parser: "css",
+                plugins: [window.prettierPlugins.postcss],
+                printWidth: options.lineWidth,
+                tabWidth: options.indentation === "tabs" ? 2 : Number(options.indentation),
+                useTabs: options.indentation === "tabs",
+                singleQuote: options.quoteMode === "single"
+              });
+            } else {
+              result = simpleFormat(original, options);
+            }
+          } catch (error) {
+            result = simpleFormat(original, options);
+            validationTextEl.textContent = "Fallback formatting used: " + error.message;
+          }
+
+          result = result.replace(/\r\n?/g, "\n");
+          result = postProcessCss(result, options);
+          if (options.ensureNewline && !result.endsWith("\n")) result += "\n";
+          if (options.removeTrailingSpaces) result = result.replace(/[ \t]+$/gm, "");
+
+          setOutput(result);
+          lastInput = original;
+          updateMeta();
+          renderAll(result, original);
+          outputMetaEl.textContent = "Formatted • " + result.length + " characters";
+          setInputStatus("ok", "✓ CSS formatted");
+          validationTextEl.textContent = "Formatting complete.";
+        }
+
+        function renderAll(code, original) {
+          updateStats(code);
+          renderInsights(code);
+          renderColorPalette(code);
+          renderVariables(code);
+          renderMediaQueries(code);
+          renderSelectorStats(code);
+          if (original !== undefined) renderDiff(original, code);
+        }
+
+        function updateStats(code) {
+          const stats = getParseStats(code);
+          document.getElementById("statChars").textContent = code.length;
+          document.getElementById("statLines").textContent = code.split(/\n/).length;
+          document.getElementById("statRules").textContent = stats.rules;
+          document.getElementById("statSelectors").textContent = stats.selectors;
+          document.getElementById("statProperties").textContent = stats.properties;
+          document.getElementById("statMediaQueries").textContent = stats.mediaQueries;
+          document.getElementById("statKeyframes").textContent = stats.keyframes;
+          document.getElementById("statVariables").textContent = stats.variables;
+          document.getElementById("statImports").textContent = stats.imports;
+          document.getElementById("statComments").textContent = stats.comments;
+          document.getElementById("statColors").textContent = stats.colors;
+          document.getElementById("statFonts").textContent = stats.fonts;
+          document.getElementById("statFileSize").textContent = stats.fileSize;
+        }
+
+        function renderInsights(code) {
+          const insights = collectInsights(code);
+          insightGridEl.innerHTML = insights.map(item =>
+            `<div class="insight-card"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.detail)}</span></div>`
+          ).join("");
+        }
+
+        function renderColorPalette(code) {
+          const colors = extractColors(code);
+          if (!colors.length) {
+            colorSwatchesEl.innerHTML = '<span class="muted" style="font-size:13px;">No colors detected.</span>';
+            return;
+          }
+          colorSwatchesEl.innerHTML = colors.map(color =>
+            `<div class="color-swatch" data-color="${escapeHtml(color)}" title="Click to copy">
+              <div class="swatch-preview" style="background:${color}"></div>
+              <span class="swatch-label">${escapeHtml(color)}</span>
+            </div>`
+          ).join("");
+          colorSwatchesEl.querySelectorAll(".color-swatch").forEach(el => {
+            el.addEventListener("click", function () {
+              const c = this.getAttribute("data-color");
+              navigator.clipboard.writeText(c).then(() => {
+                const label = this.querySelector(".swatch-label");
+                const orig = label.textContent;
+                label.textContent = "✓ Copied!";
+                setTimeout(() => { label.textContent = orig; }, 1200);
+              });
+            });
+          });
+        }
+
+        function renderVariables(code) {
+          const vars = extractVariables(code);
+          if (!vars.length) {
+            varsListEl.innerHTML = '<span class="muted" style="font-size:13px;">No CSS variables detected.</span>';
+            return;
+          }
+          varsListEl.innerHTML = vars.map(v => {
+            const showColor = isColorValue(v.value);
+            return `<div class="var-item" data-copy="${escapeHtml(v.name + ": " + v.value)}" title="Click to copy">
+              ${showColor ? `<div class="var-color" style="background:${v.value}"></div>` : `<div class="var-color" style="background:var(--surface-2)"></div>`}
+              <div>
+                <div class="var-name">${escapeHtml(v.name)}</div>
+                <div class="var-value">${escapeHtml(v.value)}${v.usages > 0 ? ` · ${v.usages} usage(s)` : ""}</div>
+              </div>
+            </div>`;
+          }).join("");
+          varsListEl.querySelectorAll(".var-item").forEach(el => {
+            el.addEventListener("click", function () {
+              const text = this.getAttribute("data-copy");
+              navigator.clipboard.writeText(text).then(() => {
+                const nameEl = this.querySelector(".var-name");
+                const orig = nameEl.textContent;
+                nameEl.textContent = "✓ Copied!";
+                setTimeout(() => { nameEl.textContent = orig; }, 1200);
+              });
+            });
+          });
+        }
+
+        function renderMediaQueries(code) {
+          const mqs = extractMediaQueries(code);
+          if (!mqs.length) {
+            mediaListEl.innerHTML = '<span class="muted" style="font-size:13px;">No media queries detected.</span>';
+            return;
+          }
+          mediaListEl.innerHTML = mqs.map(mq =>
+            `<div class="media-item">
+              <span class="media-query">@media ${escapeHtml(mq.query)}</span>
+              <span class="media-count">${mq.count}×</span>
+            </div>`
+          ).join("");
+        }
+
+        function renderSelectorStats(code) {
+          const stats = computeSelectorStats(code);
+          selectorStatsEl.innerHTML = [
+            { label: "Class (.)", value: stats.classSelectors },
+            { label: "ID (#)", value: stats.idSelectors },
+            { label: "Element", value: stats.elementSelectors },
+            { label: "Pseudo-class (:)", value: stats.pseudoClasses },
+            { label: "Pseudo-element (::)", value: stats.pseudoElements },
+            { label: "Attribute ([])", value: stats.attributeSelectors }
+          ].map(s =>
+            `<div class="selector-stat"><span class="sel-label">${escapeHtml(s.label)}</span><span class="sel-value">${s.value}</span></div>`
+          ).join("");
+        }
+
+        function renderDiff(original, formatted) {
+          diffViewEl.innerHTML = buildDiff(original, formatted);
+        }
+
+        function applyExample(name) {
+          if (examples[name]) {
+            setCurrentInput(examples[name]);
+            updateMeta();
+            formatCss();
+          }
+        }
+
+        function handleFile(file) {
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = function () {
+            setCurrentInput(reader.result);
+            updateMeta();
+            formatCss();
+          };
+          reader.readAsText(file);
+        }
+
+        function copyOutput() {
+          const value = lastFormatted || getCurrentInput();
+          if (window.DTH && window.DTH.copyText) {
+            window.DTH.copyText(value, "Copied CSS");
+          } else {
+            navigator.clipboard.writeText(value);
+          }
+          copyFeedbackEl.textContent = "✓ Copied to clipboard";
+          setTimeout(() => { copyFeedbackEl.textContent = "Ctrl+Enter · Copy"; }, 1600);
+        }
+
+        function downloadText(filename, content, mime) {
+          if (window.DTH && window.DTH.downloadText) {
+            window.DTH.downloadText(filename, content, mime);
+          } else {
+            const blob = new Blob([content], { type: mime });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = filename;
+            link.click();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+          }
+        }
+
+        function downloadOutput(kind) {
+          const value = lastFormatted || getCurrentInput();
+          if (kind === "txt") downloadText("formatted.css.txt", value, "text/plain;charset=utf-8");
+          else downloadText("formatted.css", value, "text/css;charset=utf-8");
+        }
+
+        async function downloadZip() {
+          const value = lastFormatted || getCurrentInput();
+          if (!window.JSZip) await ensureLibraries();
+          const zip = new window.JSZip();
+          zip.file("formatted.css", value);
+          zip.file("formatted.txt", value);
+          const blob = await zip.generateAsync({ type: "blob" });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "formatted-css.zip";
+          link.click();
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+
+        function openInNewWindow() {
+          const w = window.open("", "_blank");
+          if (w) {
+            w.document.write("<html><head><title>Formatted CSS</title><style>body{background:#0f172a;color:#e2e8f0;font-family:monospace;padding:24px;white-space:pre-wrap;}</style></head><body>" + escapeHtml(lastFormatted || getCurrentInput()) + "</body></html>");
+            w.document.close();
+          }
+        }
+
+        function toggleWordWrap() {
+          isWordWrap = !isWordWrap;
+          if (outputEditor && outputEditor.updateOptions) outputEditor.updateOptions({ wordWrap: isWordWrap ? "on" : "off" });
+          document.getElementById("wordWrapBtn").textContent = isWordWrap ? "Word Wrap: On" : "Word Wrap: Off";
+        }
+
+        function toggleFullscreen() {
+          const pane = document.getElementById("outputPane");
+          pane.classList.toggle("fullscreen-pane");
+          document.getElementById("fullscreenBtn").textContent = pane.classList.contains("fullscreen-pane") ? "Exit Fullscreen" : "Fullscreen";
+        }
+
+        function toggleCompareMode() {
+          isCompareMode = !isCompareMode;
+          const diffPanel = document.querySelector(".diff-panel");
+          if (diffPanel) diffPanel.style.display = isCompareMode ? "block" : "none";
+          document.getElementById("compareBtn").textContent = isCompareMode ? "Compare Mode" : "Hide Diff";
+        }
+
+        function replaceInEditor() {
+          const input = getCurrentInput();
+          const find = document.getElementById("findText").value;
+          const replace = document.getElementById("replaceText").value;
+          const mode = document.getElementById("searchMode").value;
+          const caseSensitive = document.getElementById("caseSensitive").checked;
+          let result = input;
+          if (mode === "regex") {
+            const flags = caseSensitive ? "g" : "gi";
+            try { result = input.replace(new RegExp(find, flags), replace); } catch (error) { validationTextEl.textContent = error.message; }
+          } else {
+            const source = caseSensitive ? input : input.toLowerCase();
+            const target = caseSensitive ? find : find.toLowerCase();
+            if (source.includes(target)) {
+              result = caseSensitive ? input.split(find).join(replace) : input.replace(new RegExp(find.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi"), replace);
+            }
+          }
+          setCurrentInput(result);
+          updateMeta();
+          formatCss();
+        }
+
+        function replaceAllInEditor() {
+          replaceInEditor();
+        }
+
+        async function initializeEditors() {
+          await ensureLibraries();
+          const inputHost = document.getElementById("inputEditorHost");
+          const outputHost = document.getElementById("outputEditorHost");
+          inputEditor = createEditor(inputHost, normalizeInputForEditor(defaultCss), false);
+          outputEditor = createEditor(outputHost, normalizeInputForEditor(defaultCss), true);
+          inputEditor.onDidChangeModelContent(() => {
+            updateMeta();
+            setInputStatus("warn", "⏳ Editing");
+            validationTextEl.textContent = "Live editing in progress.";
+            clearTimeout(formatTimer);
+            formatTimer = setTimeout(() => formatCss(), 350);
+          });
+          window.addEventListener("resize", () => inputEditor.layout && inputEditor.layout());
+          const inputPane = document.getElementById("inputPane");
+          ["dragenter", "dragover"].forEach((eventName) => inputPane.addEventListener(eventName, (event) => { event.preventDefault(); inputPane.style.borderColor = "var(--accent)"; }));
+          ["dragleave", "drop"].forEach((eventName) => inputPane.addEventListener(eventName, (event) => { event.preventDefault(); inputPane.style.borderColor = ""; }));
+          inputPane.addEventListener("drop", (event) => {
+            const file = event.dataTransfer?.files?.[0];
+            if (file) handleFile(file);
+          });
+        }
+
+        document.querySelectorAll(".example-card").forEach((button) => {
+          button.addEventListener("click", () => applyExample(button.getAttribute("data-example")));
+        });
+
+        document.getElementById("pasteBtn").addEventListener("click", async function () {
+          try {
+            const text = await navigator.clipboard.readText();
+            setCurrentInput(text);
+            updateMeta();
+            formatCss();
+          } catch (error) {
+            validationTextEl.textContent = "Clipboard access is unavailable.";
+          }
+        });
+        document.getElementById("loadExampleBtn").addEventListener("click", () => applyExample("basic"));
+        document.getElementById("clearBtn").addEventListener("click", () => { setCurrentInput(""); updateMeta(); setOutput(""); outputMetaEl.textContent = "Cleared."; setInputStatus("warn", "⏳ Cleared"); validationTextEl.textContent = "The editor is clear."; });
+        document.getElementById("swapBtn").addEventListener("click", () => { const current = getCurrentInput(); const formatted = lastFormatted; setCurrentInput(formatted || current); setOutput(current); lastFormatted = current; });
+        document.getElementById("copyBtn").addEventListener("click", copyOutput);
+        document.getElementById("downloadCssBtn").addEventListener("click", () => downloadOutput("css"));
+        document.getElementById("downloadTxtBtn").addEventListener("click", () => downloadOutput("txt"));
+        document.getElementById("downloadZipBtn").addEventListener("click", downloadZip);
+        document.getElementById("wordWrapBtn").addEventListener("click", toggleWordWrap);
+        document.getElementById("fullscreenBtn").addEventListener("click", toggleFullscreen);
+        document.getElementById("compareBtn").addEventListener("click", toggleCompareMode);
+        document.getElementById("newWindowBtn").addEventListener("click", openInNewWindow);
+        document.getElementById("replaceBtn").addEventListener("click", replaceInEditor);
+        document.getElementById("replaceAllBtn").addEventListener("click", replaceAllInEditor);
+        fileInput.addEventListener("change", (event) => handleFile(event.target.files[0]));
+        lineWidthInput.addEventListener("input", () => { lineWidthValue.textContent = lineWidthInput.value; });
+        maxBlankLinesInput.addEventListener("input", () => { maxBlankLinesValue.textContent = maxBlankLinesInput.value; });
+        document.querySelectorAll("select, input[type='checkbox'], input[type='radio'], input[type='range']").forEach((control) => control.addEventListener("change", () => formatCss()));
+
+        document.addEventListener("keydown", (event) => {
+          if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+            event.preventDefault();
+            formatCss();
+          }
+          if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === "m") {
+            event.preventDefault();
+            const input = getCurrentInput();
+            const output = minifyCss(input);
+            setOutput(output);
+            outputMetaEl.textContent = "Minified • " + output.length + " characters";
+            setInputStatus("ok", "✓ CSS minified");
+            validationTextEl.textContent = "Minification complete.";
+            renderDiff(input, output);
+          }
+          if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === "v") {
+            event.preventDefault();
+            const code = getCurrentInput();
+            const issues = validateCss(code);
+            if (issues.length) {
+              setInputStatus("err", "✕ CSS issues found");
+              validationTextEl.textContent = issues.slice(0, 3).join(" • ");
+            } else {
+              setInputStatus("ok", "✓ CSS looks valid");
+              validationTextEl.textContent = "No structural issues detected.";
+            }
+            renderInsights(code);
+          }
+          if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === "o") {
+            event.preventDefault();
+            formatCss();
+          }
+          if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === "c") {
+            event.preventDefault();
+            copyOutput();
+          }
+        });
+
+        const actionBar = document.createElement("div");
+        actionBar.className = "toolbar";
+        actionBar.innerHTML = '<button class="btn primary" id="formatBtn" type="button">Format CSS</button><button class="btn" id="minifyBtn" type="button">Minify CSS</button><button class="btn" id="validateBtn" type="button">Validate CSS</button><button class="btn" id="optimizeBtn" type="button">Format &amp; Optimize</button>';
+        document.querySelector(".toolbar").insertAdjacentElement("afterend", actionBar);
+        document.getElementById("formatBtn").addEventListener("click", formatCss);
+        document.getElementById("minifyBtn").addEventListener("click", function () {
+          const input = getCurrentInput();
+          const output = minifyCss(input);
+          setOutput(output);
+          outputMetaEl.textContent = "Minified • " + output.length + " characters";
+          setInputStatus("ok", "✓ CSS minified");
+          validationTextEl.textContent = "Minification complete.";
+          renderDiff(input, output);
+        });
+        document.getElementById("validateBtn").addEventListener("click", function () {
+          const code = getCurrentInput();
+          const issues = validateCss(code);
+          if (issues.length) {
+            setInputStatus("err", "✕ CSS issues found");
+            validationTextEl.textContent = issues.slice(0, 3).join(" • ");
+          } else {
+            setInputStatus("ok", "✓ CSS looks valid");
+            validationTextEl.textContent = "No structural issues detected.";
+          }
+          renderInsights(code);
+        });
+        document.getElementById("optimizeBtn").addEventListener("click", function () {
+          document.getElementById("removeDuplicateProperties").checked = true;
+          document.getElementById("mergeDuplicateSelectors").checked = true;
+          formatCss();
+        });
+
+        initializeEditors();
+        updateMeta();
+        renderAll(defaultCss);
+        setOutput(defaultCss);
+      })();
+    </script>
+  </body>
+</html>
