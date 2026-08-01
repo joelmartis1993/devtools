@@ -43,6 +43,7 @@
       .editor-host { flex:1; min-height:420px; }
       .editor-host .monaco-editor, .editor-host textarea { border-radius:0; }
       .editor-host textarea { width:100%; height:100%; min-height:420px; border:0; outline:0; padding:14px; background:transparent; color:var(--text); font-family:var(--mono); font-size:13.6px; line-height:1.6; resize:none; }
+      .editor-fallback { width:100%; height:100%; min-height:420px; border:0; outline:0; padding:14px; background:transparent; color:var(--text); font-family:var(--mono); font-size:13.6px; line-height:1.6; resize:none; }
       .status-bar { display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; padding:10px 14px; border-top:1px solid var(--border); background:color-mix(in oklab,var(--surface-2) 80%, transparent); color:var(--text-dim); font-size:12px; }
       .status-pill { display:inline-flex; align-items:center; gap:6px; border:1px solid var(--border); padding:4px 8px; border-radius:999px; }
       .status-pill.ok { color:var(--ok); border-color:color-mix(in oklab,var(--ok) 35%,var(--border)); }
@@ -556,7 +557,11 @@
         function loadScript(src) {
           return new Promise((resolve, reject) => {
             const existing = document.querySelector('script[src="' + src + '"]');
-            if (existing) { if (existing.dataset.loaded === "true") resolve(); else existing.addEventListener("load", resolve, { once: true }); return; }
+            if (existing) {
+              if (existing.dataset.loaded === "true") resolve();
+              else existing.addEventListener("load", resolve, { once: true });
+              return;
+            }
             const script = document.createElement("script");
             script.src = src;
             script.onload = () => { script.dataset.loaded = "true"; resolve(); };
@@ -565,22 +570,35 @@
           });
         }
 
+        function withTimeout(promise, ms) {
+          return Promise.race([
+            promise,
+            new Promise((_, reject) => setTimeout(() => reject(new Error("Library load timed out after " + ms + "ms")), ms))
+          ]);
+        }
+
         async function ensureLibraries() {
           if (!window.require && !window.monaco) {
-            await loadScript("https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/loader.js");
+            await withTimeout(loadScript("https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/loader.js"), 7000);
           }
-          if (window.require) {
+          if (window.require && typeof window.require.config === "function") {
             window.require.config({ paths: { vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs" } });
-            await new Promise((resolve) => window.require(["vs/editor/editor.main"], resolve));
+            await withTimeout(new Promise((resolve, reject) => {
+              try {
+                window.require(["vs/editor/editor.main"], resolve, reject);
+              } catch (error) {
+                reject(error);
+              }
+            }), 7000);
           }
           if (!window.prettier) {
-            await loadScript("https://cdn.jsdelivr.net/npm/prettier@3.4.2/dist/standalone.js");
+            await withTimeout(loadScript("https://cdn.jsdelivr.net/npm/prettier@3.4.2/dist/standalone.js"), 7000);
           }
           if (!window.prettierPlugins?.postcss) {
-            await loadScript("https://cdn.jsdelivr.net/npm/prettier@3.4.2/plugins/postcss.js");
+            await withTimeout(loadScript("https://cdn.jsdelivr.net/npm/prettier@3.4.2/plugins/postcss.js"), 7000);
           }
           if (!window.JSZip) {
-            await loadScript("https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js");
+            await withTimeout(loadScript("https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"), 7000);
           }
         }
 
@@ -589,24 +607,34 @@
         }
 
         function createEditor(container, initialValue, readOnly) {
-          if (window.monaco) {
-            const editor = window.monaco.editor.create(container, {
-              value: initialValue,
-              language: "css",
-              theme: document.documentElement.dataset.theme === "light" ? "vs" : "vs-dark",
-              minimap: { enabled: false },
-              automaticLayout: true,
-              wordWrap: "on",
-              fontSize: 13,
-              scrollBeyondLastLine: false,
-              readOnly: readOnly,
-              tabSize: 2,
-              bracketPairColorization: { enabled: true },
-              suggestOnTriggerCharacters: true,
-              formatOnPaste: false,
-              padding: { top: 12, bottom: 10 }
-            });
-            return editor;
+          if (!container) {
+            throw new Error("Editor container is missing");
+          }
+
+          // Always clear previous editor content before creating a new one.
+          container.innerHTML = "";
+
+          if (window.monaco && window.monaco.editor && typeof window.monaco.editor.create === "function") {
+            try {
+              return window.monaco.editor.create(container, {
+                value: initialValue,
+                language: "css",
+                theme: document.documentElement.dataset.theme === "light" ? "vs" : "vs-dark",
+                minimap: { enabled: false },
+                automaticLayout: true,
+                wordWrap: "on",
+                fontSize: 13,
+                scrollBeyondLastLine: false,
+                readOnly: readOnly,
+                tabSize: 2,
+                bracketPairColorization: { enabled: true },
+                suggestOnTriggerCharacters: true,
+                formatOnPaste: false,
+                padding: { top: 12, bottom: 10 }
+              });
+            } catch (error) {
+              console.warn("Monaco editor failed to initialize, falling back to textarea", error);
+            }
           }
 
           const fallback = document.createElement("textarea");
@@ -615,7 +643,24 @@
           fallback.readOnly = readOnly;
           fallback.className = "editor-fallback";
           container.appendChild(fallback);
-          return { getValue: () => fallback.value, setValue: (v) => { fallback.value = v; }, onDidChangeModelContent: () => {}, dispose: () => fallback.remove(), updateOptions: () => {}, layout: () => {} };
+
+          const editor = {
+            getValue: () => fallback.value,
+            setValue: (v) => { fallback.value = v; },
+            dispose: () => {
+              fallback.remove();
+              container.innerHTML = "";
+            },
+            updateOptions: () => {},
+            layout: () => {},
+            onDidChangeModelContent: (callback) => {
+              if (!readOnly) {
+                fallback.addEventListener("input", callback);
+              }
+            }
+          };
+
+          return editor;
         }
 
         function getOptions() {
@@ -1400,7 +1445,6 @@
         }
 
         async function initializeEditors() {
-          await ensureLibraries();
           const inputHost = document.getElementById("inputEditorHost");
           const outputHost = document.getElementById("outputEditorHost");
           inputEditor = createEditor(inputHost, normalizeInputForEditor(defaultCss), false);
@@ -1420,6 +1464,26 @@
             const file = event.dataTransfer?.files?.[0];
             if (file) handleFile(file);
           });
+
+          try {
+            await ensureLibraries();
+            if (window.monaco && window.monaco.editor && typeof window.monaco.editor.create === "function") {
+              // Recreate Monaco editors if they become available later.
+              inputEditor.dispose();
+              outputEditor.dispose();
+              inputEditor = createEditor(inputHost, normalizeInputForEditor(getCurrentInput()), false);
+              outputEditor = createEditor(outputHost, normalizeInputForEditor(lastFormatted || defaultCss), true);
+              inputEditor.onDidChangeModelContent(() => {
+                updateMeta();
+                setInputStatus("warn", "⏳ Editing");
+                validationTextEl.textContent = "Live editing in progress.";
+                clearTimeout(formatTimer);
+                formatTimer = setTimeout(() => formatCss(), 350);
+              });
+            }
+          } catch (error) {
+            console.warn("Monaco unavailable, using fallback textarea editors", error);
+          }
         }
 
         document.querySelectorAll(".example-card").forEach((button) => {
