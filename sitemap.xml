@@ -114,6 +114,14 @@
     <priority>0.7</priority>
   </url>
 
+  <!-- CSV to JSON Converter -->
+  <url>
+    <loc>https://devtoolshive.com/tools/csv-to-json.html</loc>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
   <!-- Environment Variable Parser -->
   <url>
     <loc>https://devtoolshive.com/tools/env-parser.html</loc>
