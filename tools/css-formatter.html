@@ -33,13 +33,17 @@
     <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/loader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prettier@3.4.2/dist/standalone.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prettier@3.4.2/plugins/postcss.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
     <style>
       .tool-shell { display:grid; grid-template-columns:minmax(300px,1.15fr) minmax(320px,1.1fr) minmax(280px,0.8fr); gap:14px; margin-top:18px; }
       .pane { background:var(--surface); border:1px solid var(--border); border-radius:18px; overflow:hidden; min-height:560px; display:flex; flex-direction:column; box-shadow:var(--shadow); }
       .pane-head { display:flex; justify-content:space-between; align-items:center; gap:8px; padding:12px 14px; border-bottom:1px solid var(--border); background:color-mix(in oklab,var(--surface-2) 74%,var(--surface)); }
       .pane-title { font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--text-dim); }
-      .pane-tools { display:flex; flex-wrap:wrap; gap:6px; }
+      .pane-tools { display:flex; flex-wrap:wrap; gap:6px; align-items:center; position:relative; }
+      .dropdown { position:relative; }
+      .dropdown-menu { position:absolute; top:100%; right:0; margin-top:6px; min-width:180px; background:var(--surface); border:1px solid var(--border); border-radius:12px; box-shadow:0 14px 40px rgba(0,0,0,.12); padding:6px 0; opacity:0; visibility:hidden; transform:translateY(-8px); transition:all .18s ease; z-index:30; }
+      .dropdown-menu.open { opacity:1; visibility:visible; transform:translateY(0); }
+      .dropdown-item { width:100%; text-align:left; padding:10px 14px; border:none; background:transparent; color:var(--text); cursor:pointer; font-family:var(--font); font-size:13px; line-height:1.4; transition:background .16s ease; }
+      .dropdown-item:hover, .dropdown-item:focus { background:color-mix(in oklab,var(--surface-2) 90%,transparent); outline:none; }
       .editor-host { flex:1; min-height:420px; }
       .editor-host .monaco-editor, .editor-host textarea { border-radius:0; }
       .editor-host textarea { width:100%; height:100%; min-height:420px; border:0; outline:0; padding:14px; background:transparent; color:var(--text); font-family:var(--mono); font-size:13.6px; line-height:1.6; resize:none; }
@@ -175,16 +179,20 @@
 
         <section class="pane" id="outputPane">
           <div class="pane-head">
-            <span class="pane-title">Formatted CSS Output</span>
+            <span class="pane-title">Output</span>
             <div class="pane-tools">
               <button class="btn" id="copyBtn" type="button">Copy</button>
-              <button class="btn" id="downloadCssBtn" type="button">Download CSS</button>
-              <button class="btn" id="downloadTxtBtn" type="button">Download TXT</button>
-              <button class="btn" id="downloadZipBtn" type="button">Download ZIP</button>
-              <button class="btn" id="wordWrapBtn" type="button">Word Wrap</button>
               <button class="btn" id="fullscreenBtn" type="button">Fullscreen</button>
-              <button class="btn" id="compareBtn" type="button">Compare Mode</button>
-              <button class="btn" id="newWindowBtn" type="button">Open in New Window</button>
+              <div class="dropdown">
+                <button class="btn" id="moreActionsBtn" type="button" aria-expanded="false">More ▾</button>
+                <div class="dropdown-menu" id="moreActionsMenu" aria-hidden="true">
+                  <button class="dropdown-item" id="downloadCssBtn" type="button">Download CSS</button>
+                  <button class="dropdown-item" id="downloadTxtBtn" type="button">Download TXT</button>
+                  <button class="dropdown-item" id="wordWrapBtn" type="button">Word Wrap</button>
+                  <button class="dropdown-item" id="compareBtn" type="button">Compare Mode</button>
+                  <button class="dropdown-item" id="newWindowBtn" type="button">Open in New Window</button>
+                </div>
+              </div>
             </div>
           </div>
           <div class="editor-host" id="outputEditorHost"></div>
@@ -596,9 +604,6 @@
           }
           if (!window.prettierPlugins?.postcss) {
             await withTimeout(loadScript("https://cdn.jsdelivr.net/npm/prettier@3.4.2/plugins/postcss.js"), 7000);
-          }
-          if (!window.JSZip) {
-            await withTimeout(loadScript("https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"), 7000);
           }
         }
 
@@ -1376,21 +1381,6 @@
           else downloadText("formatted.css", value, "text/css;charset=utf-8");
         }
 
-        async function downloadZip() {
-          const value = lastFormatted || getCurrentInput();
-          if (!window.JSZip) await ensureLibraries();
-          const zip = new window.JSZip();
-          zip.file("formatted.css", value);
-          zip.file("formatted.txt", value);
-          const blob = await zip.generateAsync({ type: "blob" });
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = "formatted-css.zip";
-          link.click();
-          setTimeout(() => URL.revokeObjectURL(url), 1000);
-        }
-
         function openInNewWindow() {
           const w = window.open("", "_blank");
           if (w) {
@@ -1506,11 +1496,26 @@
         document.getElementById("copyBtn").addEventListener("click", copyOutput);
         document.getElementById("downloadCssBtn").addEventListener("click", () => downloadOutput("css"));
         document.getElementById("downloadTxtBtn").addEventListener("click", () => downloadOutput("txt"));
-        document.getElementById("downloadZipBtn").addEventListener("click", downloadZip);
         document.getElementById("wordWrapBtn").addEventListener("click", toggleWordWrap);
         document.getElementById("fullscreenBtn").addEventListener("click", toggleFullscreen);
         document.getElementById("compareBtn").addEventListener("click", toggleCompareMode);
         document.getElementById("newWindowBtn").addEventListener("click", openInNewWindow);
+        document.getElementById("moreActionsBtn").addEventListener("click", function () {
+          const menu = document.getElementById("moreActionsMenu");
+          const expanded = this.getAttribute("aria-expanded") === "true";
+          this.setAttribute("aria-expanded", String(!expanded));
+          menu.setAttribute("aria-hidden", String(expanded));
+          menu.classList.toggle("open", !expanded);
+        });
+        document.addEventListener("click", function (event) {
+          const moreBtn = document.getElementById("moreActionsBtn");
+          const menu = document.getElementById("moreActionsMenu");
+          if (!moreBtn.contains(event.target) && !menu.contains(event.target)) {
+            moreBtn.setAttribute("aria-expanded", "false");
+            menu.setAttribute("aria-hidden", "true");
+            menu.classList.remove("open");
+          }
+        });
         document.getElementById("replaceBtn").addEventListener("click", replaceInEditor);
         document.getElementById("replaceAllBtn").addEventListener("click", replaceAllInEditor);
         fileInput.addEventListener("change", (event) => handleFile(event.target.files[0]));
