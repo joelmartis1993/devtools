@@ -165,6 +165,22 @@
           <p class="hp-section-sub">Interactive previews of the most-used utilities. Hover to see them in action.</p>
           <div class="hp-featured-scroll" id="featuredScroll">
 
+            <!-- CSV to JSON -->
+            <a class="hp-featured-card" href="/tools/csv-to-json.html">
+              <div class="hp-featured-preview">
+                <span class="hp-term-key">name,email,age</span><br>
+                <span class="hp-term-str">Alice,alice@example.com,28</span><br>
+                <span class="hp-term-str">Bob,bob@example.com,35</span><br><br>
+                <span class="hp-term-key">→</span> <span class="hp-term-str">[{"name":"Alice"...}]</span>
+              </div>
+              <div class="hp-featured-info">
+                <span class="hp-featured-tag">Data</span>
+                <h3 class="hp-featured-name">CSV to JSON Converter</h3>
+                <p class="hp-featured-desc">Convert CSV files and pasted data into clean JSON with delimiter, header, and formatting options.</p>
+                <span class="hp-featured-cta">Open tool</span>
+              </div>
+            </a>
+
             <!-- JSON Formatter -->
             <a class="hp-featured-card" href="/tools/json-formatter.html">
               <div class="hp-featured-preview">
@@ -312,7 +328,7 @@
         <div class="container">
           <p class="hp-section-label">Toolkit</p>
           <h2 class="hp-section-title" data-i18n="section.all">All tools</h2>
-          <p class="hp-section-sub">Fifteen focused utilities. Zero server round-trips. Pick a category or browse them all.</p>
+          <p class="hp-section-sub">Sixteen focused utilities. Zero server round-trips. Pick a category or browse them all.</p>
 
           <div class="hp-tab-bar" role="tablist" aria-label="Tool categories" id="tabBar">
             <button class="hp-tab active" role="tab" aria-selected="true" data-cat="all">All</button>
@@ -324,6 +340,15 @@
           </div>
 
           <div class="hp-tab-content" id="tabContent">
+            <!-- CSV to JSON -->
+            <a class="hp-tool-row" href="/tools/csv-to-json.html" data-cats="data">
+              <span class="hp-tool-row-icon" aria-hidden="true">📄</span>
+              <span class="hp-tool-row-text">
+                <p class="hp-tool-row-name">CSV to JSON Converter</p>
+                <p class="hp-tool-row-desc">Convert CSV files and pasted data into clean JSON with robust parsing and formatting options.</p>
+              </span>
+              <span class="hp-tool-row-arrow" aria-hidden="true">→</span>
+            </a>
             <!-- JSON Formatter -->
             <a class="hp-tool-row" href="/tools/json-formatter.html" data-cats="data">
               <span class="hp-tool-row-icon" aria-hidden="true">{ }</span>
@@ -678,6 +703,7 @@
 
       /* ──── TOOLS DATA (for command palette) ──── */
       const TOOLS = [
+        { name: "CSV to JSON Converter", slug: "csv-to-json", icon: "📄", cat: "Data", desc: "Convert CSV files and pasted data into clean JSON with robust parsing options.", i18nTitle: "tool.csv-to-json.title", i18nDesc: "tool.csv-to-json.desc" },
         { name: "JSON Formatter & Validator", slug: "json-formatter", icon: "{ }", cat: "Data", desc: "Beautify, validate and explore JSON with a tree view.", i18nTitle: "tool.json-formatter.title", i18nDesc: "tool.json-formatter.desc" },
         { name: "JSON to TypeScript", slug: "json-to-typescript", icon: "TS", cat: "Data", desc: "Convert JSON payloads into clean interfaces and types instantly.", i18nTitle: "tool.json-to-typescript.title", i18nDesc: "tool.json-to-typescript.desc" },
         { name: "JSON Diff", slug: "json-diff", icon: "⇄", cat: "Data", desc: "Compare two JSON documents side by side.", i18nTitle: "tool.json-diff.title", i18nDesc: "tool.json-diff.desc" },

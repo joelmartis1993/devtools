@@ -11,6 +11,8 @@ window.DTH_I18N = {
     "hero.cta.browse":"Browse tools",
     "hero.badge.fast":"Instant","hero.badge.private":"100% client-side","hero.badge.free":"Free forever",
     "section.all":"All tools",
+    "tool.csv-to-json.title":"CSV to JSON Converter",
+    "tool.csv-to-json.desc":"Convert CSV files and pasted data into clean JSON with robust parsing and formatting options.",
     "tool.json-formatter.title":"JSON Formatter & Validator",
     "tool.json-formatter.desc":"Beautify, validate and explore JSON with a tree view. Handles large payloads.",
     "tool.json-diff.title":"JSON Diff",
