@@ -158,23 +158,50 @@
           <label>Unix timestamp (seconds or ms)</label
           ><input type="text" id="ts" placeholder="1716239022" />
         </div>
-        <button class="btn primary" id="now" style="height: 38px">Now</button>
+        <button class="btn primary" id="now" type="button" style="height: 38px">Live Now</button>
         <button
           class="btn"
           id="convert"
           data-shortcut="run"
+          type="button"
           style="height: 38px"
           data-i18n="ui.convert"
         >
           Convert
         </button>
       </div>
+      <div
+        class="row-inline"
+        style="margin-top: 8px; gap: 8px; flex-wrap: wrap"
+      >
+        <label
+          class="live-control"
+          for="live-toggle"
+          style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted, #9aa4b2)"
+        >
+          <input type="checkbox" id="live-toggle" checked />
+          <span>Live current timestamp</span>
+        </label>
+        <span
+          id="live-status"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border: 1px solid rgba(77, 214, 167, 0.25); border-radius: 999px; background: rgba(77, 214, 167, 0.12); color: var(--muted, #9aa4b2); font-size: 12px; white-space: nowrap"
+        >
+          <span
+            id="live-dot"
+            style="width: 7px; height: 7px; display: inline-block; border-radius: 999px; background: var(--accent, #4dd6a7); box-shadow: 0 0 0 3px rgba(77, 214, 167, 0.2)"
+          ></span>
+          <span id="live-status-text">Live</span>
+        </span>
+      </div>
       <div class="row-inline" style="margin-top: 10px">
         <div class="field" style="flex: 2">
           <label>Date (any parseable string)</label
           ><input type="text" id="dt" placeholder="2026-05-09T12:00:00Z" />
         </div>
-        <button class="btn" id="d2t" style="height: 38px">→ Timestamp</button>
+        <button class="btn" id="d2t" type="button" style="height: 38px">→ Timestamp</button>
       </div>
       <div
         id="cards"
@@ -269,7 +296,19 @@
         $ = D.$;
       const TS = $("#ts"),
         DT = $("#dt"),
-        C = $("#cards");
+        C = $("#cards"),
+        LIVE_TOGGLE = $("#live-toggle"),
+        LIVE_STATUS = $("#live-status"),
+        LIVE_STATUS_TEXT = $("#live-status-text"),
+        LIVE_DOT = $("#live-dot"),
+        NOW_BTN = $("#now"),
+        CONVERT_BTN = $("#convert"),
+        D2T_BTN = $("#d2t");
+
+      let liveMode = true;
+      let liveTimer = null;
+      let cardElements = [];
+
       function relative(then) {
         const d = Date.now() - then,
           a = Math.abs(d),
@@ -285,64 +324,182 @@
               : Math.floor(a / 1000) + "s";
         return d >= 0 ? s + " ago" : "in " + s;
       }
-      function render(d) {
-        const fmts = [
-          ["Local", d.toString()],
-          ["UTC", d.toUTCString()],
-          ["ISO 8601", d.toISOString()],
-          ["Date only", d.toLocaleDateString()],
-          ["Time only", d.toLocaleTimeString()],
-          ["Unix (s)", Math.floor(d.getTime() / 1000)],
-          ["Unix (ms)", d.getTime()],
-          ["Relative", relative(d.getTime())],
+
+      function parseTimestamp(value) {
+        const raw = value.trim();
+        if (!raw) return null;
+        const n = Number(raw);
+        if (!Number.isFinite(n)) {
+          return { invalid: true, outOfRange: false };
+        }
+        const ms = Math.abs(n) < 1e12 ? n * 1000 : n;
+        const d = new Date(ms);
+        if (Number.isNaN(d.getTime())) {
+          return { invalid: true, outOfRange: true };
+        }
+        return {
+          value: ms,
+          date: d,
+        };
+      }
+
+      function buildCards() {
+        const labels = [
+          "Local",
+          "UTC",
+          "ISO 8601",
+          "Date only",
+          "Time only",
+          "Unix (s)",
+          "Unix (ms)",
+          "Relative",
         ];
         C.innerHTML = "";
-        fmts.forEach(([k, v]) => {
+        cardElements = labels.map((label) => {
           const card = document.createElement("div");
           card.className = "pane";
           card.style.minHeight = "auto";
-          card.innerHTML = `<div class="pane-head">${k}<span class="spacer"></span><button class="btn" style="padding:3px 8px">copy</button></div><div style="padding:12px;font-family:var(--mono);font-size:13.5px;word-break:break-all">${v}</div>`;
-          card.querySelector("button").onclick = () => D.copyText(String(v));
+          card.innerHTML = `<div class="pane-head">${label}<span class="spacer"></span><button class="btn" type="button" style="padding:3px 8px">copy</button></div><div class="pane-value" style="padding:12px;font-family:var(--mono);font-size:13.5px;word-break:break-all"></div>`;
+          const button = card.querySelector("button");
+          const valueEl = card.querySelector(".pane-value");
+          button.onclick = () => D.copyText(String(valueEl.textContent));
           C.appendChild(card);
+          return { card, valueEl };
         });
       }
-      function fromTs() {
-        let v = TS.value.trim();
-        if (!v) return;
-        let n = Number(v);
-        if (!isFinite(n)) {
-          D.toast("Invalid number", "err");
+
+      function updateCards(d) {
+        const values = [
+          d.toString(),
+          d.toUTCString(),
+          d.toISOString(),
+          d.toLocaleDateString(),
+          d.toLocaleTimeString(),
+          Math.floor(d.getTime() / 1000),
+          d.getTime(),
+          relative(d.getTime()),
+        ];
+        cardElements.forEach((item, index) => {
+          item.valueEl.textContent = values[index];
+        });
+      }
+
+      function render(d) {
+        updateCards(d);
+      }
+
+      function convertTimestamp() {
+        const parsed = parseTimestamp(TS.value);
+        if (parsed === null) return;
+        if (parsed.invalid) {
+          D.toast(
+            parsed.outOfRange
+              ? "Timestamp is outside the supported date range"
+              : "Invalid number",
+            "err"
+          );
           return;
         }
-        if (n < 1e12) n *= 1000;
-        render(new Date(n));
+        render(parsed.date);
       }
+
       function fromDt() {
         const d = new Date(DT.value);
-        if (isNaN(d)) {
+        if (Number.isNaN(d.getTime())) {
           D.toast("Invalid date", "err");
           return;
         }
         render(d);
       }
-      $("#now").onclick = () => {
-        const d = new Date();
-        TS.value = Math.floor(d.getTime() / 1000);
-        render(d);
-      };
-      $("#convert").onclick = fromTs;
-      $("#d2t").onclick = fromDt;
-      TS.addEventListener("input", D.debounce(fromTs, 250));
-      DT.addEventListener("input", D.debounce(fromDt, 250));
-      TS.value = Math.floor(Date.now() / 1000);
-      render(new Date());
-      setInterval(() => {
-        if (!TS.value || +TS.value * 1000 > Date.now() - 2000) {
+
+      function stopLiveTimer() {
+        if (liveTimer !== null) {
+          clearInterval(liveTimer);
+          liveTimer = null;
+        }
+      }
+
+      function startLiveTimer() {
+        stopLiveTimer();
+        liveTimer = setInterval(() => {
+          if (!liveMode) return;
           const d = new Date();
           TS.value = Math.floor(d.getTime() / 1000);
           render(d);
+        }, 1000);
+      }
+
+      function setLiveStatus(isLive) {
+        liveMode = isLive;
+        LIVE_TOGGLE.checked = isLive;
+        LIVE_STATUS.style.display = "inline-flex";
+        LIVE_STATUS.style.borderColor = isLive
+          ? "rgba(77, 214, 167, 0.25)"
+          : "rgba(154, 164, 178, 0.25)";
+        LIVE_STATUS.style.background = isLive
+          ? "rgba(77, 214, 167, 0.12)"
+          : "rgba(154, 164, 178, 0.08)";
+        LIVE_DOT.style.background = isLive
+          ? "var(--accent, #4dd6a7)"
+          : "var(--muted, #9aa4b2)";
+        LIVE_DOT.style.boxShadow = isLive
+          ? "0 0 0 3px rgba(77, 214, 167, 0.2)"
+          : "0 0 0 3px rgba(154, 164, 178, 0.16)";
+        LIVE_STATUS_TEXT.textContent = isLive ? "Live" : "Paused";
+        LIVE_STATUS.setAttribute(
+          "aria-label",
+          isLive ? "Live updates enabled" : "Live updates paused"
+        );
+        if (isLive) {
+          startLiveTimer();
+        } else {
+          stopLiveTimer();
         }
-      }, 1000);
+      }
+
+      function enableLiveMode() {
+        const d = new Date();
+        TS.value = Math.floor(d.getTime() / 1000);
+        setLiveStatus(true);
+        render(d);
+      }
+
+      function disableLiveMode() {
+        setLiveStatus(false);
+      }
+
+      const debouncedConvertTimestamp = D.debounce(convertTimestamp, 250);
+      const debouncedFromDt = D.debounce(() => {
+        disableLiveMode();
+        fromDt();
+      }, 250);
+
+      NOW_BTN.onclick = () => {
+        enableLiveMode();
+      };
+      CONVERT_BTN.onclick = () => {
+        disableLiveMode();
+        convertTimestamp();
+      };
+      D2T_BTN.onclick = () => {
+        disableLiveMode();
+        fromDt();
+      };
+      LIVE_TOGGLE.addEventListener("change", () => {
+        if (LIVE_TOGGLE.checked) {
+          enableLiveMode();
+        } else {
+          disableLiveMode();
+        }
+      });
+      TS.addEventListener("input", () => {
+        disableLiveMode();
+        debouncedConvertTimestamp();
+      });
+      DT.addEventListener("input", debouncedFromDt);
+
+      buildCards();
+      enableLiveMode();
     </script>
   </body>
 </html>
