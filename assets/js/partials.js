@@ -16,6 +16,7 @@
     {slug:'regex',           k:'tool.regex'},
     {slug:'case-converter',  k:'tool.case'},
     {slug:'user-agent',      k:'tool.user-agent'},
+    {slug:'hash-generator',  k:'tool.hash-generator', isNew:true},
   ];
   window.DTH_TOOLS = TOOLS;
 

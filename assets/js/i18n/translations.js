@@ -43,6 +43,8 @@ window.DTH_I18N = {
     "tool.sql-formatter.desc":"Format SQL queries with a browser-based SQL beautifier. Supports common dialects and copy/download output.",
     "tool.css-formatter.title":"CSS Formatter & Beautifier",
     "tool.css-formatter.desc":"Format, beautify, validate, minify, and analyze CSS with color palette detection and variable inspection.",
+    "tool.hash-generator.title":"Hash Generator",
+    "tool.hash-generator.desc":"Generate MD5, SHA-1, SHA-256, SHA-384 and SHA-512 hashes from text or files locally in your browser.",
 
     "ui.input":"Input","ui.output":"Output","ui.options":"Options",
     "ui.format":"Format","ui.minify":"Minify","ui.validate":"Validate",
@@ -84,6 +86,8 @@ window.DTH_I18N = {
     "tool.sql-formatter.title":"Formateador SQL","tool.sql-formatter.desc":"Formatea consultas SQL en el navegador con soporte para dialectos comunes.",
     "tool.css-formatter.title":"Formateador CSS",
     "tool.css-formatter.desc":"Formatea, embellece, valida, minifica y analiza CSS con detección de paleta de colores.",
+    "tool.hash-generator.title":"Generador de Hash",
+    "tool.hash-generator.desc":"Genera hashes MD5, SHA-1, SHA-256, SHA-384 y SHA-512 desde texto o archivos localmente en tu navegador.",
 
     "ui.input":"Entrada","ui.output":"Salida","ui.options":"Opciones",
     "ui.format":"Formatear","ui.minify":"Minificar","ui.validate":"Validar",
@@ -122,6 +126,8 @@ window.DTH_I18N = {
     "tool.sql-formatter.title":"SQL Formatter & Beautifier","tool.sql-formatter.desc":"Formatiere SQL-Abfragen im Browser mit Unterstützung gängiger Dialekte.",
     "tool.css-formatter.title":"CSS Formatter",
     "tool.css-formatter.desc":"CSS formatieren, verschönern, validieren, minifizieren und analysieren mit Farbpaletten-Erkennung.",
+    "tool.hash-generator.title":"Hash-Generator",
+    "tool.hash-generator.desc":"Erzeuge MD5-, SHA-1-, SHA-256-, SHA-384- und SHA-512-Hashes aus Text oder Dateien direkt im Browser.",
 
     "ui.input":"Eingabe","ui.output":"Ausgabe","ui.options":"Optionen",
     "ui.format":"Formatieren","ui.minify":"Minifizieren","ui.validate":"Validieren",
@@ -160,6 +166,8 @@ window.DTH_I18N = {
     "tool.sql-formatter.title":"Formateur SQL","tool.sql-formatter.desc":"Formatez les requêtes SQL dans le navigateur avec prise en charge des dialectes courants.",
     "tool.css-formatter.title":"Formateur CSS",
     "tool.css-formatter.desc":"Formatez, embellissez, validez, minifiez et analysez le CSS avec détection de palette de couleurs.",
+    "tool.hash-generator.title":"Générateur de hachage",
+    "tool.hash-generator.desc":"Générez des hachages MD5, SHA-1, SHA-256, SHA-384 et SHA-512 à partir de texte ou de fichiers directement dans votre navigateur.",
 
     "ui.input":"Entrée","ui.output":"Sortie","ui.options":"Options",
     "ui.format":"Formater","ui.minify":"Minifier","ui.validate":"Valider",
@@ -198,6 +206,8 @@ window.DTH_I18N = {
     "tool.sql-formatter.title":"SQLフォーマッタ","tool.sql-formatter.desc":"一般的なSQL方言に対応し、ブラウザ内でSQLクエリを整形します。",
     "tool.css-formatter.title":"CSSフォーマッタ",
     "tool.css-formatter.desc":"CSSの整形、検証、圧縮、分析。カラーパレット検出と変数検査機能付き。",
+    "tool.hash-generator.title":"ハッシュジェネレータ",
+    "tool.hash-generator.desc":"テキストまたはファイルからMD5、SHA-1、SHA-256、SHA-384、SHA-512ハッシュをブラウザ内で生成します。",
 
     "ui.input":"入力","ui.output":"出力","ui.options":"オプション",
     "ui.format":"整形","ui.minify":"圧縮","ui.validate":"検証",

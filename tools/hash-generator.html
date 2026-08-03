@@ -1,0 +1,798 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="google-adsense-account" content="ca-pub-2114664554162220" />
+    <title>Hash Generator – MD5, SHA-1, SHA-256 &amp; SHA-512</title>
+    <meta
+      name="description"
+      content="Generate MD5, SHA-1, SHA-256 and SHA-512 hashes online. Hash text or files securely in your browser with instant results and one-click copy."
+    />
+    <link rel="canonical" href="https://devtoolshive.com/tools/hash-generator.html" />
+    <link rel="alternate" hreflang="en" href="https://devtoolshive.com/tools/hash-generator.html?lang=en" />
+    <link rel="alternate" hreflang="es" href="https://devtoolshive.com/tools/hash-generator.html?lang=es" />
+    <link rel="alternate" hreflang="de" href="https://devtoolshive.com/tools/hash-generator.html?lang=de" />
+    <link rel="alternate" hreflang="fr" href="https://devtoolshive.com/tools/hash-generator.html?lang=fr" />
+    <link rel="alternate" hreflang="ja" href="https://devtoolshive.com/tools/hash-generator.html?lang=ja" />
+    <link rel="alternate" hreflang="x-default" href="https://devtoolshive.com/tools/hash-generator.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Hash Generator – MD5, SHA-1, SHA-256 & SHA-512 | DevToolsHive" />
+    <meta property="og:description" content="Generate MD5, SHA-1, SHA-256 and SHA-512 hashes online. Hash text or files securely in your browser with instant results and one-click copy." />
+    <meta property="og:url" content="https://devtoolshive.com/tools/hash-generator.html" />
+    <meta property="og:image" content="https://devtoolshive.com/assets/img/favicon.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Hash Generator – MD5, SHA-1, SHA-256 & SHA-512 | DevToolsHive" />
+    <meta name="twitter:description" content="Generate MD5, SHA-1, SHA-256 and SHA-512 hashes online. Hash text or files securely in your browser with instant results and one-click copy." />
+    <meta name="twitter:image" content="https://devtoolshive.com/assets/img/favicon.svg" />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0b0d12" />
+    <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg" />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <script src="../assets/js/theme.js"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Hash Generator",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "url": "https://devtoolshive.com/tools/hash-generator.html"
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is this hash generator free?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. The tool is free and runs directly in your browser."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is my text uploaded to a server?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. Text and files are processed locally in your browser by this tool."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the difference between MD5 and SHA-256?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "MD5 is an older algorithm with known cryptographic weaknesses. SHA-256 is a modern SHA-2 algorithm and is generally preferred for integrity and security-related use cases."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I reverse a hash?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "A cryptographic hash is designed to be one-way. You generally cannot convert a hash back into the original input."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why does changing one character create a completely different hash?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Cryptographic hash functions are designed so that even a small input change produces a drastically different output."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Which hash algorithm should I use?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "For general file integrity checks, SHA-256 is usually a good default. The correct choice depends on the system and use case."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I generate a hash from a file?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Select the File tab, choose a file, select an algorithm, and generate the hash locally in your browser."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does a matching hash prove that a file is safe?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. A matching hash only confirms that the compared data is identical. It does not prove that the file is safe or trustworthy."
+            }
+          }
+        ]
+      }
+    </script>
+  </head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SPD83QKS2J"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SPD83QKS2J');
+  </script>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="site-header"></div>
+    <main id="main" class="container tool-page">
+      <div class="crumbs">
+        <a href="/">Home</a> · <span data-i18n="nav.tools">Tools</span> ·
+        <span>Hash Generator</span>
+      </div>
+      <header class="tool-head">
+        <h1>Hash Generator</h1>
+        <p>Generate secure hashes from text or files using MD5, SHA-1, SHA-256, SHA-384, and SHA-512 — instantly in your browser.</p>
+      </header>
+
+      <div class="hash-tool-shell">
+        <section class="hash-panel" aria-labelledby="hash-input-title">
+          <div class="panel-head">
+            <div>
+              <h2 id="hash-input-title">Input</h2>
+              <p>Hash text or a local file without sending anything to a server.</p>
+            </div>
+          </div>
+          <div class="hash-tabs" role="tablist" aria-label="Hash input mode">
+            <button class="hash-tab is-active" role="tab" aria-selected="true" aria-controls="panel-text" id="tab-text" type="button">Text</button>
+            <button class="hash-tab" role="tab" aria-selected="false" aria-controls="panel-file" id="tab-file" type="button">File</button>
+          </div>
+
+          <div class="hash-panel-body">
+            <div id="panel-text" class="hash-mode-panel is-active" role="tabpanel" aria-labelledby="tab-text">
+              <div class="field">
+                <label for="text-input">Text to hash</label>
+                <textarea id="text-input" spellcheck="false" placeholder="Enter or paste text here..."></textarea>
+                <div class="meta-row">
+                  <span id="char-count">0 characters</span>
+                  <label class="checkbox-inline" for="utf8-toggle">
+                    <input type="checkbox" id="utf8-toggle" checked />
+                    <span>Treat input as UTF-8</span>
+                  </label>
+                </div>
+              </div>
+              <div class="button-row">
+                <button class="btn" id="sample-text" type="button">Sample</button>
+                <button class="btn ghost" id="clear-text" type="button">Clear</button>
+              </div>
+            </div>
+
+            <div id="panel-file" class="hash-mode-panel" role="tabpanel" aria-labelledby="tab-file">
+              <div id="drop-zone" class="drop-zone" tabindex="0" role="button" aria-label="Choose a file to hash">
+                <input id="file-input" type="file" class="visually-hidden" />
+                <div class="drop-zone__content">
+                  <strong>Drop a file here or click to browse</strong>
+                  <p>Your file stays on your device and is never uploaded.</p>
+                </div>
+              </div>
+              <div id="file-progress" class="file-progress is-hidden" role="status" aria-live="polite"></div>
+              <div id="file-meta" class="file-meta is-hidden" aria-live="polite"></div>
+            </div>
+          </div>
+
+          <div class="panel-section compact">
+            <div class="section-heading">
+              <h3>Algorithms</h3>
+              <div class="button-row compact">
+                <button class="btn small" id="select-all-algos" type="button">Select all</button>
+                <button class="btn small ghost" id="clear-algos" type="button">Clear selection</button>
+              </div>
+            </div>
+            <div id="algorithms" class="algo-chip-list" role="group" aria-label="Hash algorithms"></div>
+          </div>
+
+          <div class="panel-section compact">
+            <div class="privacy-note">Privacy: Text and files are processed locally in your browser. Nothing is uploaded or stored.</div>
+            <button class="btn primary full-width" id="generate-btn" data-shortcut="run" type="button">Generate Hashes</button>
+          </div>
+        </section>
+
+        <section class="hash-panel results-panel" aria-labelledby="hash-results-title">
+          <div class="panel-head">
+            <div>
+              <h2 id="hash-results-title">Results</h2>
+              <p>One output per selected algorithm, with copy and download actions.</p>
+            </div>
+            <div class="result-toolbar" role="group" aria-label="Result actions">
+              <label class="select-inline" for="format-select">
+                <span>Output format</span>
+                <select id="format-select">
+                  <option value="lowercase">Lowercase hexadecimal</option>
+                  <option value="uppercase">Uppercase hexadecimal</option>
+                </select>
+              </label>
+              <button class="btn small" id="copy-all" type="button">Copy all results</button>
+              <button class="btn small ghost" id="download-all" type="button">Download all</button>
+            </div>
+          </div>
+          <div id="results" class="results-list" aria-live="polite"></div>
+          <div class="panel-section compact verify-section">
+            <div class="section-heading">
+              <h3>Verify a Hash</h3>
+            </div>
+            <p class="muted small">Paste an expected hash to check whether it matches the generated result.</p>
+            <div class="field">
+              <label for="verify-input">Expected hash</label>
+              <textarea id="verify-input" spellcheck="false" placeholder="Paste expected hash here..."></textarea>
+            </div>
+            <div class="row-inline verify-controls">
+              <div class="field compact-field">
+                <label for="verify-algorithm">Algorithm</label>
+                <select id="verify-algorithm">
+                  <option value="auto">Auto Detect</option>
+                  <option value="md5">MD5</option>
+                  <option value="sha1">SHA-1</option>
+                  <option value="sha256">SHA-256</option>
+                  <option value="sha384">SHA-384</option>
+                  <option value="sha512">SHA-512</option>
+                </select>
+              </div>
+              <button class="btn primary" id="verify-btn" type="button">Verify</button>
+            </div>
+            <div id="verify-result" class="verify-result" aria-live="polite">No verification run yet.</div>
+          </div>
+        </section>
+      </div>
+
+      <section class="content narrow">
+        <h2>What Is a Hash Generator?</h2>
+        <p>A hash generator converts text or file data into a fixed-length hash value. The same input produces the same hash, and a small change produces a very different result. Hashes are one-way values and are not encryption.</p>
+        <h3>How to Generate a Hash</h3>
+        <ol>
+          <li>Enter text or select a file.</li>
+          <li>Choose one or more hash algorithms.</li>
+          <li>Click Generate Hashes.</li>
+          <li>Copy or download the generated hash.</li>
+        </ol>
+        <h3>Common Hash Algorithms</h3>
+        <p>MD5 is a fast legacy checksum algorithm and is not suitable for security. SHA-1 is a legacy algorithm that should be avoided for new security-sensitive systems. SHA-256 is widely used and recommended for integrity checks. SHA-384 and SHA-512 are longer SHA-2 variants with stronger output sizes.</p>
+        <h3>What Are Hashes Used For?</h3>
+        <ul>
+          <li>Checking file integrity</li>
+          <li>Verifying downloads</li>
+          <li>Comparing data</li>
+          <li>Generating checksums</li>
+          <li>Storing passwords securely only through an appropriate password-hashing system such as Argon2, bcrypt, or scrypt</li>
+          <li>Validating software releases</li>
+        </ul>
+        <h3>Hashing vs Encryption</h3>
+        <p>Hashing is designed to be one-way. Encryption is designed to be reversible with the correct key.</p>
+        <h3>Is This Hash Generator Private?</h3>
+        <p>All text and files are processed locally in your browser. No input is uploaded by the tool. Users should still avoid entering sensitive secrets into websites they do not trust.</p>
+        <h2 data-i18n="ui.faq">FAQ</h2>
+        <div class="faq">
+          <details open>
+            <summary>Is this hash generator free?</summary>
+            <div class="a">Yes. The tool is free and runs directly in your browser.</div>
+          </details>
+          <details>
+            <summary>Is my text uploaded to a server?</summary>
+            <div class="a">No. Text and files are processed locally in your browser by this tool.</div>
+          </details>
+          <details>
+            <summary>What is the difference between MD5 and SHA-256?</summary>
+            <div class="a">MD5 is an older algorithm with known cryptographic weaknesses. SHA-256 is a modern SHA-2 algorithm and is generally preferred for integrity and security-related use cases.</div>
+          </details>
+          <details>
+            <summary>Can I reverse a hash?</summary>
+            <div class="a">A cryptographic hash is designed to be one-way. You generally cannot convert a hash back into the original input.</div>
+          </details>
+          <details>
+            <summary>Why does changing one character create a completely different hash?</summary>
+            <div class="a">Cryptographic hash functions are designed so that even a small input change produces a drastically different output.</div>
+          </details>
+          <details>
+            <summary>Which hash algorithm should I use?</summary>
+            <div class="a">For general file integrity checks, SHA-256 is usually a good default. The correct choice depends on the system and use case.</div>
+          </details>
+          <details>
+            <summary>Can I generate a hash from a file?</summary>
+            <div class="a">Yes. Select the File tab, choose a file, select an algorithm, and generate the hash locally in your browser.</div>
+          </details>
+          <details>
+            <summary>Does a matching hash prove that a file is safe?</summary>
+            <div class="a">No. A matching hash only confirms that the compared data is identical. It does not prove that the file is safe or trustworthy.</div>
+          </details>
+        </div>
+        <h2 data-i18n="ui.related">Related tools</h2>
+        <div class="related">
+          <a href="/tools/base64.html">Base64 Encoder / Decoder</a>
+          <a href="/tools/jwt-decoder.html">JWT Decoder</a>
+          <a href="/tools/uuid.html">UUID Generator</a>
+          <a href="/tools/json-formatter.html">JSON Formatter</a>
+          <a href="/tools/case-converter.html">Text Case Converter</a>
+        </div>
+      </section>
+    </main>
+    <div id="site-footer"></div>
+    <script src="../assets/js/common.js"></script>
+    <script src="../assets/js/md5.js"></script>
+    <script src="../assets/js/i18n/translations.js"></script>
+    <script src="../assets/js/i18n.js"></script>
+    <script src="../assets/js/partials.js"></script>
+    <script>
+      (function(){
+        const DTH = window.DTH;
+        const MD5 = window.DTH_MD5;
+        const state = {
+          mode: 'text',
+          text: '',
+          utf8: true,
+          selectedAlgorithms: ['sha256', 'sha512'],
+          file: null,
+          outputFormat: 'lowercase',
+          results: []
+        };
+        const algorithms = [
+          { value: 'md5', label: 'MD5', status: 'Legacy', secondary: 'Legacy — not recommended for security' },
+          { value: 'sha1', label: 'SHA-1', status: 'Legacy', secondary: 'Deprecated for security-sensitive use' },
+          { value: 'sha256', label: 'SHA-256', status: 'Recommended', secondary: 'Recommended for general integrity checks' },
+          { value: 'sha384', label: 'SHA-384', status: 'Strong', secondary: 'Strong cryptographic hash' },
+          { value: 'sha512', label: 'SHA-512', status: 'Strong', secondary: 'Strong cryptographic hash' }
+        ];
+
+        const textInput = document.getElementById('text-input');
+        const charCount = document.getElementById('char-count');
+        const utf8Toggle = document.getElementById('utf8-toggle');
+        const sampleBtn = document.getElementById('sample-text');
+        const clearTextBtn = document.getElementById('clear-text');
+        const algosEl = document.getElementById('algorithms');
+        const generateBtn = document.getElementById('generate-btn');
+        const resultsEl = document.getElementById('results');
+        const formatSelect = document.getElementById('format-select');
+        const copyAllBtn = document.getElementById('copy-all');
+        const downloadAllBtn = document.getElementById('download-all');
+        const verifyInput = document.getElementById('verify-input');
+        const verifyAlgo = document.getElementById('verify-algorithm');
+        const verifyBtn = document.getElementById('verify-btn');
+        const verifyResult = document.getElementById('verify-result');
+        const fileInput = document.getElementById('file-input');
+        const dropZone = document.getElementById('drop-zone');
+        const fileMeta = document.getElementById('file-meta');
+        const fileProgress = document.getElementById('file-progress');
+        const selectAllBtn = document.getElementById('select-all-algos');
+        const clearAlgosBtn = document.getElementById('clear-algos');
+        const tabs = Array.from(document.querySelectorAll('.hash-tab'));
+        const panels = Array.from(document.querySelectorAll('.hash-mode-panel'));
+
+        function formatHash(value) {
+          return state.outputFormat === 'uppercase' ? value.toUpperCase() : value.toLowerCase();
+        }
+
+        function getActiveInput() {
+          if (state.mode === 'file') {
+            return state.file ? state.file : null;
+          }
+          return state.text;
+        }
+
+        function updateGenerateButton() {
+          const hasInput = state.mode === 'file' ? Boolean(state.file) : Boolean(state.text.trim());
+          const hasSelection = state.selectedAlgorithms.length > 0;
+          generateBtn.disabled = !hasInput || !hasSelection;
+        }
+
+        function updateCharCount() {
+          const count = textInput.value.length;
+          charCount.textContent = `${count} character${count === 1 ? '' : 's'}`;
+        }
+
+        function renderAlgorithms() {
+          algosEl.innerHTML = '';
+          algorithms.forEach((algo) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'algo-chip' + (state.selectedAlgorithms.includes(algo.value) ? ' is-selected' : '');
+            button.dataset.value = algo.value;
+            button.innerHTML = '<span class="algo-label">' + algo.label + '</span><span class="algo-badge">' + algo.status + '</span>';
+            button.setAttribute('aria-pressed', state.selectedAlgorithms.includes(algo.value));
+            button.addEventListener('click', () => toggleAlgorithm(algo.value));
+            algosEl.appendChild(button);
+          });
+        }
+
+        function toggleAlgorithm(value) {
+          if (state.selectedAlgorithms.includes(value)) {
+            state.selectedAlgorithms = state.selectedAlgorithms.filter((item) => item !== value);
+          } else {
+            state.selectedAlgorithms = [...state.selectedAlgorithms, value];
+          }
+          renderAlgorithms();
+          updateGenerateButton();
+        }
+
+        function setMode(mode) {
+          state.mode = mode;
+          tabs.forEach((tab) => {
+            const active = tab.id === (mode === 'text' ? 'tab-text' : 'tab-file');
+            tab.classList.toggle('is-active', active);
+            tab.setAttribute('aria-selected', active ? 'true' : 'false');
+          });
+          panels.forEach((panel) => {
+            const active = panel.id === (mode === 'text' ? 'panel-text' : 'panel-file');
+            panel.classList.toggle('is-active', active);
+          });
+          updateGenerateButton();
+        }
+
+        function setFileInfo(file) {
+          fileMeta.innerHTML = '';
+          fileMeta.classList.toggle('is-hidden', !file);
+          fileProgress.classList.add('is-hidden');
+          fileProgress.textContent = '';
+          if (!file) return;
+          const size = (file.size / 1024 / 1024).toFixed(2);
+          const nameEl = document.createElement('div');
+          nameEl.className = 'file-meta__entry';
+          const strong = document.createElement('strong');
+          strong.textContent = file.name;
+          nameEl.appendChild(strong);
+          const sizeEl = document.createElement('div');
+          sizeEl.className = 'file-meta__entry';
+          sizeEl.textContent = size + ' MB';
+          const removeBtn = document.createElement('button');
+          removeBtn.type = 'button';
+          removeBtn.className = 'btn small ghost';
+          removeBtn.textContent = 'Remove';
+          removeBtn.addEventListener('click', () => {
+            state.file = null;
+            fileInput.value = '';
+            setFileInfo(null);
+            updateGenerateButton();
+          });
+          fileMeta.appendChild(nameEl);
+          fileMeta.appendChild(sizeEl);
+          fileMeta.appendChild(removeBtn);
+        }
+
+        function setFileProgress(text) {
+          if (!text) {
+            fileProgress.classList.add('is-hidden');
+            fileProgress.textContent = '';
+            return;
+          }
+          fileProgress.classList.remove('is-hidden');
+          fileProgress.textContent = text;
+        }
+
+        function readFileChunks(file, onProgress) {
+          return new Promise((resolve, reject) => {
+            const chunkSize = Math.min(1024 * 1024, Math.max(64 * 1024, file.size / 20));
+            const chunks = [];
+            let offset = 0;
+            const readNext = () => {
+              if (offset >= file.size) {
+                const totalLength = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
+                const merged = new Uint8Array(totalLength);
+                let writeIndex = 0;
+                chunks.forEach((chunk) => {
+                  merged.set(chunk, writeIndex);
+                  writeIndex += chunk.length;
+                });
+                resolve(merged);
+                return;
+              }
+              const slice = file.slice(offset, Math.min(offset + chunkSize, file.size));
+              const reader = new FileReader();
+              reader.onload = () => {
+                const buffer = new Uint8Array(reader.result);
+                chunks.push(buffer);
+                offset += buffer.length;
+                onProgress(Math.min(100, Math.round((offset / file.size) * 100)));
+                readNext();
+              };
+              reader.onerror = () => reject(reader.error || new Error('Failed to read file'));
+              reader.readAsArrayBuffer(slice);
+            };
+            readNext();
+          });
+        }
+
+        async function hashString(input, algorithm) {
+          const message = typeof input === 'string' ? input : '';
+          const encoder = new TextEncoder();
+          const bytes = encoder.encode(message);
+          const hashBuffer = await crypto.subtle.digest(algorithmToWebCrypto(algorithm), bytes);
+          return Array.from(new Uint8Array(hashBuffer)).map((b) => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        function algorithmToWebCrypto(algorithm) {
+          switch (algorithm) {
+            case 'sha1': return 'SHA-1';
+            case 'sha256': return 'SHA-256';
+            case 'sha384': return 'SHA-384';
+            case 'sha512': return 'SHA-512';
+            default: return 'SHA-256';
+          }
+        }
+
+        async function hashInput() {
+          if (!window.crypto || !window.crypto.subtle) {
+            DTH.toast('Your browser does not support Web Crypto hashing','err');
+            return;
+          }
+          if (!state.selectedAlgorithms.length) {
+            DTH.toast('Select at least one algorithm','err');
+            return;
+          }
+          const hasInput = state.mode === 'file' ? Boolean(state.file) : Boolean(state.text.trim());
+          if (!hasInput) {
+            DTH.toast(state.mode === 'file' ? 'Choose a file first' : 'Enter some text first','err');
+            return;
+          }
+
+          resultsEl.innerHTML = '<div class="empty-state">Hashing…</div>';
+          const inputSource = state.mode === 'file' ? state.file : state.text;
+          const results = [];
+
+          if (state.mode === 'text') {
+            const inputValue = state.utf8 ? state.text : state.text;
+            for (const algorithm of state.selectedAlgorithms) {
+              let hashValue;
+              if (algorithm === 'md5') {
+                hashValue = MD5.hashText(inputValue, state.utf8);
+              } else {
+                hashValue = await hashString(inputValue, algorithm);
+              }
+              results.push({ algorithm, hash: formatHash(hashValue) });
+            }
+          } else {
+            setFileProgress('Reading file…');
+            const bytes = await readFileChunks(state.file, (progress) => {
+              setFileProgress('Hashing file… ' + progress + '%');
+            });
+            for (const algorithm of state.selectedAlgorithms) {
+              let hashValue;
+              if (algorithm === 'md5') {
+                hashValue = MD5.hashBytes(bytes);
+              } else {
+                hashValue = await hashBytes(bytes, algorithm);
+              }
+              results.push({ algorithm, hash: formatHash(hashValue) });
+            }
+            setFileProgress('');
+          }
+
+          state.results = results;
+          renderResults();
+        }
+
+        async function hashBytes(bytes, algorithm) {
+          const hashBuffer = await crypto.subtle.digest(algorithmToWebCrypto(algorithm), bytes);
+          return Array.from(new Uint8Array(hashBuffer)).map((b) => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        function renderResults() {
+          resultsEl.innerHTML = '';
+          if (!state.results.length) {
+            const empty = document.createElement('div');
+            empty.className = 'empty-state';
+            empty.textContent = 'No hashes generated yet.';
+            resultsEl.appendChild(empty);
+            return;
+          }
+          state.results.forEach((result) => {
+            const card = document.createElement('article');
+            card.className = 'result-card';
+            const algo = algorithmMeta(result.algorithm);
+            const top = document.createElement('div');
+            top.className = 'result-card__top';
+            const meta = document.createElement('div');
+            const title = document.createElement('h3');
+            title.textContent = algo.label;
+            const badge = document.createElement('span');
+            badge.className = 'badge';
+            badge.textContent = algo.status;
+            meta.appendChild(title);
+            meta.appendChild(badge);
+            const actions = document.createElement('div');
+            actions.className = 'result-actions';
+            const copyBtn = document.createElement('button');
+            copyBtn.type = 'button';
+            copyBtn.className = 'icon-btn small';
+            copyBtn.setAttribute('aria-label', 'Copy ' + algo.label + ' hash');
+            copyBtn.dataset.copy = result.algorithm;
+            copyBtn.textContent = '⧉';
+            copyBtn.addEventListener('click', () => copyResult(copyBtn.dataset.copy));
+            const downloadBtn = document.createElement('button');
+            downloadBtn.type = 'button';
+            downloadBtn.className = 'icon-btn small';
+            downloadBtn.setAttribute('aria-label', 'Download ' + algo.label + ' hash');
+            downloadBtn.dataset.download = result.algorithm;
+            downloadBtn.textContent = '⇩';
+            downloadBtn.addEventListener('click', () => downloadResult(downloadBtn.dataset.download));
+            actions.appendChild(copyBtn);
+            actions.appendChild(downloadBtn);
+            top.appendChild(meta);
+            top.appendChild(actions);
+            const output = document.createElement('pre');
+            output.className = 'hash-output';
+            output.setAttribute('aria-label', 'Generated hash');
+            output.textContent = result.hash;
+            card.appendChild(top);
+            card.appendChild(output);
+            resultsEl.appendChild(card);
+          });
+        }
+
+        function algorithmMeta(value) {
+          return algorithms.find((algo) => algo.value === value) || algorithms[0];
+        }
+
+        async function copyResult(algorithm) {
+          const result = state.results.find((item) => item.algorithm === algorithm);
+          if (!result) return;
+          await DTH.copyText(result.hash, 'Copied');
+        }
+
+        function downloadResult(algorithm) {
+          const result = state.results.find((item) => item.algorithm === algorithm);
+          if (!result) return;
+          const filename = algorithm.toUpperCase() + '-hash.txt';
+          const text = 'Algorithm:\n' + algorithmMeta(algorithm).label + '\n\nHash:\n' + result.hash;
+          DTH.downloadText(filename, text, 'text/plain;charset=utf-8');
+        }
+
+        async function copyAllResults() {
+          const text = state.results.map((result) => algorithmMeta(result.algorithm).label + ': ' + result.hash).join('\n');
+          await DTH.copyText(text, 'Copied all results');
+        }
+
+        function downloadAllResults() {
+          const text = state.results.map((result) => algorithmMeta(result.algorithm).label + ': ' + result.hash).join('\n');
+          DTH.downloadText('hashes.txt', text, 'text/plain;charset=utf-8');
+        }
+
+        function verifyHash() {
+          const expected = verifyInput.value.trim();
+          const selected = verifyAlgo.value;
+          if (!expected) {
+            verifyResult.className = 'verify-result error';
+            verifyResult.textContent = 'Enter an expected hash to compare.';
+            return;
+          }
+          if (!isValidHex(expected)) {
+            verifyResult.className = 'verify-result error';
+            verifyResult.textContent = 'The expected hash must be a valid hexadecimal value with a recognizable length.';
+            return;
+          }
+
+          const targetAlgorithm = selected === 'auto' ? detectAlgorithmFromLength(expected.length) : selected;
+          if (!targetAlgorithm) {
+            verifyResult.className = 'verify-result error';
+            verifyResult.textContent = 'Unable to determine the algorithm from the hash length.';
+            return;
+          }
+          const generated = state.results.find((result) => result.algorithm === targetAlgorithm);
+          if (!generated) {
+            verifyResult.className = 'verify-result error';
+            verifyResult.textContent = 'Generate hashes first, or choose an algorithm that has a result.';
+            return;
+          }
+          const expectedNormalized = expected.toLowerCase();
+          const generatedNormalized = generated.hash.toLowerCase();
+          if (expectedNormalized === generatedNormalized) {
+            verifyResult.className = 'verify-result success';
+            verifyResult.textContent = 'Hash matches';
+          } else {
+            verifyResult.className = 'verify-result error';
+            verifyResult.textContent = 'Hash does not match';
+          }
+        }
+
+        function isValidHex(value) {
+          const hex = value.trim().toLowerCase();
+          if (!/^[0-9a-f]+$/i.test(hex)) return false;
+          const lengths = { md5: 32, sha1: 40, sha256: 64, sha384: 96, sha512: 128 };
+          if (verifyAlgo.value !== 'auto') {
+            return hex.length === lengths[verifyAlgo.value];
+          }
+          return Boolean(detectAlgorithmFromLength(hex.length));
+        }
+
+        function detectAlgorithmFromLength(length) {
+          const mapping = { 32: 'md5', 40: 'sha1', 64: 'sha256', 96: 'sha384', 128: 'sha512' };
+          return mapping[length] || null;
+        }
+
+        function bindEvents() {
+          textInput.addEventListener('input', () => {
+            state.text = textInput.value;
+            updateCharCount();
+            updateGenerateButton();
+          });
+          utf8Toggle.addEventListener('change', () => {
+            state.utf8 = utf8Toggle.checked;
+          });
+          sampleBtn.addEventListener('click', () => {
+            textInput.value = 'DevToolsHive';
+            state.text = textInput.value;
+            updateCharCount();
+            updateGenerateButton();
+            textInput.focus();
+          });
+          clearTextBtn.addEventListener('click', () => {
+            textInput.value = '';
+            state.text = '';
+            updateCharCount();
+            updateGenerateButton();
+          });
+          formatSelect.addEventListener('change', () => {
+            state.outputFormat = formatSelect.value;
+            renderResults();
+          });
+          copyAllBtn.addEventListener('click', copyAllResults);
+          downloadAllBtn.addEventListener('click', downloadAllResults);
+          verifyBtn.addEventListener('click', verifyHash);
+          selectAllBtn.addEventListener('click', () => {
+            state.selectedAlgorithms = algorithms.map((algo) => algo.value);
+            renderAlgorithms();
+            updateGenerateButton();
+          });
+          clearAlgosBtn.addEventListener('click', () => {
+            state.selectedAlgorithms = [];
+            renderAlgorithms();
+            updateGenerateButton();
+          });
+          generateBtn.addEventListener('click', () => {
+            hashInput();
+          });
+          fileInput.addEventListener('change', () => {
+            state.file = fileInput.files[0] || null;
+            setFileInfo(state.file);
+            updateGenerateButton();
+          });
+          dropZone.addEventListener('click', () => fileInput.click());
+          dropZone.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              fileInput.click();
+            }
+          });
+          dropZone.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dropZone.classList.add('is-dragover');
+          });
+          dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('is-dragover');
+          });
+          dropZone.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dropZone.classList.remove('is-dragover');
+            const file = event.dataTransfer.files[0];
+            if (file) {
+              state.file = file;
+              const dataTransfer = new DataTransfer();
+              dataTransfer.items.add(file);
+              fileInput.files = dataTransfer.files;
+              setFileInfo(state.file);
+              updateGenerateButton();
+            }
+          });
+          tabs.forEach((tab) => {
+            tab.addEventListener('click', () => setMode(tab.id === 'tab-text' ? 'text' : 'file'));
+          });
+        }
+
+        function init() {
+          renderAlgorithms();
+          updateCharCount();
+          updateGenerateButton();
+          bindEvents();
+          setMode('text');
+        }
+
+        init();
+      })();
+    </script>
+  </body>
+</html>
