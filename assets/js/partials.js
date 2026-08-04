@@ -11,6 +11,7 @@
     {slug:'css-formatter',   k:'tool.css-formatter', isNew:true},
     {slug:'base64',          k:'tool.base64'},
     {slug:'url-encoder',     k:'tool.url'},
+    {slug:'url-parser',      k:'tool.url-parser', isNew:true},
     {slug:'timestamp',       k:'tool.timestamp'},
     {slug:'uuid',            k:'tool.uuid'},
     {slug:'regex',           k:'tool.regex'},

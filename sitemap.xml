@@ -146,6 +146,14 @@
     <priority>0.6</priority>
   </url>
 
+  <!-- URL Parser -->
+  <url>
+    <loc>https://devtoolshive.com/tools/url-parser.html</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
   <!-- Hash Generator -->
   <url>
     <loc>https://devtoolshive.com/tools/hash-generator.html</loc>
