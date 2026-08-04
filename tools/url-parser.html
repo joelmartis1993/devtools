@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="google-adsense-account" content="ca-pub-2114664554162220" />
+    <title>URL Parser – Parse and Analyze URLs Online | DevToolsHive</title>
+    <meta
+      name="description"
+      content="Parse and analyze URLs online. Extract the protocol, hostname, port, path, query parameters, fragment, and other URL components instantly."
+    />
+    <link rel="canonical" href="https://devtoolshive.com/tools/url-parser.html" />
+    <link rel="alternate" hreflang="en" href="https://devtoolshive.com/tools/url-parser.html?lang=en" />
+    <link rel="alternate" hreflang="es" href="https://devtoolshive.com/tools/url-parser.html?lang=es" />
+    <link rel="alternate" hreflang="de" href="https://devtoolshive.com/tools/url-parser.html?lang=de" />
+    <link rel="alternate" hreflang="fr" href="https://devtoolshive.com/tools/url-parser.html?lang=fr" />
+    <link rel="alternate" hreflang="ja" href="https://devtoolshive.com/tools/url-parser.html?lang=ja" />
+    <link rel="alternate" hreflang="x-default" href="https://devtoolshive.com/tools/url-parser.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="URL Parser – Parse and Analyze URLs Online | DevToolsHive" />
+    <meta
+      property="og:description"
+      content="Parse and analyze URLs online. Extract the protocol, hostname, port, path, query parameters, fragment, and other URL components instantly."
+    />
+    <meta property="og:url" content="https://devtoolshive.com/tools/url-parser.html" />
+    <meta property="og:image" content="https://devtoolshive.com/assets/img/favicon.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="URL Parser – Parse and Analyze URLs Online | DevToolsHive" />
+    <meta
+      name="twitter:description"
+      content="Parse and analyze URLs online. Extract the protocol, hostname, port, path, query parameters, fragment, and other URL components instantly."
+    />
+    <meta name="twitter:image" content="https://devtoolshive.com/assets/img/favicon.svg" />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0b0d12" />
+    <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg" />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <script src="../assets/js/theme.js"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "URL Parser",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any (web)",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "url": "https://devtoolshive.com/tools/url-parser.html"
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is a URL parser?",
+            "acceptedAnswer": { "@type": "Answer", "text": "A URL parser breaks a web address into meaningful parts such as the protocol, hostname, port, path, query string, and fragment." }
+          },
+          {
+            "@type": "Question",
+            "name": "What parts of a URL can this tool extract?",
+            "acceptedAnswer": { "@type": "Answer", "text": "It extracts the protocol, username, password, host, hostname, port, pathname, search string, hash, origin, and query parameters." }
+          },
+          {
+            "@type": "Question",
+            "name": "Does this URL parser work with query parameters?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. It displays each query parameter separately, preserves duplicates, and lets you copy or inspect each value." }
+          },
+          {
+            "@type": "Question",
+            "name": "Can a URL contain multiple parameters with the same name?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. The tool preserves repeated parameter names so you can inspect each occurrence without merging them together." }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the difference between a hostname and a host?",
+            "acceptedAnswer": { "@type": "Answer", "text": "The hostname is the domain name or IP address, while the host includes the hostname and an optional port." }
+          },
+          {
+            "@type": "Question",
+            "name": "What is a URL fragment?",
+            "acceptedAnswer": { "@type": "Answer", "text": "A fragment is the portion after the # symbol and often points to a specific section or anchor within a page." }
+          },
+          {
+            "@type": "Question",
+            "name": "Does this tool send my URL to a server?",
+            "acceptedAnswer": { "@type": "Answer", "text": "This tool processes URLs locally in your browser. The URL is not sent to a server by the tool itself." }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I parse URLs with ports and credentials?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. The tool handles ports, usernames, passwords, and other standard URL components when they are present." }
+          }
+        ]
+      }
+    </script>
+  </head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SPD83QKS2J"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SPD83QKS2J');
+  </script>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="site-header"></div>
+    <main id="main" class="container tool-page">
+      <div class="crumbs">
+        <a href="/">Home</a> · <span data-i18n="nav.tools">Tools</span> · <span>URL Parser</span>
+      </div>
+      <header class="tool-head">
+        <h1>URL Parser</h1>
+        <p>Parse any URL and instantly view its protocol, hostname, port, path, query parameters, fragment, and other components.</p>
+      </header>
+
+      <div class="toolbar">
+        <button class="btn primary" id="parseBtn" data-shortcut="run">Parse URL</button>
+        <button class="btn" id="clearBtn">Clear</button>
+        <button class="btn" id="pasteBtn">Paste</button>
+        <button class="btn" id="exampleBtn">Load Example</button>
+        <span class="spacer"></span>
+        <span id="parseStatus" class="muted small" aria-live="polite">Ready to parse a URL.</span>
+      </div>
+
+      <div class="field">
+        <label for="urlInput">Enter a URL</label>
+        <textarea id="urlInput" spellcheck="false" placeholder="https://user:password@example.com:8080/products/item?category=books&page=2#reviews"></textarea>
+        <div id="validationMessage" class="error-box hide" aria-live="polite"></div>
+      </div>
+
+      <div class="url-parser-shell">
+        <section class="url-parser-panel" aria-labelledby="overviewTitle">
+          <div class="panel-head">
+            <div>
+              <h2 id="overviewTitle">URL Overview</h2>
+              <p>Key components pulled from the browser URL parser.</p>
+            </div>
+            <div class="button-row compact">
+              <button class="btn small" id="togglePasswordBtn">Show password</button>
+              <button class="btn small" id="copyAllBtn">Copy all components</button>
+            </div>
+          </div>
+          <div id="overviewGrid" class="info-grid"></div>
+        </section>
+
+        <section class="url-parser-panel" aria-labelledby="analysisTitle">
+          <div class="panel-head">
+            <div>
+              <h2 id="analysisTitle">URL Analysis</h2>
+              <p>Quick checks and metrics for the parsed URL.</p>
+            </div>
+          </div>
+          <div id="analysisGrid" class="analysis-grid"></div>
+        </section>
+      </div>
+
+      <section class="url-parser-panel panel-section" aria-labelledby="paramsTitle">
+        <div class="panel-head">
+          <div>
+            <h2 id="paramsTitle">Query Parameters</h2>
+            <p>Inspect every query parameter, including duplicates.</p>
+          </div>
+          <div class="button-row compact">
+            <button class="btn small" id="copyAllParamsBtn">Copy all parameters</button>
+          </div>
+        </div>
+        <div class="query-controls">
+          <label class="field compact-field" for="paramFilter">
+            <span class="visually-hidden">Filter parameters</span>
+            <input id="paramFilter" type="search" placeholder="Filter parameters" />
+          </label>
+          <label class="checkbox-inline">
+            <input type="checkbox" id="rawParamToggle" />
+            Raw encoded values
+          </label>
+        </div>
+        <div id="queryParamsTableWrap" class="table-wrap"></div>
+      </section>
+
+      <section class="url-parser-panel panel-section" aria-labelledby="breakdownTitle">
+        <div class="panel-head">
+          <div>
+            <h2 id="breakdownTitle">URL Breakdown</h2>
+            <p>A visual view of the main URL parts.</p>
+          </div>
+        </div>
+        <div id="breakdownVisual" class="breakdown-visual"></div>
+      </section>
+
+      <section class="url-parser-panel panel-section" aria-labelledby="normalizedTitle">
+        <div class="panel-head">
+          <div>
+            <h2 id="normalizedTitle">Normalized URL</h2>
+            <p>The URL generated by the browser URL parser.</p>
+          </div>
+          <div class="button-row compact">
+            <button class="btn small" id="copyNormalizedBtn">Copy normalized URL</button>
+          </div>
+        </div>
+        <div id="normalizedWrap" class="mono-block"></div>
+        <div id="normalizationNote" class="muted small"></div>
+      </section>
+
+      <section class="url-parser-panel panel-section" aria-labelledby="encodeTitle">
+        <div class="panel-head">
+          <div>
+            <h2 id="encodeTitle">URL Encoding &amp; Decoding</h2>
+            <p>Encode or decode a full URL or a selected component.</p>
+          </div>
+          <a class="btn small" href="/tools/url-encoder.html">Open URL Encoder / Decoder</a>
+        </div>
+        <div class="utility-grid">
+          <div class="field">
+            <label for="encodeInput">Text to encode or decode</label>
+            <textarea id="encodeInput" spellcheck="false" placeholder="Paste a value here"></textarea>
+          </div>
+          <div class="field">
+            <label for="encodeMode">Mode</label>
+            <select id="encodeMode">
+              <option value="component">Component</option>
+              <option value="full">Full URL</option>
+            </select>
+            <div class="button-row compact" style="margin-top: 8px;">
+              <button class="btn" id="encodeBtn">Encode URL</button>
+              <button class="btn" id="decodeBtn">Decode URL</button>
+            </div>
+            <label for="encodeOutput">Result</label>
+            <textarea id="encodeOutput" spellcheck="false" readonly></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="url-parser-panel panel-section" aria-labelledby="exportsTitle">
+        <div class="panel-head">
+          <div>
+            <h2 id="exportsTitle">Copy &amp; Export</h2>
+            <p>Share parsed data or export it as JSON.</p>
+          </div>
+          <label class="checkbox-inline">
+            <input type="checkbox" id="includePasswordExport" />
+            Include password in export
+          </label>
+        </div>
+        <div class="button-row">
+          <button class="btn" id="copyJsonBtn">Copy Parsed JSON</button>
+          <button class="btn" id="downloadJsonBtn">Download Parsed Data as JSON</button>
+        </div>
+      </section>
+
+      <section class="content narrow">
+        <h2>What is a URL Parser?</h2>
+        <p>A URL parser separates a web address into components such as the protocol, hostname, port, path, query string, and fragment. That makes it easier to inspect redirects, debug API requests, and understand routing behavior.</p>
+
+        <h2>How to parse a URL</h2>
+        <ol>
+          <li>Paste a complete URL into the input field.</li>
+          <li>Click Parse URL or press Ctrl/Cmd + Enter.</li>
+          <li>Review the extracted URL components and query parameters.</li>
+          <li>Inspect the breakdown, analysis, and normalized URL output.</li>
+          <li>Copy or export the parsed information for later use.</li>
+        </ol>
+
+        <h2>URL components explained</h2>
+        <h3>Protocol</h3>
+        <p>The protocol declares how the resource should be accessed. Common values include <code>http://</code> and <code>https://</code>.</p>
+        <h3>Hostname</h3>
+        <p>The hostname is the domain name or IP address of the server. It is usually the part that appears before the port.</p>
+        <h3>Port</h3>
+        <p>The port identifies the network endpoint the server uses. Common examples include <code>80</code>, <code>443</code>, and <code>8080</code>.</p>
+        <h3>Pathname</h3>
+        <p>The pathname identifies the resource or route on the server, such as <code>/products/item</code>.</p>
+        <h3>Query parameters</h3>
+        <p>Query parameters are the key/value pairs after the <code>?</code> in a URL. They are commonly used for filters, pagination, and tracking.</p>
+        <h3>Fragment</h3>
+        <p>The fragment is the part after the <code>#</code>. It often points to a specific section of a page or a client-side route.</p>
+
+        <h2>Why use an online URL parser?</h2>
+        <p>Developers use a URL parser to debug API requests, inspect redirect URLs, read tracking parameters, analyze callback URLs, troubleshoot malformed URLs, review values from logs, and understand web application routing.</p>
+
+        <h2>URL parsing example</h2>
+        <p>For <code>https://example.com:8080/products/item?category=books&amp;page=2#reviews</code>, the protocol is <code>https:</code>, the hostname is <code>example.com</code>, the port is <code>8080</code>, the pathname is <code>/products/item</code>, the query parameters are <code>category=books</code> and <code>page=2</code>, and the fragment is <code>#reviews</code>.</p>
+
+        <h2 data-i18n="ui.faq">FAQ</h2>
+        <div class="faq">
+          <details open>
+            <summary>What is a URL parser?</summary>
+            <div class="a">A URL parser breaks a web address into meaningful parts such as the protocol, hostname, port, path, query string, and fragment.</div>
+          </details>
+          <details>
+            <summary>What parts of a URL can this tool extract?</summary>
+            <div class="a">It extracts the protocol, username, password, host, hostname, port, pathname, search string, hash, origin, and query parameters.</div>
+          </details>
+          <details>
+            <summary>Does this URL parser work with query parameters?</summary>
+            <div class="a">Yes. It displays every query parameter separately, preserves duplicates, and lets you copy or inspect each value.</div>
+          </details>
+          <details>
+            <summary>Can a URL contain multiple parameters with the same name?</summary>
+            <div class="a">Yes. The tool preserves repeated parameter names so you can inspect each occurrence without merging them together.</div>
+          </details>
+          <details>
+            <summary>What is the difference between a hostname and a host?</summary>
+            <div class="a">The hostname is the domain name or IP address, while the host includes the hostname and an optional port.</div>
+          </details>
+          <details>
+            <summary>What is a URL fragment?</summary>
+            <div class="a">A fragment is the part after the <code>#</code> and is often used to point to a section or anchor within a page.</div>
+          </details>
+          <details>
+            <summary>Does this tool send my URL to a server?</summary>
+            <div class="a">This tool processes URLs locally in your browser. The URL is not sent to a server by the tool itself.</div>
+          </details>
+          <details>
+            <summary>Can I parse URLs with ports and credentials?</summary>
+            <div class="a">Yes. The tool handles ports, usernames, passwords, and other standard URL components when they are present.</div>
+          </details>
+        </div>
+
+        <h2 data-i18n="ui.related">Related tools</h2>
+        <div class="related">
+          <a href="/tools/url-encoder.html">URL Encoder / Decoder</a>
+          <a href="/tools/json-formatter.html">JSON Formatter</a>
+          <a href="/tools/jwt-decoder.html">JWT Decoder</a>
+          <a href="/tools/base64.html">Base64 Encoder / Decoder</a>
+        </div>
+      </section>
+    </main>
+    <div id="site-footer"></div>
+    <script src="../assets/js/common.js"></script>
+    <script src="../assets/js/i18n/translations.js"></script>
+    <script src="../assets/js/i18n.js"></script>
+    <script src="../assets/js/partials.js"></script>
+    <script>
+      (function () {
+        const $ = (sel) => document.querySelector(sel);
+        const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+        const exampleUrl = 'https://user:password@example.com:8080/products/item?category=books&page=2#reviews';
+        const input = $('#urlInput');
+        const validationMessage = $('#validationMessage');
+        const parseStatus = $('#parseStatus');
+        const overviewGrid = $('#overviewGrid');
+        const analysisGrid = $('#analysisGrid');
+        const breakdownVisual = $('#breakdownVisual');
+        const normalizedWrap = $('#normalizedWrap');
+        const normalizationNote = $('#normalizationNote');
+        const paramFilter = $('#paramFilter');
+        const rawParamToggle = $('#rawParamToggle');
+        const queryParamsTableWrap = $('#queryParamsTableWrap');
+        const togglePasswordBtn = $('#togglePasswordBtn');
+        const includePasswordExport = $('#includePasswordExport');
+        const encodeInput = $('#encodeInput');
+        const encodeOutput = $('#encodeOutput');
+        const encodeMode = $('#encodeMode');
+        const state = { parsed: null, showPassword: false, rawParamValues: false, parsedJson: null };
+
+        function setStatus(message, kind) {
+          parseStatus.textContent = message || 'Ready to parse a URL.';
+          parseStatus.className = 'muted small';
+          if (kind === 'ok') parseStatus.classList.add('ok');
+          if (kind === 'err') parseStatus.classList.add('err');
+        }
+
+        function showValidation(message) {
+          validationMessage.textContent = message;
+          validationMessage.classList.remove('hide');
+        }
+
+        function clearValidation() {
+          validationMessage.textContent = '';
+          validationMessage.classList.add('hide');
+        }
+
+        function safeDecode(value) {
+          try { return decodeURIComponent(value); }
+          catch (e) { return value; }
+        }
+
+        function splitQuery(rawQuery) {
+          if (!rawQuery) return [];
+          const withoutLeading = rawQuery.startsWith('?') ? rawQuery.slice(1) : rawQuery;
+          return withoutLeading ? withoutLeading.split('&').filter(Boolean) : [];
+        }
+
+        function parseQueryEntries(url) {
+          const entries = [];
+          const pairs = splitQuery(url.search);
+          pairs.forEach((pair) => {
+            const separatorIndex = pair.indexOf('=');
+            const name = separatorIndex >= 0 ? pair.slice(0, separatorIndex) : pair;
+            const value = separatorIndex >= 0 ? pair.slice(separatorIndex + 1) : '';
+            entries.push({
+              name: safeDecode(name),
+              rawValue: value,
+              displayValue: safeDecode(value),
+              encodedKey: name,
+              encodedValue: value,
+              keyValue: `${name}=${value}`
+            });
+          });
+          return entries;
+        }
+
+        function getHostType(url) {
+          const host = url.hostname;
+          if (host === 'localhost') return 'Localhost';
+          if (host.startsWith('[')) return 'IPv6 address';
+          if (/^\d+\.\d+\.\d+\.\d+$/.test(host)) return 'IPv4 address';
+          if (/^[a-z0-9.-]+$/i.test(host) && !host.includes(' ')) return 'Domain';
+          return 'Unknown';
+        }
+
+        function buildOverviewItems(parsedUrl) {
+          const items = [
+            { label: 'Full URL', value: parsedUrl.href, copyLabel: 'Copy full URL' },
+            { label: 'Protocol', value: parsedUrl.protocol || 'Not present', copyLabel: 'Copy protocol' },
+            { label: 'Username', value: parsedUrl.username || 'Not present', copyLabel: 'Copy username' },
+            { label: 'Password', value: parsedUrl.password ? (state.showPassword ? parsedUrl.password : '••••••••') : 'Not present', copyLabel: 'Copy password' },
+            { label: 'Host', value: parsedUrl.host || 'Not present', copyLabel: 'Copy host' },
+            { label: 'Hostname', value: parsedUrl.hostname || 'Not present', copyLabel: 'Copy hostname' },
+            { label: 'Port', value: parsedUrl.port ? parsedUrl.port : 'Not present', copyLabel: 'Copy port' },
+            { label: 'Pathname', value: parsedUrl.pathname || 'Not present', copyLabel: 'Copy pathname' },
+            { label: 'Search / Query', value: parsedUrl.search || 'Not present', copyLabel: 'Copy query string' },
+            { label: 'Hash / Fragment', value: parsedUrl.hash || 'Not present', copyLabel: 'Copy fragment' },
+            { label: 'Origin', value: parsedUrl.origin || 'Not present', copyLabel: 'Copy origin' }
+          ];
+          return items;
+        }
+
+        function renderOverview(parsedUrl) {
+          const items = buildOverviewItems(parsedUrl);
+          overviewGrid.innerHTML = items.map((item, index) => {
+            const safeValue = item.value || 'Not present';
+            const valueText = safeValue === 'Not present' ? 'Not present' : safeValue;
+            const copyValue = item.label === 'Password' ? (state.showPassword ? parsedUrl.password : '') : (item.value === 'Not present' ? '' : item.value);
+            return `
+              <article class="info-card">
+                <div class="info-card__label">${item.label}</div>
+                <div class="info-card__value mono">${valueText}</div>
+                <button class="btn small" data-copy-index="${index}" aria-label="Copy ${item.label}">Copy</button>
+              </article>
+            `;
+          }).join('');
+          $$('[data-copy-index]').forEach((btn) => {
+            btn.addEventListener('click', async () => {
+              const index = Number(btn.getAttribute('data-copy-index'));
+              const item = items[index];
+              const copyValue = item.label === 'Password' ? (state.showPassword ? parsedUrl.password : '') : (item.value === 'Not present' ? '' : item.value);
+              if (!copyValue) {
+                DTH.toast('Nothing to copy', 'err');
+                return;
+              }
+              await DTH.copyText(copyValue, item.copyLabel);
+            });
+          });
+        }
+
+        function renderAnalysis(parsedUrl) {
+          const stats = [
+            { title: 'Secure', value: parsedUrl.protocol === 'https:' ? 'Yes' : 'No' },
+            { title: 'Uses HTTPS encryption', value: parsedUrl.protocol === 'https:' ? 'Yes' : 'No' },
+            { title: 'Has query parameters', value: parsedUrl.search ? 'Yes' : 'No' },
+            { title: 'Has a fragment', value: parsedUrl.hash ? 'Yes' : 'No' },
+            { title: 'Has a custom port', value: parsedUrl.port ? 'Yes' : 'No' },
+            { title: 'Has user information', value: parsedUrl.username || parsedUrl.password ? 'Yes' : 'No' },
+            { title: 'Number of query parameters', value: state.parsed.queryEntries.length },
+            { title: 'Number of path segments', value: parsedUrl.pathname.split('/').filter(Boolean).length },
+            { title: 'URL length', value: parsedUrl.href.length },
+            { title: 'Host type', value: getHostType(parsedUrl) }
+          ];
+          analysisGrid.innerHTML = stats.map((item) => `
+            <article class="analysis-card">
+              <div class="analysis-card__label">${item.title}</div>
+              <div class="analysis-card__value">${item.value}</div>
+            </article>
+          `).join('');
+        }
+
+        function renderBreakdown(parsedUrl) {
+          const segments = [
+            { label: 'Protocol', text: parsedUrl.protocol + '//', tooltip: 'The communication protocol used by the URL.' },
+            { label: 'Hostname', text: parsedUrl.hostname || 'unknown', tooltip: 'The domain name or IP address of the server.' },
+            { label: 'Port', text: parsedUrl.port ? ':' + parsedUrl.port : '', tooltip: 'The network port used by the server.' },
+            { label: 'Path', text: parsedUrl.pathname || '/', tooltip: 'The location of a resource on the server.' },
+            { label: 'Query', text: parsedUrl.search ? parsedUrl.search : '', tooltip: 'Additional parameters passed to the resource.' },
+            { label: 'Fragment', text: parsedUrl.hash || '', tooltip: 'A location or section within the resource.' }
+          ];
+          breakdownVisual.innerHTML = segments.map((segment) => {
+            const content = segment.text || '—';
+            return `<div class="segment-pill" title="${segment.tooltip}">${content}</div>`;
+          }).join('');
+        }
+
+        function renderNormalized(parsedUrl, originalValue) {
+          const normalizedHref = parsedUrl.href;
+          normalizedWrap.innerHTML = `<div class="mono-block__content">${normalizedHref}</div>`;
+          const differs = normalizedHref !== originalValue.trim();
+          if (differs) {
+            normalizationNote.innerHTML = 'The normalized URL may differ from your original input because the browser URL parser may lowercase the hostname, resolve encoding, or normalize formatting details according to URL rules.';
+          } else {
+            normalizationNote.innerHTML = 'The normalized URL matches the original input.';
+          }
+        }
+
+        function renderQueryParameters(parsedUrl) {
+          const entries = state.parsed.queryEntries;
+          const filter = paramFilter.value.trim().toLowerCase();
+          const visibleEntries = entries.filter((entry) => {
+            const haystack = `${entry.name} ${entry.displayValue}`.toLowerCase();
+            return haystack.includes(filter);
+          });
+          if (!entries.length) {
+            queryParamsTableWrap.innerHTML = '<div class="empty-state">No query parameters found in this URL.</div>';
+            return;
+          }
+          if (!visibleEntries.length) {
+            queryParamsTableWrap.innerHTML = '<div class="empty-state">No matching query parameters found.</div>';
+            return;
+          }
+          queryParamsTableWrap.innerHTML = `
+            <div class="table-scroll">
+              <table class="param-table">
+                <thead>
+                  <tr><th>Parameter</th><th>Value</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                  ${visibleEntries.map((entry) => {
+                    const displayValue = state.rawParamValues ? entry.encodedValue : entry.displayValue;
+                    const encodedText = entry.encodedValue;
+                    const displayText = entry.displayValue;
+                    return `
+                      <tr>
+                        <td class="mono">${entry.name}</td>
+                        <td class="mono">${displayValue}</td>
+                        <td>
+                          <div class="param-actions">
+                            <button class="btn small" data-copy-name="${entry.name}">Copy name</button>
+                            <button class="btn small" data-copy-value="${displayValue}">Copy value</button>
+                            <button class="btn small" data-copy-key="${entry.name}=${displayValue}">Copy key=value</button>
+                          </div>
+                        </td>
+                      </tr>
+                    `;
+                  }).join('')}
+                </tbody>
+              </table>
+            </div>
+          `;
+          $$('[data-copy-name]').forEach((btn) => btn.addEventListener('click', () => DTH.copyText(btn.getAttribute('data-copy-name'), 'Copied parameter name')));
+          $$('[data-copy-value]').forEach((btn) => btn.addEventListener('click', () => DTH.copyText(btn.getAttribute('data-copy-value'), 'Copied parameter value')));
+          $$('[data-copy-key]').forEach((btn) => btn.addEventListener('click', () => DTH.copyText(btn.getAttribute('data-copy-key'), 'Copied parameter')));
+        }
+
+        function buildParsedData(url) {
+          const queryEntries = parseQueryEntries(url);
+          return {
+            href: url.href,
+            protocol: url.protocol,
+            username: url.username || '',
+            password: url.password || '',
+            host: url.host,
+            hostname: url.hostname,
+            port: url.port,
+            pathname: url.pathname,
+            search: url.search,
+            hash: url.hash,
+            origin: url.origin,
+            queryParameters: queryEntries.map((entry) => ({ name: entry.name, value: entry.displayValue }))
+          };
+        }
+
+        function parseAndRender() {
+          const value = input.value.trim();
+          if (!value) {
+            clearValidation();
+            setStatus('Enter a URL to parse.', 'err');
+            overviewGrid.innerHTML = '';
+            analysisGrid.innerHTML = '';
+            breakdownVisual.innerHTML = '';
+            normalizedWrap.innerHTML = '';
+            normalizationNote.innerHTML = '';
+            queryParamsTableWrap.innerHTML = '';
+            state.parsed = null;
+            return;
+          }
+          try {
+            const url = new URL(value);
+            clearValidation();
+            const parsed = buildParsedData(url);
+            state.parsed = { url, data: parsed, queryEntries: parseQueryEntries(url) };
+            state.parsedJson = parsed;
+            renderOverview(url);
+            renderAnalysis(url);
+            renderBreakdown(url);
+            renderNormalized(url, value);
+            renderQueryParameters(url);
+            setStatus(`Parsed ${url.hostname || 'URL'} successfully.`, 'ok');
+          } catch (error) {
+            showValidation('Enter a complete valid URL, such as https://example.com/path');
+            setStatus('The URL is not valid.', 'err');
+            state.parsed = null;
+            state.parsedJson = null;
+            overviewGrid.innerHTML = '';
+            analysisGrid.innerHTML = '';
+            breakdownVisual.innerHTML = '';
+            normalizedWrap.innerHTML = '';
+            normalizationNote.innerHTML = '';
+            queryParamsTableWrap.innerHTML = '';
+          }
+        }
+
+        const debouncedParse = DTH.debounce(parseAndRender, 350);
+
+        input.addEventListener('input', debounceInput);
+        input.addEventListener('paste', debounceInput);
+        input.addEventListener('keydown', (event) => {
+          if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+            event.preventDefault();
+            parseAndRender();
+          }
+        });
+
+        function debounceInput() {
+          debouncedParse();
+        }
+
+        $('#parseBtn').addEventListener('click', parseAndRender);
+        $('#clearBtn').addEventListener('click', () => {
+          input.value = '';
+          clearValidation();
+          setStatus('Ready to parse a URL.');
+          overviewGrid.innerHTML = '';
+          analysisGrid.innerHTML = '';
+          breakdownVisual.innerHTML = '';
+          normalizedWrap.innerHTML = '';
+          normalizationNote.innerHTML = '';
+          queryParamsTableWrap.innerHTML = '';
+          state.parsed = null;
+          state.parsedJson = null;
+        });
+        $('#exampleBtn').addEventListener('click', () => {
+          input.value = exampleUrl;
+          parseAndRender();
+        });
+        $('#pasteBtn').addEventListener('click', async () => {
+          if (!navigator.clipboard || !navigator.clipboard.readText) {
+            DTH.toast('Clipboard access is not available.', 'err');
+            return;
+          }
+          try {
+            const text = await navigator.clipboard.readText();
+            input.value = text;
+            parseAndRender();
+          } catch (error) {
+            DTH.toast('Unable to read clipboard.', 'err');
+          }
+        });
+        togglePasswordBtn.addEventListener('click', () => {
+          state.showPassword = !state.showPassword;
+          togglePasswordBtn.textContent = state.showPassword ? 'Hide password' : 'Show password';
+          if (state.parsed) renderOverview(state.parsed.url);
+        });
+        paramFilter.addEventListener('input', () => {
+          if (state.parsed) renderQueryParameters(state.parsed.url);
+        });
+        rawParamToggle.addEventListener('change', () => {
+          state.rawParamValues = rawParamToggle.checked;
+          if (state.parsed) renderQueryParameters(state.parsed.url);
+        });
+        $('#copyAllBtn').addEventListener('click', () => {
+          if (!state.parsed) {
+            DTH.toast('Parse a URL first.', 'err');
+            return;
+          }
+          const summary = [
+            `Full URL: ${state.parsed.data.href}`,
+            `Protocol: ${state.parsed.data.protocol || 'Not present'}`,
+            `Username: ${state.parsed.data.username || 'Not present'}`,
+            `Password: ${state.parsed.data.password ? (state.showPassword ? state.parsed.data.password : '••••••••') : 'Not present'}`,
+            `Host: ${state.parsed.data.host || 'Not present'}`,
+            `Hostname: ${state.parsed.data.hostname || 'Not present'}`,
+            `Port: ${state.parsed.data.port || 'Not present'}`,
+            `Pathname: ${state.parsed.data.pathname || 'Not present'}`,
+            `Search: ${state.parsed.data.search || 'Not present'}`,
+            `Hash: ${state.parsed.data.hash || 'Not present'}`,
+            `Origin: ${state.parsed.data.origin || 'Not present'}`
+          ].join('\n');
+          DTH.copyText(summary, 'Copied URL components');
+        });
+        $('#copyNormalizedBtn').addEventListener('click', () => {
+          if (!state.parsed) {
+            DTH.toast('Parse a URL first.', 'err');
+            return;
+          }
+          DTH.copyText(state.parsed.data.href, 'Copied normalized URL');
+        });
+        $('#copyJsonBtn').addEventListener('click', () => {
+          if (!state.parsedJson) {
+            DTH.toast('Parse a URL first.', 'err');
+            return;
+          }
+          const dataToExport = buildExportData(state.parsedJson);
+          DTH.copyText(JSON.stringify(dataToExport, null, 2), 'Copied parsed JSON');
+        });
+        $('#downloadJsonBtn').addEventListener('click', () => {
+          if (!state.parsedJson) {
+            DTH.toast('Parse a URL first.', 'err');
+            return;
+          }
+          const dataToExport = buildExportData(state.parsedJson);
+          DTH.downloadText('url-parser-data.json', JSON.stringify(dataToExport, null, 2), 'application/json');
+        });
+        $('#copyAllParamsBtn').addEventListener('click', () => {
+          if (!state.parsed) {
+            DTH.toast('Parse a URL first.', 'err');
+            return;
+          }
+          const lines = state.parsed.queryEntries.map((entry) => `${entry.name}=${state.rawParamValues ? entry.encodedValue : entry.displayValue}`);
+          DTH.copyText(lines.join('\n'), 'Copied query parameters');
+        });
+        $('#encodeBtn').addEventListener('click', () => {
+          try {
+            const text = encodeInput.value;
+            const result = encodeMode.value === 'component' ? encodeURIComponent(text) : encodeURI(text);
+            encodeOutput.value = result;
+          } catch (error) {
+            encodeOutput.value = '';
+            DTH.toast('Unable to encode the provided value.', 'err');
+          }
+        });
+        $('#decodeBtn').addEventListener('click', () => {
+          try {
+            const text = encodeInput.value;
+            const result = encodeMode.value === 'component' ? decodeURIComponent(text) : decodeURI(text);
+            encodeOutput.value = result;
+          } catch (error) {
+            encodeOutput.value = '';
+            DTH.toast('Unable to decode the provided value.', 'err');
+          }
+        });
+
+        function buildExportData(parsedData) {
+          const exportData = {
+            href: parsedData.href,
+            protocol: parsedData.protocol,
+            username: parsedData.username,
+            password: parsedData.password,
+            host: parsedData.host,
+            hostname: parsedData.hostname,
+            port: parsedData.port,
+            pathname: parsedData.pathname,
+            search: parsedData.search,
+            hash: parsedData.hash,
+            origin: parsedData.origin,
+            queryParameters: parsedData.queryParameters
+          };
+          if (!includePasswordExport.checked && exportData.password) {
+            exportData.password = '••••••••';
+          }
+          return exportData;
+        }
+
+        input.value = exampleUrl;
+        parseAndRender();
+      })();
+    </script>
+  </body>
+</html>
