@@ -139,6 +139,8 @@
     const cmdBtn = document.getElementById('cmd-palette-btn');
     if (cmdBtn) cmdBtn.addEventListener('click', openPalette);
 
+    // Expose openPalette so it can be re-bound after header injection
+    window.DTH._openPalette = openPalette;
     window.DTH._paletteInitialized = true;
   }
 
@@ -195,6 +197,13 @@
     const h=document.getElementById('site-header'); if(h) h.outerHTML = header();
     const f=document.getElementById('site-footer'); if(f) f.outerHTML = footer();
     initPalette();
+    // Always (re-)bind the header search button after injection, even if
+    // initPalette already ran earlier (homepage timing race: the inline
+    // script can call initPalette before injectShell creates the button).
+    const cmdBtn = document.getElementById('cmd-palette-btn');
+    if (cmdBtn && window.DTH._openPalette) {
+      cmdBtn.addEventListener('click', window.DTH._openPalette);
+    }
     if(window.DTH_LANG){ /* re-apply after injection */
       document.dispatchEvent(new CustomEvent('dth:apply'));
       const cur = window.DTH_LANG.current(); window.DTH_LANG.set(cur);
