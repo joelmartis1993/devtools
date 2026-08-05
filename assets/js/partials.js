@@ -20,7 +20,7 @@
     {name:'User Agent Parser', slug:'user-agent', icon:'🌐', cat:'Text', desc:'Parse User-Agent strings into browser, OS, device.', i18nTitle:'tool.user-agent.title', i18nDesc:'tool.user-agent.desc'},
     {name:'Hash Generator', slug:'hash-generator', icon:'#', cat:'Security', desc:'Generate MD5, SHA-1, SHA-256, SHA-384, and SHA-512 hashes locally.', i18nTitle:'tool.hash-generator.title', i18nDesc:'tool.hash-generator.desc'}
   ];
-  const toolLinks = TOOLS.map(t=>({slug:t.slug, k:t.i18nTitle.replace('.title','')}));
+
   window.DTH_TOOLS = TOOLS;
 
   function escapeHtml(value) {
@@ -163,8 +163,8 @@
   }
 
   function footer(){
-    const cols = TOOLS.slice(0,6).map(t=>`<li><a href="/tools/${t.slug}.html" data-i18n="${t.k}.title">${t.slug}</a></li>`).join('');
-    const cols2= TOOLS.slice(6).map(t=>`<li><a href="/tools/${t.slug}.html" data-i18n="${t.k}.title">${t.slug}</a></li>`).join('');
+    const cols = TOOLS.slice(0,6).map(t=>`<li><a href="/tools/${t.slug}.html" data-i18n="${t.i18nTitle}">${escapeHtml(t.name)}</a></li>`).join('');
+    const cols2= TOOLS.slice(6).map(t=>`<li><a href="/tools/${t.slug}.html" data-i18n="${t.i18nTitle}">${escapeHtml(t.name)}</a></li>`).join('');
     return `<footer class="site-footer"><div class="container">
       <div class="cols">
         <div>

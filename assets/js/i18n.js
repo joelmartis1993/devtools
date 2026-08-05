@@ -14,6 +14,10 @@
   }
   let current=detect();
   function get(key){
+    if(!key || key.includes('undefined') || key.includes('null')){
+      console.warn('[i18n] Invalid translation key:', key);
+      return '';
+    }
     const dict = (window.DTH_I18N && window.DTH_I18N[current]) || {};
     return dict[key] || (window.DTH_I18N && window.DTH_I18N.en && window.DTH_I18N.en[key]) || key;
   }
@@ -28,7 +32,11 @@
   function apply(){
     document.documentElement.lang = current;
     document.querySelectorAll('[data-i18n]').forEach(el=>{
-      const k=el.getAttribute('data-i18n'); el.textContent = get(k);
+      const k=el.getAttribute('data-i18n');
+      const v=get(k);
+      if(v && v !== k) el.textContent = v;
+      else if(!v) { /* key was invalid, keep existing text */ }
+      /* else v===k means no translation found; keep the existing fallback text */
     });
     document.querySelectorAll('[data-i18n-attr]').forEach(el=>{
       // syntax: "placeholder:keyName,title:otherKey"
